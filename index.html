@@ -123,12 +123,12 @@
         </div>
 
     <footer class="bg-white border-t border-slate-200 py-8 mt-12 text-center text-slate-500 text-sm">
-        <p>© 2026 RAYN SCOFIELD — ALL RIGHTS RESERVED.</p>
+        <p>© 2026 NhaDatPro. Chạy trực tiếp từ 1 file HTML, dữ liệu Google Sheets.</p>
     </footer>
 
     <script>
         // ---------------- THAY LINK GOOGLE SHEETS CSV CỦA BẠN VÀO ĐÂY ----------------
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS7mA5XviMuhCgfXzkdz1b0Zr7-MYgG-qtNhEMvXpLJbHk489cAzDp7jQKjQemLToAvvcgn-Ylh9DAk/pub?output=csv';
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9uTLeZVVffWnOQ-MarjeF6UEiMak6zwIF_-4fI2Jo51UFH_6C7qeyuQc5dXNscJev4bWB_ac9yL1n/pub?output=csv';
         // Ví dụ: const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-xxxx/pub?output=csv';
 
         let properties = [];
@@ -353,6 +353,11 @@
                                     <a href="${isRented ? '#' : 'tel:' + p.agent.phone}" class="w-full py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-colors ${isRented ? 'bg-slate-200 text-slate-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg'}">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                                         ${isRented ? 'Đã giao dịch' : 'Gọi ' + p.agent.phone}
+                                    </a>
+
+                                    <a href="${isRented ? '#' : 'https://zalo.me/' + p.agent.phone}" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-colors ${isRented ? 'bg-slate-200 text-slate-500 cursor-not-allowed' : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200'}">
+                                        <svg width="18" height="18" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 11H12.5V13H21V11ZM21 15.5H12.5V17.5H21V15.5ZM21 20H12.5V22H21V20ZM10 22V11H11.5V22H10Z" fill="${isRented ? 'currentColor' : '#fff'}"/></svg>
+                                        ${isRented ? 'Đã giao dịch' : 'Chat Zalo'}
                                     </a>
                                 </div>
                             </div>
