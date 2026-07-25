@@ -61,7 +61,7 @@
             <div class="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-3xl mx-auto">
                 <div class="flex-1 flex items-center bg-slate-50 rounded-xl px-4 py-3 border border-transparent focus-within:border-blue-500 focus-within:bg-white transition-colors">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-400 mr-3 shrink-0"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <input type="text" id="searchInput" placeholder="Nhập địa điểm, tiêu đề..." class="bg-transparent w-full text-slate-900 placeholder:text-slate-400 focus:outline-none">
+                    <input type="text" id="searchInput" placeholder="Nhập địa điểm, tên dự án..." class="bg-transparent w-full text-slate-900 placeholder:text-slate-400 focus:outline-none">
                 </div>
                 <button class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold transition-colors whitespace-nowrap shadow-md">
                     Tìm kiếm
@@ -75,8 +75,8 @@
             
             <div class="flex bg-slate-100 p-1 rounded-lg w-full lg:w-auto" id="tabs-container">
                 <button data-tab="Tất cả" class="tab-btn flex-1 lg:flex-none px-6 py-2 rounded-md text-sm font-semibold transition-all bg-white text-blue-600 shadow-sm">Tất cả</button>
-                <button data-tab="Mặt bằng" class="tab-btn flex-1 lg:flex-none px-6 py-2 rounded-md text-sm font-semibold transition-all text-slate-500 hover:text-slate-700">Mặt bằng</button>
-                <button data-tab="Phòng trọ" class="tab-btn flex-1 lg:flex-none px-6 py-2 rounded-md text-sm font-semibold transition-all text-slate-500 hover:text-slate-700">Phòng trọ</button>
+                <button data-tab="Bán" class="tab-btn flex-1 lg:flex-none px-6 py-2 rounded-md text-sm font-semibold transition-all text-slate-500 hover:text-slate-700">Bán</button>
+                <button data-tab="Cho thuê" class="tab-btn flex-1 lg:flex-none px-6 py-2 rounded-md text-sm font-semibold transition-all text-slate-500 hover:text-slate-700">Cho thuê</button>
             </div>
 
             <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
@@ -84,17 +84,25 @@
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
                     Bộ lọc:
                 </div>
+                <select id="filterType" class="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                    <option value="Tất cả">Loại hình</option>
+                    <option value="Căn hộ">Căn hộ</option>
+                    <option value="Nhà phố">Nhà phố</option>
+                    <option value="Biệt thự">Biệt thự</option>
+                    <option value="Mặt bằng">Mặt bằng</option>
+                    <option value="Nhà trọ">Nhà trọ</option>
+                </select>
                 <select id="filterStatus" class="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
                     <option value="Tất cả">Trạng thái</option>
-                    <option value="Còn trống">Còn trống</option>
-                    <option value="Đã thuê">Đã thuê / Đã giao dịch</option>
+                    <option value="Còn trống">Đang trống</option>
+                    <option value="Đã thuê">Đã giao dịch</option>
                 </select>
             </div>
         </div>
 
         <div id="loading" class="flex flex-col items-center justify-center py-24 text-blue-600">
             <div class="loader mb-4"></div>
-            <p class="font-medium text-slate-600">Đang đọc dữ liệu trực tiếp từ Sheet của bạn...</p>
+            <p class="font-medium text-slate-600">Đang đọc dữ liệu từ Google Sheets...</p>
         </div>
         
         <div id="error" class="hidden text-center py-24 bg-red-50 rounded-2xl border border-red-200">
@@ -114,8 +122,7 @@
         </div>
     </main>
 
-    <div id="modalOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm hidden overflow-y-auto">
-        </div>
+    <div id="modalOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm hidden overflow-y-auto"></div>
 
     <footer class="bg-white border-t border-slate-200 py-8 mt-12 text-center text-slate-500 text-sm">
         <p>© 2026 NhaDatPro. Chạy trực tiếp từ 1 file HTML, dữ liệu Google Sheets.</p>
@@ -123,53 +130,58 @@
 
     <script>
         // ====================================================================
-        // 1. THAY LINK GOOGLE SHEETS DẠNG CSV CỦA BẠN VÀO ĐÂY
+        // LINK CSV CỦA BẠN (TỪ ẢNH CHỤP)
         // ====================================================================
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9uTLeZVVffWnOQ-MarjeF6UEiMak6zwIF_-4fI2Jo51UFH_6C7qeyuQc5dXNscJev4bWB_ac9yL1n/pub?output=csv';
 
         let properties = [];
         let activeTab = 'Tất cả';
         
-        // DOM Elements
         const elGrid = document.getElementById('grid');
         const elLoading = document.getElementById('loading');
         const elError = document.getElementById('error');
         const elContent = document.getElementById('content');
         const elResultCount = document.getElementById('resultCount');
         const elSearch = document.getElementById('searchInput');
+        const elType = document.getElementById('filterType');
         const elStatus = document.getElementById('filterStatus');
         const modalOverlay = document.getElementById('modalOverlay');
 
-        // Hàm định dạng tiền
         const formatPrice = (price) => {
             const num = Number(price);
-            if (isNaN(num) || num === 0) return 'Liên hệ thỏa thuận';
+            if (isNaN(num) || num === 0) return 'Thỏa thuận';
             return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(num);
         };
 
-        // Lấy dữ liệu CHUẨN XÁC theo 9 cột của bạn (id, title, type, price, area, location, image, contact, status)
+        // PARSE THEO ĐÚNG CÁC CỘT TRONG ẢNH CỦA BẠN
         Papa.parse(CSV_URL, {
             download: true,
             header: true,
             skipEmptyLines: true,
-            transformHeader: function(h) { return h.trim().toLowerCase(); },
+            transformHeader: function(h) { return h.trim().toLowerCase(); }, // Đưa tên cột về chữ thường hết cho dễ map
             complete: function(results) {
                 try {
                     properties = results.data.filter(item => item.id && item.title).map(item => {
-                        
-                        const rawStatus = item.status || 'Còn trống';
+                        const rawStatus = item.status || 'Đang trống';
+                        // Định nghĩa "Còn trống/Đang trống" là trạng thái Available
                         const isAvailable = rawStatus.toLowerCase().includes('trống');
 
                         return {
                             id: String(item.id).trim(),
                             title: item.title,
-                            type: item.type || 'Chưa phân loại',
+                            description: item.description || 'Chưa có thông tin chi tiết',
                             priceStr: formatPrice(item.price),
-                            area: item.area || '0',
-                            location: item.location || 'Chưa cập nhật',
+                            address: item.address || 'Đang cập nhật',
+                            beds: Number(item.beds) || 0,
+                            baths: Number(item.baths) || 0,
+                            area: Number(item.area) || 0,
+                            propertyType: item.propertytype || 'BĐS',
                             image: item.image || 'https://placehold.co/800x600?text=No+Image',
-                            contact: item.contact || 'Chưa có SĐT',
+                            agentName: item.agentname || 'CTV',
+                            agentPhone: item.agentphone || 'Đang cập nhật',
                             status: rawStatus,
+                            transactionType: item.transactiontype || 'Bán',
+                            location: item.location || 'Khác',
                             isAvailable: isAvailable
                         };
                     });
@@ -178,12 +190,10 @@
                     elContent.classList.remove('hidden');
                     render();
                 } catch(err) {
-                    console.error("Lỗi Parsing:", err);
-                    showError('Có lỗi xảy ra khi xử lý các cột dữ liệu. Hãy đảm bảo File Sheet có các cột: id, title, type, price...');
+                    showError('Có lỗi xảy ra khi gán dữ liệu. Vui lòng kiểm tra lại file Sheet.');
                 }
             },
-            error: function(err) {
-                console.error("Lỗi Tải File:", err);
+            error: function() {
                 showError('Không thể kết nối đến Google Sheets. Hãy kiểm tra lại link CSV.');
             }
         });
@@ -196,19 +206,20 @@
 
         function filterProperties() {
             const search = elSearch.value.toLowerCase();
+            const type = elType.value;
             const status = elStatus.value;
 
             return properties.filter(p => {
-                const matchTab = activeTab === 'Tất cả' || p.type === activeTab;
+                const matchTab = activeTab === 'Tất cả' || p.transactionType === activeTab;
                 const matchSearch = p.title.toLowerCase().includes(search) || p.location.toLowerCase().includes(search);
+                const matchType = type === 'Tất cả' || p.propertyType === type;
                 const matchStatus = status === 'Tất cả' || 
                                    (status === 'Còn trống' && p.isAvailable) || 
                                    (status === 'Đã thuê' && !p.isAvailable);
-                return matchTab && matchSearch && matchStatus;
+                return matchTab && matchSearch && matchType && matchStatus;
             });
         }
 
-        // Render Lưới BĐS
         function render() {
             const filtered = filterProperties();
             elResultCount.textContent = `(${filtered.length} kết quả)`;
@@ -216,7 +227,7 @@
             if (filtered.length === 0) {
                 elGrid.innerHTML = `
                     <div class="col-span-full text-center py-24 bg-white rounded-2xl border border-dashed border-slate-300">
-                        <h3 class="text-lg font-bold text-slate-900 mb-2">Không tìm thấy kết quả nào</h3>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">Không tìm thấy bất động sản nào</h3>
                         <p class="text-slate-500">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm của bạn.</p>
                     </div>`;
                 return;
@@ -226,7 +237,7 @@
                 <div class="property-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden cursor-pointer flex flex-col ${!p.isAvailable ? 'opacity-75 grayscale-[30%]' : ''}" onclick="openModal('${p.id}')">
                     <div class="relative h-56 overflow-hidden bg-slate-100">
                         <img src="${p.image}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" onerror="this.src='https://placehold.co/800x600?text=No+Image'">
-                        <div class="absolute top-4 left-4 bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-md shadow-md">${p.type}</div>
+                        <div class="absolute top-4 left-4 bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-md shadow-md">${p.transactionType}</div>
                         <div class="absolute top-4 right-4 text-xs font-bold px-3 py-1.5 rounded-md shadow-md backdrop-blur-sm ${!p.isAvailable ? 'bg-red-500/90' : 'bg-emerald-500/90'} text-white">${p.status}</div>
                         <div class="absolute bottom-4 left-4 bg-white/95 text-slate-900 font-bold px-4 py-2 rounded-lg shadow-lg">${p.priceStr}</div>
                     </div>
@@ -236,23 +247,27 @@
                             <span class="truncate">${p.location}</span>
                         </div>
                         <h3 class="font-bold text-lg text-slate-800 leading-tight mb-4 line-clamp-2">${p.title}</h3>
-                        
-                        <div class="mt-auto grid grid-cols-2 gap-2 border-t border-slate-100 pt-4">
-                            <div class="flex flex-col items-center justify-center text-slate-600 border-r border-slate-100">
-                                <span class="text-xs text-slate-400 mb-1">Diện tích</span>
-                                <span class="text-sm font-bold text-slate-800">${p.area} m²</span>
+                        <div class="mt-auto grid grid-cols-3 gap-2 border-t border-slate-100 pt-4">
+                            <div class="flex flex-col items-center justify-center text-slate-600">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mb-1 text-slate-400"><path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"></path></svg>
+                                <span class="text-sm font-semibold">${p.beds} PN</span>
+                            </div>
+                            <div class="flex flex-col items-center justify-center text-slate-600 border-x border-slate-100">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mb-1 text-slate-400"><path d="M9 6 6.5 9.5 2 10l1.46 3.16L2 18l5-1 3.5 2.5 1-4.5L16 11l-4.5-.5z"></path></svg>
+                                <span class="text-sm font-semibold">${p.baths} WC</span>
                             </div>
                             <div class="flex flex-col items-center justify-center text-slate-600">
-                                <span class="text-xs text-slate-400 mb-1">Liên hệ</span>
-                                <span class="text-sm font-bold text-slate-800">${p.contact}</span>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mb-1 text-slate-400"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                                <span class="text-sm font-semibold">${p.area} m²</span>
                             </div>
                         </div>
                     </div>
                 </div>`).join('');
         }
 
-        // Bắt sự kiện lọc
+        // Lắng nghe bộ lọc
         elSearch.addEventListener('input', render);
+        elType.addEventListener('change', render);
         elStatus.addEventListener('change', render);
 
         document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -266,15 +281,12 @@
             });
         });
 
-        // ====================================================================
-        // MỞ MODAL CHI TIẾT (Fix lỗi nhận diện id)
-        // ====================================================================
+        // Mở Modal
         window.openModal = function(id) {
             const p = properties.find(item => item.id === id);
-            if(!p) {
-                alert("Lỗi: Không tìm thấy ID " + id);
-                return;
-            }
+            if(!p) return;
+
+            const safeDesc = p.description.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
             modalOverlay.innerHTML = `
             <div class="bg-white rounded-2xl w-full max-w-5xl my-auto shadow-2xl flex flex-col relative" onclick="event.stopPropagation()">
@@ -286,26 +298,34 @@
                         <div class="relative h-64 md:h-96 bg-slate-100">
                             <img src="${p.image}" class="w-full h-full object-cover">
                             <div class="absolute top-4 left-4 flex gap-2">
-                                <span class="bg-blue-600 text-white text-sm font-bold px-3 py-1.5 rounded-md shadow-md">${p.type}</span>
+                                <span class="bg-blue-600 text-white text-sm font-bold px-3 py-1.5 rounded-md shadow-md">${p.propertyType}</span>
                                 <span class="text-sm font-bold px-3 py-1.5 rounded-md shadow-md ${!p.isAvailable ? 'bg-red-500 text-white' : 'bg-emerald-500 text-white'}">${p.status}</span>
                             </div>
                         </div>
                         <div class="p-6 md:p-8">
                             <div class="flex items-center text-blue-600 text-sm font-semibold mb-3">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                ${p.location}
+                                ${p.address}
                             </div>
                             <h1 class="text-2xl md:text-3xl font-bold text-slate-900 mb-6">${p.title}</h1>
                             
                             <div class="flex flex-wrap gap-4 md:gap-8 bg-slate-50 p-4 rounded-xl mb-8 border border-slate-100">
                                 <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-white rounded-lg shadow-sm text-blue-500"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"></path></svg></div>
+                                    <div><p class="text-xs text-slate-500 font-medium">Phòng ngủ</p><p class="font-bold text-slate-800">${p.beds}</p></div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-white rounded-lg shadow-sm text-blue-500"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6 6.5 9.5 2 10l1.46 3.16L2 18l5-1 3.5 2.5 1-4.5L16 11l-4.5-.5z"></path></svg></div>
+                                    <div><p class="text-xs text-slate-500 font-medium">Phòng tắm</p><p class="font-bold text-slate-800">${p.baths}</p></div>
+                                </div>
+                                <div class="flex items-center gap-3">
                                     <div class="p-2 bg-white rounded-lg shadow-sm text-blue-500"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg></div>
                                     <div><p class="text-xs text-slate-500 font-medium">Diện tích</p><p class="font-bold text-slate-800">${p.area} m²</p></div>
                                 </div>
-                                <div class="flex items-center gap-3">
-                                    <div class="p-2 bg-white rounded-lg shadow-sm text-blue-500"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg></div>
-                                    <div><p class="text-xs text-slate-500 font-medium">Loại hình</p><p class="font-bold text-slate-800">${p.type}</p></div>
-                                </div>
+                            </div>
+                            <div class="text-slate-600">
+                                <h3 class="text-xl font-bold text-slate-900 mb-3">Thông tin chi tiết</h3>
+                                <p class="leading-relaxed whitespace-pre-line">${safeDesc}</p>
                             </div>
                         </div>
                     </div>
@@ -313,7 +333,7 @@
                     <div class="w-full md:w-1/3 bg-slate-50 p-6 md:p-8 border-l border-slate-200">
                         <div class="sticky top-8">
                             <div class="mb-6">
-                                <p class="text-slate-500 text-sm font-medium mb-1">Mức giá</p>
+                                <p class="text-slate-500 text-sm font-medium mb-1">Mức giá ${p.transactionType}</p>
                                 <p class="text-3xl font-extrabold text-blue-600">${p.priceStr}</p>
                             </div>
                             
@@ -326,14 +346,20 @@
                             </div>` : ''}
 
                             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6">
-                                <p class="font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">Thông tin liên hệ</p>
+                                <div class="flex items-center gap-4 mb-6">
+                                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl border-2 border-white shadow-md uppercase">${p.agentName.charAt(0)}</div>
+                                    <div>
+                                        <p class="font-bold text-slate-900">${p.agentName}</p>
+                                        <p class="text-xs text-slate-500 flex items-center gap-1 mt-0.5"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Đối tác xác thực</p>
+                                    </div>
+                                </div>
                                 <div class="space-y-3">
-                                    <a href="${!p.isAvailable ? '#' : 'tel:' + p.contact}" class="w-full py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-colors ${!p.isAvailable ? 'bg-slate-200 text-slate-500 cursor-not-allowed' : 'bg-slate-900 hover:bg-slate-800 text-white shadow-md'}">
+                                    <a href="${!p.isAvailable ? '#' : 'tel:' + p.agentPhone}" class="w-full py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-colors ${!p.isAvailable ? 'bg-slate-200 text-slate-500 cursor-not-allowed' : 'bg-slate-900 hover:bg-slate-800 text-white shadow-md'}">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                                        ${!p.isAvailable ? 'Đã giao dịch' : 'Gọi ' + p.contact}
+                                        ${!p.isAvailable ? 'Đã giao dịch' : 'Gọi ' + p.agentPhone}
                                     </a>
 
-                                    <a href="${!p.isAvailable ? '#' : 'https://zalo.me/' + p.contact}" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-colors shadow-md ${!p.isAvailable ? 'bg-slate-200 text-slate-500 cursor-not-allowed' : 'bg-zalo hover:bg-zaloHover text-white'}">
+                                    <a href="${!p.isAvailable ? '#' : 'https://zalo.me/' + p.agentPhone}" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-colors shadow-md ${!p.isAvailable ? 'bg-slate-200 text-slate-500 cursor-not-allowed' : 'bg-zalo hover:bg-zaloHover text-white'}">
                                         <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M50 10C27.9 10 10 26.1 10 46C10 57.6 16.4 67.8 26.1 74C25.3 78.4 22.3 84.6 22 85.3C21.6 86.4 22.8 87.2 23.7 86.6C28.9 83.3 36.3 80.5 40.5 79.4C43.5 80.1 46.7 80.4 50 80.4C72.1 80.4 90 64.3 90 44.4C90 24.5 72.1 10 50 10Z" fill="currentColor"/>
                                             <text x="50" y="56" font-family="Arial, sans-serif" font-size="28" font-weight="900" fill="#0068FF" text-anchor="middle">Zalo</text>
