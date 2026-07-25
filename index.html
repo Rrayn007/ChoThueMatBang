@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NhaDatPro - Tìm kiếm ngôi nhà mơ ước</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .property-card { transition: all 0.3s ease; }
+        .property-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
+        .loader {
+            border: 4px solid #f3f4f6; border-top: 4px solid #2563eb;
+            border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                </div>
+                <span class="font-black text-xl tracking-tight text-slate-900">NhaDat<span class="text-blue-600">Pro</span></span>
+            </div>
+            <nav class="hidden md:flex gap-8">
+                <a href="#" class="text-blue-600 font-semibold border-b-2 border-blue-600 pb-1">Trang chủ</a>
+                <a href="#" class="text-slate-500 hover:text-slate-900 font-medium transition-colors">Dự án</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="bg-slate-900 text-white pt-16 pb-24 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2000')] bg-cover bg-center"></div>
+        <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">Tìm kiếm ngôi nhà mơ ước</h1>
+            <p class="text-slate-300 text-lg mb-8 max-w-2xl mx-auto">Hàng ngàn bất động sản bán và cho thuê được cập nhật liên tục.</p>
+            
+            <div class="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-3xl mx-auto">
+                <div class="flex-1 flex items-center bg-slate-50 rounded-xl px-4 py-3 border border-transparent focus-within:border-blue-500 focus-within:bg-white transition-colors">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-400 mr-3 shrink-0"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="searchInput" placeholder="Nhập địa điểm, tên dự án..." class="bg-transparent w-full text-slate-900 placeholder:text-slate-400 focus:outline-none">
+                </div>
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold transition-colors whitespace-nowrap shadow-md">
+                    Tìm kiếm
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 -mt-12 relative z-20">
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-8 flex flex-col lg:flex-row justify-between items-center gap-4">
+            
+            <div class="flex bg-slate-100 p-1 rounded-lg w-full lg:w-auto" id="tabs-container">
+                <button data-tab="Tất cả" class="tab-btn flex-1 lg:flex-none px-6 py-2 rounded-md text-sm font-semibold transition-all bg-white text-blue-600 shadow-sm">Tất cả</button>
+                <button data-tab="Bán" class="tab-btn flex-1 lg:flex-none px-6 py-2 rounded-md text-sm font-semibold transition-all text-slate-500 hover:text-slate-700">Bán</button>
+                <button data-tab="Cho thuê" class="tab-btn flex-1 lg:flex-none px-6 py-2 rounded-md text-sm font-semibold transition-all text-slate-500 hover:text-slate-700">Cho thuê</button>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                <div class="flex items-center text-sm font-medium text-slate-500 bg-slate-50 px-3 py-2 rounded-lg border border-slate-200">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                    Bộ lọc:
+                </div>
+                <select id="filterType" class="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                    <option value="Tất cả">Loại hình</option>
+                    <option value="Mặt bằng">Mặt bằng</option>
+                    <option value="Nhà trọ">Nhà trọ</option>
+                    <option value="Căn hộ">Căn hộ</option>
+                    <option value="Nhà phố">Nhà phố</option>
+                    <option value="Biệt thự">Biệt thự</option>
+                    <option value="BĐS">BĐS</option>
+                </select>
+                <select id="filterStatus" class="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                    <option value="Tất cả">Trạng thái</option>
+                    <option value="Đang trống">Đang trống</option>
+                    <option value="Đã giao dịch">Đã giao dịch</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="loading" class="flex flex-col items-center justify-center py-24 text-blue-600">
+            <div class="loader mb-4"></div>
+            <p class="font-medium text-slate-600">Đang tải dữ liệu từ Google Sheets...</p>
+        </div>
+        
+        <div id="error" class="hidden text-center py-24 bg-red-50 rounded-2xl border border-red-200">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mx-auto text-red-500 mb-4"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <h3 class="text-lg font-bold text-red-700 mb-2">Lỗi tải dữ liệu</h3>
+            <p class="text-red-600" id="errorMsg"></p>
+        </div>
+
+        <div id="content" class="hidden">
+            <div class="mb-6 flex justify-between items-end">
+                <h2 class="text-2xl font-bold text-slate-900">
+                    Danh sách Bất Động Sản <span id="resultCount" class="text-slate-400 font-medium text-lg">(0 kết quả)</span>
+                </h2>
+            </div>
+            <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                </div>
+        </div>
+    </main>
+
+    <div id="modalOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm hidden">
+        </div>
+
+    <footer class="bg-white border-t border-slate-200 py-8 mt-12 text-center text-slate-500 text-sm">
+        <p>© 2026 NhaDatPro. Chạy trực tiếp từ 1 file HTML, dữ liệu Google Sheets.</p>
+    </footer>
+
+    <script>
+        // ---------------- THAY LINK GOOGLE SHEETS CSV CỦA BẠN VÀO ĐÂY ----------------
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS7mA5XviMuhCgfXzkdz1b0Zr7-MYgG-qtNhEMvXpLJbHk489cAzDp7jQKjQemLToAvvcgn-Ylh9DAk/pub?output=csv';
+        // Ví dụ: const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-xxxx/pub?output=csv';
+
+        let properties = [];
+        let activeTab = 'Tất cả';
+        
+        // DOM Elements
+        const elGrid = document.getElementById('grid');
+        const elLoading = document.getElementById('loading');
+        const elError = document.getElementById('error');
+        const elContent = document.getElementById('content');
+        const elResultCount = document.getElementById('resultCount');
+        const elSearch = document.getElementById('searchInput');
+        const elType = document.getElementById('filterType');
+        const elStatus = document.getElementById('filterStatus');
+        const modalOverlay = document.getElementById('modalOverlay');
+
+        // Formatter tiền tệ
+        const formatPrice = (price) => {
+            const num = Number(price);
+            if (isNaN(num) || num === 0) return 'Thỏa thuận';
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(num);
+        };
+
+        // Fetch Data sử dụng PapaParse
+        Papa.parse(CSV_URL, {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+                try {
+                    properties = results.data.filter(item => item.id && item.title).map(item => ({
+                        ...item,
+                        price: Number(item.price) || 0,
+                        beds: Number(item.beds) || 0,
+                        baths: Number(item.baths) || 0,
+                        area: Number(item.area) || 0,
+                        priceStr: formatPrice(item.price),
+                        agent: {
+                            name: item.agentName || 'CTV Ẩn danh',
+                            phone: item.agentPhone || 'Đang cập nhật'
+                        }
+                    }));
+                    
+                    elLoading.classList.add('hidden');
+                    elContent.classList.remove('hidden');
+                    render();
+                } catch(err) {
+                    showError('Có lỗi xảy ra khi xử lý dữ liệu.');
+                }
+            },
+            error: function(err) {
+                showError('Không thể kết nối đến Google Sheets. Hãy chắc chắn bạn đã nhập đúng link CSV.');
+            }
+        });
+
+        function showError(msg) {
+            elLoading.classList.add('hidden');
+            elError.classList.remove('hidden');
+            document.getElementById('errorMsg').textContent = msg;
+        }
+
+        // Lọc dữ liệu
+        function filterProperties() {
+            const search = elSearch.value.toLowerCase();
+            const type = elType.value;
+            const status = elStatus.value;
+
+            return properties.filter(p => {
+                const matchTab = activeTab === 'Tất cả' || p.transactionType === activeTab;
+                const matchSearch = (p.title || '').toLowerCase().includes(search) || (p.location || '').toLowerCase().includes(search);
+                const matchType = type === 'Tất cả' || p.propertyType === type;
+                const matchStatus = status === 'Tất cả' || p.status === status;
+                return matchTab && matchSearch && matchType && matchStatus;
+            });
+        }
+
+        // Render Lưới thẻ BĐS
+        function render() {
+            const filtered = filterProperties();
+            elResultCount.textContent = `(${filtered.length} kết quả)`;
+            
+            if (filtered.length === 0) {
+                elGrid.innerHTML = `
+                    <div class="col-span-full text-center py-24 bg-white rounded-2xl border border-dashed border-slate-300">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mx-auto text-slate-300 mb-4"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">Không tìm thấy bất động sản nào</h3>
+                        <p class="text-slate-500">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm của bạn.</p>
+                    </div>`;
+                return;
+            }
+
+            elGrid.innerHTML = filtered.map(p => {
+                const isRented = p.status !== 'Đang trống';
+                return `
+                <div class="property-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden cursor-pointer flex flex-col ${isRented ? 'opacity-75 grayscale-[30%]' : ''}" onclick="openModal(${p.id})">
+                    <div class="relative h-56 overflow-hidden bg-slate-100">
+                        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" onerror="this.src='https://placehold.co/800x600?text=No+Image'">
+                        <div class="absolute top-4 left-4 bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-md shadow-md">${p.transactionType}</div>
+                        <div class="absolute top-4 right-4 text-xs font-bold px-3 py-1.5 rounded-md shadow-md backdrop-blur-sm ${isRented ? 'bg-red-500/90' : 'bg-emerald-500/90'} text-white">${p.status}</div>
+                        <div class="absolute bottom-4 left-4 bg-white/95 text-slate-900 font-bold px-4 py-2 rounded-lg shadow-lg">${p.priceStr}</div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-center text-slate-500 text-sm mb-2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1 text-blue-500 shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span class="truncate">${p.location}</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-800 leading-tight mb-4 line-clamp-2">${p.title}</h3>
+                        <div class="mt-auto grid grid-cols-3 gap-2 border-t border-slate-100 pt-4">
+                            <div class="flex flex-col items-center justify-center text-slate-600">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mb-1 text-slate-400"><path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"></path></svg>
+                                <span class="text-sm font-semibold">${p.beds} PN</span>
+                            </div>
+                            <div class="flex flex-col items-center justify-center text-slate-600 border-x border-slate-100">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mb-1 text-slate-400"><path d="M9 6 6.5 9.5 2 10l1.46 3.16L2 18l5-1 3.5 2.5 1-4.5L16 11l-4.5-.5z"></path></svg>
+                                <span class="text-sm font-semibold">${p.baths} WC</span>
+                            </div>
+                            <div class="flex flex-col items-center justify-center text-slate-600">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mb-1 text-slate-400"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                                <span class="text-sm font-semibold">${p.area} m²</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // Logic UI Events
+        elSearch.addEventListener('input', render);
+        elType.addEventListener('change', render);
+        elStatus.addEventListener('change', render);
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Update styling
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    b.className = 'tab-btn flex-1 lg:flex-none px-6 py-2 rounded-md text-sm font-semibold transition-all text-slate-500 hover:text-slate-700';
+                });
+                e.target.className = 'tab-btn flex-1 lg:flex-none px-6 py-2 rounded-md text-sm font-semibold transition-all bg-white text-blue-600 shadow-sm';
+                // Update state and render
+                activeTab = e.target.dataset.tab;
+                render();
+            });
+        });
+
+        // Modal Logic
+        function openModal(id) {
+            const p = properties.find(item => Number(item.id) === id);
+            if(!p) return;
+            const isRented = p.status !== 'Đang trống';
+
+            modalOverlay.innerHTML = `
+            <div class="bg-white rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col relative" onclick="event.stopPropagation()">
+                <button onclick="closeModal()" class="absolute top-4 right-4 z-10 bg-white/50 hover:bg-white text-slate-800 p-2 rounded-full backdrop-blur-md transition-colors shadow-sm">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+                <div class="flex flex-col md:flex-row">
+                    <div class="w-full md:w-2/3">
+                        <div class="relative h-64 md:h-96 bg-slate-100">
+                            <img src="${p.image}" class="w-full h-full object-cover">
+                            <div class="absolute top-4 left-4 flex gap-2">
+                                <span class="bg-blue-600 text-white text-sm font-bold px-3 py-1.5 rounded-md shadow-md">${p.transactionType}</span>
+                                <span class="text-sm font-bold px-3 py-1.5 rounded-md shadow-md ${isRented ? 'bg-red-500 text-white' : 'bg-emerald-500 text-white'}">${p.status}</span>
+                            </div>
+                        </div>
+                        <div class="p-6 md:p-8">
+                            <div class="flex items-center text-blue-600 text-sm font-semibold mb-3">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                ${p.address}
+                            </div>
+                            <h1 class="text-2xl md:text-3xl font-bold text-slate-900 mb-6">${p.title}</h1>
+                            
+                            <div class="flex flex-wrap gap-4 md:gap-8 bg-slate-50 p-4 rounded-xl mb-8 border border-slate-100">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-white rounded-lg shadow-sm text-blue-500"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"></path></svg></div>
+                                    <div><p class="text-xs text-slate-500 font-medium">Phòng ngủ</p><p class="font-bold text-slate-800">${p.beds}</p></div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-white rounded-lg shadow-sm text-blue-500"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6 6.5 9.5 2 10l1.46 3.16L2 18l5-1 3.5 2.5 1-4.5L16 11l-4.5-.5z"></path></svg></div>
+                                    <div><p class="text-xs text-slate-500 font-medium">Phòng tắm</p><p class="font-bold text-slate-800">${p.baths}</p></div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-white rounded-lg shadow-sm text-blue-500"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg></div>
+                                    <div><p class="text-xs text-slate-500 font-medium">Diện tích</p><p class="font-bold text-slate-800">${p.area} m²</p></div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-white rounded-lg shadow-sm text-blue-500"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg></div>
+                                    <div><p class="text-xs text-slate-500 font-medium">Loại hình</p><p class="font-bold text-slate-800">${p.propertyType}</p></div>
+                                </div>
+                            </div>
+                            <div class="text-slate-600">
+                                <h3 class="text-xl font-bold text-slate-900 mb-3">Thông tin chi tiết</h3>
+                                <p class="leading-relaxed whitespace-pre-line">${p.description}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-1/3 bg-slate-50 p-6 md:p-8 border-l border-slate-200">
+                        <div class="sticky top-8">
+                            <div class="mb-6">
+                                <p class="text-slate-500 text-sm font-medium mb-1">Mức giá ${p.transactionType.toLowerCase()}</p>
+                                <p class="text-3xl font-extrabold text-blue-600">${p.priceStr}</p>
+                            </div>
+                            
+                            ${isRented ? `
+                            <div class="bg-red-50 text-red-700 p-4 rounded-xl mb-6 flex items-start gap-3 border border-red-100">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                <div>
+                                    <p class="font-bold text-sm">Bất động sản này không còn trống</p>
+                                    <p class="text-xs mt-1">Vui lòng xem các gợi ý khác hoặc liên hệ để tìm căn tương tự.</p>
+                                </div>
+                            </div>` : ''}
+
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6">
+                                <div class="flex items-center gap-4 mb-6">
+                                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl border-2 border-white shadow-md uppercase">${p.agent.name.charAt(0)}</div>
+                                    <div>
+                                        <p class="font-bold text-slate-900">${p.agent.name}</p>
+                                        <p class="text-xs text-slate-500 flex items-center gap-1 mt-0.5"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Đối tác xác thực</p>
+                                    </div>
+                                </div>
+                                <div class="space-y-3">
+                                    <a href="${isRented ? '#' : 'tel:' + p.agent.phone}" class="w-full py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-colors ${isRented ? 'bg-slate-200 text-slate-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg'}">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                                        ${isRented ? 'Đã giao dịch' : 'Gọi ' + p.agent.phone}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+            modalOverlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modalOverlay.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        modalOverlay.addEventListener('click', closeModal);
+    </script>
+</body>
+</html>
