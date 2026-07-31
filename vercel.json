@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/data",
+      "destination": "https://docs.google.com/spreadsheets/d/e/2PACX-1vS7mA5XviMuhCgfXzkdz1b0Zr7-MYgG-qtNhEMvXpLJbHk489cAzDp7jQKjQemLToAvvcgn-Ylh9DAk/pub?output=csv"
+    }
+  ]
+}
