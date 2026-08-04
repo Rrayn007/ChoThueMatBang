@@ -20,7 +20,6 @@
         }
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <style>
@@ -28,66 +27,76 @@
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .property-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .property-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.12); }
-        .loader {
-            border: 4px solid #f3f4f6; border-top: 4px solid #2563eb;
-            border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;
-        }
+        .loader { border: 4px solid #f3f4f6; border-top: 4px solid #2563eb; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .custom-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+        }
     </style>
 </head>
 <body class="antialiased">
 
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2 cursor-pointer" onclick="window.location.hash=''; location.reload();">
-                <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-md shadow-blue-500/20">
+    <header class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm h-16 flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex items-center justify-between gap-3 sm:gap-6">
+            
+            <div class="flex items-center gap-2 cursor-pointer shrink-0" onclick="window.location.hash=''; location.reload();">
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-md shadow-blue-500/20">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                 </div>
-                <span class="font-black text-2xl tracking-tight text-slate-900">00<span class="text-blue-600">7</span></span>
+                <span class="font-black text-2xl tracking-tight text-slate-900 hidden md:block">00<span class="text-blue-600">7</span></span>
             </div>
-            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
-                <a href="#" class="text-blue-600 border-b-2 border-blue-600 pb-1">Trang chủ</a>
+
+            <div class="flex-1 max-w-3xl relative group">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="headerSearchInput" placeholder="Tìm theo khu vực, đường, tên dự án..." class="w-full bg-slate-100 border border-transparent rounded-full py-2.5 pl-10 pr-4 text-sm font-medium focus:outline-none focus:bg-white focus:border-blue-300 focus:ring-4 focus:ring-blue-500/10 transition-all text-slate-800 shadow-inner">
+            </div>
+
+            <nav class="hidden lg:flex items-center gap-6 text-sm font-semibold shrink-0">
+                <a href="#" class="text-blue-600">Trang chủ</a>
                 <a href="#content" class="text-slate-500 hover:text-slate-900 transition-colors">Danh sách BĐS</a>
             </nav>
         </div>
     </header>
 
-    <section class="bg-slate-900 text-white pt-16 pb-24 relative overflow-hidden">
+    <section id="heroSection" class="bg-slate-900 text-white pt-12 pb-20 relative overflow-hidden">
         <div class="absolute inset-0 opacity-25 bg-[url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2000')] bg-cover bg-center"></div>
         <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
             <h1 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight leading-tight">Tìm kiếm ngôi nhà & mặt bằng mơ ước</h1>
             <p class="text-slate-300 text-lg mb-8 max-w-2xl mx-auto font-normal">Cập nhật danh sách nhà trọ, mặt bằng kinh doanh, bán BĐS chính chủ liên tục.</p>
             
-            <div class="bg-white p-2.5 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-3xl mx-auto">
+            <div class="bg-white p-2 sm:p-2.5 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-3xl mx-auto">
                 <div class="flex-1 flex items-center bg-slate-50 rounded-xl px-4 py-3 border border-transparent focus-within:border-blue-500 focus-within:bg-white transition-colors">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-400 mr-3 shrink-0"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <input type="text" id="searchInput" placeholder="Nhập địa điểm, tên dự án, đường..." class="bg-transparent w-full text-slate-900 placeholder:text-slate-400 focus:outline-none text-sm md:text-base">
+                    <input type="text" id="heroSearchInput" placeholder="Nhập địa điểm, tên dự án, đường..." class="bg-transparent w-full text-slate-900 placeholder:text-slate-400 font-medium focus:outline-none text-sm md:text-base">
                 </div>
-                <button onclick="render()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 rounded-xl font-bold transition-all whitespace-nowrap shadow-md active:scale-95">
-                    Tìm kiếm
+                <button id="btnHeroSearch" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 rounded-xl font-bold transition-all whitespace-nowrap shadow-md active:scale-95">
+                    Khám phá ngay
                 </button>
             </div>
         </div>
     </section>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 -mt-12 relative z-20" id="content">
-        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-8 flex flex-col lg:flex-row justify-between items-center gap-4">
+    <div id="stickyFilterBar" class="sticky top-[64px] z-40 bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-sm py-3 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             
-            <div class="flex bg-slate-100 p-1 rounded-xl w-full lg:w-auto" id="tabs-container">
-                <button data-tab="Tất cả" class="tab-btn flex-1 lg:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all bg-white text-blue-600 shadow-sm">Tất cả</button>
-                <button data-tab="Bán" class="tab-btn flex-1 lg:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all text-slate-500 hover:text-slate-800">Bán</button>
-                <button data-tab="Cho thuê" class="tab-btn flex-1 lg:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all text-slate-500 hover:text-slate-800">Cho thuê</button>
+            <div class="flex bg-slate-100 p-1 rounded-xl w-full md:w-auto overflow-x-auto no-scrollbar shrink-0" id="tabs-container">
+                <button data-tab="Tất cả" class="tab-btn shrink-0 flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50 transition-all">Tất cả</button>
+                <button data-tab="Bán" class="tab-btn shrink-0 flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 transition-all">Bán</button>
+                <button data-tab="Cho thuê" class="tab-btn shrink-0 flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 transition-all">Cho thuê</button>
             </div>
 
-            <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-                <div class="flex items-center text-xs font-bold text-slate-400 bg-slate-50 px-3 py-2.5 rounded-xl border border-slate-200 uppercase tracking-wider">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                    Lọc:
-                </div>
-                <select id="filterType" class="bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
-                    <option value="Tất cả">Loại hình (Tất cả)</option>
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar w-full md:w-auto pb-1 md:pb-0">
+                <select id="filterType" class="custom-select shrink-0 bg-slate-50 border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl px-4 py-2.5 outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all">
+                    <option value="Tất cả">Loại BĐS (Tất cả)</option>
                     <option value="Mặt bằng">Mặt bằng</option>
                     <option value="Nhà trọ">Nhà trọ / KTX</option>
                     <option value="Căn hộ">Căn hộ / Studio</option>
@@ -95,35 +104,38 @@
                     <option value="Biệt thự">Biệt thự</option>
                     <option value="Đất nền">Đất nền / BĐS</option>
                 </select>
-                <select id="filterStatus" class="bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                
+                <select id="filterStatus" class="custom-select shrink-0 bg-slate-50 border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl px-4 py-2.5 outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all">
                     <option value="Tất cả">Trạng thái (Tất cả)</option>
                     <option value="Đang trống">Còn trống</option>
                     <option value="Đã giao dịch">Đã giao dịch / Thuê</option>
                 </select>
-                <select id="filterSort" class="bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
-                    <option value="default">Sắp xếp: Mới nhất</option>
+                
+                <select id="filterSort" class="custom-select shrink-0 bg-slate-50 border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl px-4 py-2.5 outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all">
+                    <option value="default">Sắp xếp (Mới nhất)</option>
                     <option value="price-asc">Giá: Thấp đến Cao</option>
                     <option value="price-desc">Giá: Cao đến Thấp</option>
                     <option value="area-desc">Diện tích: Lớn nhất</option>
                 </select>
             </div>
         </div>
+    </div>
 
-        <div id="loading" class="flex flex-col items-center justify-center py-24 text-blue-600">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 relative z-20 min-h-[50vh]" id="content">
+        <div id="loading" class="flex flex-col items-center justify-center py-20 text-blue-600">
             <div class="loader mb-4"></div>
             <p class="font-semibold text-slate-600">Đang tải dữ liệu...</p>
         </div>
         
-        <div id="error" class="hidden text-center py-20 bg-red-50 rounded-2xl border border-red-200">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mx-auto text-red-500 mb-3"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <div id="error" class="hidden text-center py-16 bg-red-50 rounded-2xl border border-red-200">
             <h3 class="text-lg font-bold text-red-700 mb-1">Không thể kết nối dữ liệu</h3>
             <p class="text-red-600 text-sm" id="errorMsg"></p>
         </div>
 
         <div id="contentGrid" class="hidden">
-            <div class="mb-6 flex justify-between items-end">
-                <h2 class="text-2xl font-bold text-slate-900">
-                    Danh sách Bất Động Sản <span id="resultCount" class="text-slate-400 font-normal text-lg ml-1">(0 kết quả)</span>
+            <div class="mb-5 flex justify-between items-end">
+                <h2 class="text-xl md:text-2xl font-bold text-slate-900">
+                    Danh sách Bất Động Sản <span id="resultCount" class="text-slate-400 font-medium text-base ml-1">(0 kết quả)</span>
                 </h2>
             </div>
             <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -131,10 +143,9 @@
         </div>
     </main>
 
-    <div id="modalOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/70 backdrop-blur-sm hidden overflow-y-auto">
-        </div>
+    <div id="modalOverlay" class="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-6 bg-slate-950/70 backdrop-blur-sm hidden overflow-y-auto"></div>
 
-    <div id="lightboxOverlay" class="fixed inset-0 z-[60] bg-black/95 hidden flex flex-col items-center justify-center p-4">
+    <div id="lightboxOverlay" class="fixed inset-0 z-[70] bg-black/95 hidden flex flex-col items-center justify-center p-4">
         <button onclick="closeLightbox()" class="absolute top-5 right-5 text-white/80 hover:text-white p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
@@ -142,17 +153,407 @@
         <p id="lightboxCaption" class="text-white/70 text-sm mt-4 font-medium"></p>
     </div>
 
-    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl font-medium text-sm flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 z-[70]">
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl font-medium text-sm flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 z-[80]">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
         <span id="toastMsg">Thành công</span>
     </div>
 
-    <footer class="bg-white border-t border-slate-200 py-8 mt-16 text-center text-slate-500 text-sm">
+    <footer class="bg-white border-t border-slate-200 py-8 mt-12 text-center text-slate-500 text-sm">
         <p>© 2026 RAYN SCOFIELD — ALL RIGHTS RESERVED.</p>
     </footer>
 
     <script>
-        const _0x20d4c3=_0x193a;function _0x193a(_0x252407,_0x12407d){_0x252407=_0x252407-(-0x215*-0xc+0x167*0x1+0x626*-0x4);const _0x180f80=_0x50f9();let _0x4a4db4=_0x180f80[_0x252407];return _0x4a4db4;}(function(_0x129f42,_0x19b119){const _0x54592f=_0x193a,_0x545602=_0x129f42();while(!![]){try{const _0x27f510=-parseInt(_0x54592f(0x28c))/(-0xc0b+-0x1*-0x1f01+0x1*-0x12f5)*(-parseInt(_0x54592f(0x2d3))/(0x1f6c+0x812*-0x1+0x4*-0x5d6))+-parseInt(_0x54592f(0x31f))/(0xb7c+0x19*-0xff+-0x3*-0x47a)+parseInt(_0x54592f(0x37c))/(0x5*-0x418+0xd9f+0x6dd)*(parseInt(_0x54592f(0x460))/(-0x2373+-0x4*-0x172+0x1db0))+parseInt(_0x54592f(0x1dc))/(0xd75+-0x106e+-0xd*-0x3b)+-parseInt(_0x54592f(0x541))/(-0x2065+-0x1a7*-0x16+-0x3ee)+-parseInt(_0x54592f(0x3db))/(-0xa9b*0x1+0x3+-0x110*-0xa)*(-parseInt(_0x54592f(0x464))/(0x2342+0x4*0x25f+-0x2cb5))+parseInt(_0x54592f(0x522))/(-0x1*-0x1f9d+-0x1a32+-0x561)*(-parseInt(_0x54592f(0x2d1))/(-0x795+0x1a35+-0x1*0x1295));if(_0x27f510===_0x19b119)break;else _0x545602['push'](_0x545602['shift']());}catch(_0x16eb37){_0x545602['push'](_0x545602['shift']());}}}(_0x50f9,0x4d267*-0x1+0x41e08+0x4e865));const _0x4a4db4=(function(){let _0x387283=!![];return function(_0x37f88f,_0x2e2559){const _0x37db36=_0x387283?function(){if(_0x2e2559){const _0x58eb0e=_0x2e2559['apply'](_0x37f88f,arguments);return _0x2e2559=null,_0x58eb0e;}}:function(){};return _0x387283=![],_0x37db36;};}()),_0x180f80=_0x4a4db4(this,function(){const _0x1c429a=_0x193a,_0x347ce8={};_0x347ce8[_0x1c429a(0x2bf)]=function(_0x533282,_0x56ea30){return _0x533282!==_0x56ea30;},_0x347ce8[_0x1c429a(0x1f9)]='(((.+)+)+)'+'+$';const _0x6ff554=_0x347ce8;if(_0x6ff554[_0x1c429a(0x2bf)](_0x180f80['bind']()[_0x1c429a(0x3e6)]()['indexOf']('\x0a'),-(0xda*0x7+0x721+-0xd16)))return;return _0x180f80[_0x1c429a(0x3e6)]()[_0x1c429a(0x490)](_0x6ff554[_0x1c429a(0x1f9)])[_0x1c429a(0x3e6)]()[_0x1c429a(0x2ae)+'r'](_0x180f80)['search'](_0x6ff554[_0x1c429a(0x1f9)]);});_0x180f80();function _0x50f9(){const _0xb73fc1=['-full\x20py-3','-6\x22>\x0a\x20\x20\x20\x20\x20','=\x22https://','ded-lg\x20sha','d-lg\x20backd','warn','ow-hidden\x22','exception','ol\x20','ation-500\x20','16\x200\x200\x200\x206','\x22>\x0a\x20\x20\x20\x20\x20\x20\x20','><polyline','c\x20uy\x20tín\x0a\x20','old\x20flex\x20i','\x22\x20target=\x22','g-slate-80','d-lg\x20shado','v\x20class=\x22w','price','rawPrice','800&q=80','9\x2018\x2015\x2012','EwDaz','\x20class=\x22mt','y-1\x20rounde','20sWAuld','rder-slate','div>\x0a\x20\x20\x20\x20\x20','16\x22\x20height','97983FwdwPj','oke-width=','rid-cols-2','tracking-w',':h-20\x20obje','\x22><polylin','tion-color','id=\x22modalM','.3\x2090\x2044.4','ate-200\x20ov','sm\x20leading','text-white','\x20\x20\x20</div>','100\x20pt-3.5','50\x20flex\x20fl','Bán','-full\x20h-fu','tải\x20file\x20C','\x22\x20của\x20Goog','id=','\x5c+\x5c+\x20*(?:[','95\x20opacity','ath><circl','C27.9\x2010\x201','xmTUb','0\x20font-med','p-5\x20rounde','15\x22\x20height','</span>\x0a\x20\x20','ity-100','getElement','\x20flex\x20item','S\x20vào\x20bộ\x20n','\x20\x20\x20<span\x20c','gWwDn','1560518883','dal()\x22\x20cla','e/95\x20text-','Tất\x20cả','\x209\x206\x22></po','title','sort','images','\x2026.1\x2074C2','search','imgCounter','beds','alImage(','v-8\x22></pat','vg>\x20Xem\x20Bả','\x22>WC</span','bind','table','-family=\x22A','ue-600\x20tex','descriptio','join','v\x20class=\x22p','\x201-2.18\x202\x20','v>\x0a\x20\x20\x20\x20\x20\x20\x20','style','\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20','Chưa\x20có\x20SĐ','te\x20top-4\x20r','xt-xs\x20font','15\x206\x22></po','onclick=\x22o','eWuLb','s=\x22bg-blue','th\x20d=\x22M12\x20','querySelec','27a2\x202\x200\x200','3a9\x209\x200\x200\x20','c=\x22','blue-600\x20f','resultCoun','hpxng','\x20\x20\x20\x20<svg\x20w','ill=\x22none\x22','ght=\x2220\x22\x20v','ciEFp','ative\x20h-56','</svg>\x20Chi','\x20m²','ter\x20font-b','Môi\x20giới','eight=\x2218\x22','-md\x20transi','\x20\x20\x20\x20\x20\x20\x20\x20<d','textConten','\x20<p\x20class=','r=\x223\x22></ci','error','5\x22></line>','split','\x20\x20\x20\x20<h1\x20cl','ase\x20text-s','ext-white\x20','\x20font-weig','on>\x0a\x0a\x20\x20\x20\x20\x20','lative\x20h-6','e\x20top-3\x20le','ty-100\x20sha','\x22w-full\x20py','</span>\x20/\x20','a-zA-Z_$][','y1=\x222\x22\x20x2=','dow-md\x22>','iewBox=\x220\x20','old\x20text-s','a\x20lại\x20chế\x20','call','over:bg-bl','tel:','\x20tìm\x20thấy\x20','ZDfXV','<p\x20class=\x22','.5\x2019.5\x200\x20','t\x20không\x20kh','\x20viewBox=\x22','id=\x22thumbn','keyCode','\x22text-xs\x20f','9\x2013-9\x2013s','VJlfc','xt-slate-7','\x20text-cent','ntype','\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20','\x200\x200\x200\x202-2','\x20stroke=\x22c','i=1&query=','\x20py-1.5\x20ro','lightboxOv','0\x200\x201\x204.11','b-3\x22>🔍</p>','change','\x20\x20\x20\x20\x20\x20\x20\x20\x20<','y-20','overflow-h','00\x20text-sl','old\x20text-l','g\x22>\x0a\x20\x20\x20\x20\x20\x20','ase\x20shrink','bsolute\x20to','right-3\x22>\x0a','ver:bg-sla','oto-156051','h=\x2220\x22\x20hei','xtrabold\x20t','bQqwt','ass=\x22py-3\x20','click','_blank\x22\x20re','-base\x22>','over:text-','area-desc','0-8\x208c0\x205.','s-center\x20g','=\x2218\x22\x20y2=\x22','300\x22>\x0a\x20\x20\x20\x20','OlULv','\x22selectMod','\x20\x20\x20<img\x20sr','clipboard','ages.unspl','roup\x22>\x0a\x20\x20\x20','t-xs\x20font-','cập\x20nhật\x20t','ck/80\x20text','te-900\x20tru','0\x20text-whi','bGrRu','ailContain','lass=\x22bloc','ransition-','\x20rounded-f','\x20\x20\x20\x20\x20\x20<img','status','m:p-6\x20lg:b','-0\x22>\x0a\x20\x20\x20\x20\x20','te-900\x20tex','46C10\x2057.6','FF\x22\x20text-a','xt-white','stener','-relaxed\x20w','old\x20px-3\x20p','text-slate','tify-betwe','50mVFsYv','0/80\x20text-','e-width=\x222','b-1\x22>Không','ustify-cen','AsalL','=\x2216\x22\x20view','/div>','_blank\x22\x20cl','8883-ce090','\x22><path\x20d=','\x22currentCo','com/photo-','00\x20font-bo','ack/80\x20tex','ht=\x22900\x22\x20f','fvKuU','semibold\x20m','ex-col\x20jus','cy=\x2213\x22\x20r=','tColor\x22\x20st','lightboxIm','\x20</div>\x0a\x0a\x20','bold\x20text-','s://images','7-9\x2013-9\x201','\x20class=\x22te','isAvailabl','ft-3\x20flex\x20','Chủ\x20nhà\x20/\x20','Cho\x20thuê','1326150sfBCDV','ansition-c','xt-xs\x20text','Đang\x20cập\x20n','shiftKey','writeText','/div>\x0a\x20\x20\x20\x20','ctrlKey','qcwqw','#thumbnail','\x20points=\x221','hMbXZ','om-3\x20right','thuê','-black/70\x20','overflow','d-md\x20backd','wLBki','unter\x22>','jVHYX',':w-2/5\x20p-4','tive\x20overf','age(1)\x22\x20cl','-6\x20py-2.5\x20','er\x20border-','\x20pb-2\x20no-s','contextmen','text-sm\x20tr','9\x209\x200\x200\x201\x20','RCnQD','\x20class=\x22re','\x20\x20\x20\x20\x20\x20\x20\x20<p','12\x22\x20cy=\x2210','ms-center\x20','ter\x20gap-2\x20','2\x200\x200\x201-.4','lại\x20bộ\x20lọc','d\x22>','\x22copyShare','\x20\x20\x20\x20\x20\x20\x20\x20<s','nter\x20borde','agentName','tom-3\x20left','\x20class=\x22bo','\x20font-medi','address','unded-xl\x20f','hrink-0\x20bo','bất\x20động\x20s','value','ine\x20x1=\x226\x22','mt-3\x20overf','<svg\x20width','roke-width','ounded-xl\x20','\x20\x20\x20\x20\x20</div','KJmcM','\x2024\x2024\x22\x20fi','ash.com/ph','full\x20backd','filterType','\x200\x200\x201-2-2','px]\x20text-s','=\x22currentC','acking-tig','=\x220\x200\x2024\x202','rsor-not-a','ne\x22\x20stroke','=\x22text-xs\x20','class=\x22abs','\x223\x22></circ','\x22M21\x2010c0\x20','unded-xl\x20s','rder-trans','.</p>\x0a\x20\x20\x20\x20','59eeffa?w=','iWyXb','d\x20px-2.5\x20p','late-400\x20f','input','hash','cover\x20tran','ont-bold\x20t','late-700\x20f','m\x20transiti','l\x20flex\x20fle','ption','pan\x20class=','[11px]\x20tex','\x20\x20</div>\x0a\x20','rder-blue-','ct-cover\x20r','200\x22>\x0a\x20\x20\x20\x20','0-9a-zA-Z_','\x20\x20\x20<p\x20clas','hadow-lg\x22>','map','ium\x22>Phòng','1212210rVKFDM','lo.me/','oxzbB','-100\x20shado','4\x2024\x22\x20fill','div\x20class=','t-base\x20fon','s-center\x20j','></path><c','BĐS','\x20<div\x20clas','ounded-lg\x20','x-col\x20rela','=\x22min-w-0\x22','height=\x2215','http://','dth=\x2218\x22\x20h','.com/maps/','shadow-sm\x20','modalOverl','en\x22>\x0a\x20\x20\x20\x20\x20','7\x2080.4\x2050\x20','-8.67A2\x202\x20','-[20%]','erlay','target','\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20','parent\x20opa','ikDky','NAvcX','=\x2215\x22\x20view','cVvmI','2.81.7A2\x202','debu','-lg\x20backdr','ss=\x22mr-1.5','w-md','e=\x22current','.5\x22>\x0a\x20\x20\x20\x20\x20','-3/5\x20p-4\x20s','text-xs\x20fo','now','filter','late-900\x20g','2\x22><path\x20d','\x20\x20\x20<h3\x20cla','EPhVy','lex\x20items-','\x20class=\x22ab','zxGuq','xRqVL','class=\x22mt-','h><polylin','80.4\x2090\x2064','sm:w-20\x20sm','ffa?w=800&','www.google','g\x20border-2','s=\x22text-xs','slate-800\x22','\x20flex\x20gap-','\x22\x20r=\x223\x22></','WPGBj','idth=\x2220\x22\x20','\x20ảnh\x0a\x20\x20\x20\x20\x20','fExIR','0\x22\x20fill=\x22n','s=\x22absolut','stroke=\x22cu','lor\x22\x20strok','\x20\x20\x20\x20\x20\x20<div','\x20d=\x22M50\x2010','rounded-lg','classList','5\x2080.1\x2046.','-translate','opacity-75','ter\x20gap-1.','ack\x20text-b','Parse\x20Erro','-zoom-in\x22\x20','NvoOQ','ld\x20px-3\x20py','https://za','x\x20items-ce','=\x22none\x22\x20st','iv>\x0a\x20\x20\x20\x20\x20\x20','agentPhone','e-600\x20scal','VOMML','nter\x20justi','#id=','IUlRC','-xs\x20font-b','=\x22M4\x2012v8a','-size=\x2226\x22','ate-100\x20te','stopPropag','l\x20bg-white','font-bold\x20','reload','area','<span\x20clas','PMhYL','e-105\x22\x20one','dth=\x2220\x22\x20h','th=\x222\x22><pa','erflow-hid','filterStat','\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20','h=\x2212\x22\x20hei','\x22\x20stroke-w','hidden','vg\x20width=\x22','ld\x20text-xs','b-2\x22>\x0a\x20\x20\x20\x20','emibold\x20px','ll\x20max-w-5','ute\x20left-3','ute\x20top-3\x20','=\x22absolute','\x22openModal','bWUfx','e)\x20{}','-2xl\x20borde','\x20\x20<div\x20cla','t-center\x20p','-2.5\x20py-1\x20','all\x20text-s','\x20sm:p-6\x20bg','width=\x222.5','JsVfN','\x20\x20\x20\x20\x20\x20\x20</d','medium\x20mb-','3s-9-6-9-1','length','20\x206\x209\x2017\x20','location','ss=\x22text-3','-[11px]\x20fo','idden\x20bg-s','\x20\x20\x20\x20\x20\x20\x20','op-blur-sm','d-2xl\x20bord',')\x22\x20class=\x22','Không\x20thể\x20','order-r\x20bo','18\x22></line','9\x2083.3\x2036.','\x22\x20height=\x22','https://','-semibold\x20','lue-600\x20tr','</p>\x0a\x20\x20\x20\x20\x20','nsparent\x20o','te\x20rounded','late-200\x20h','eading-snu','\x20y1=\x226\x22\x20x2','black/50\x20h','\x2212\x22\x20y2=\x221','5\x202.11L8.0','den\x20cursor','\x20bg-slate-','olute\x20bott','\x20\x20\x20\x20</butt','\x20\x20</div>\x0a\x0a','ss=\x22font-b','\x20\x20\x20\x20\x20\x20<h3\x20','\x20<div>\x0a\x20\x20\x20','\x20shadow-2x','\x20\x20\x20\x20\x20\x20\x20\x20</','startsWith','-y-1/2\x20bg-','hover:scal','d-2xl\x20mb-6','452156odHvTQ','4\x22\x20fill=\x22n','=\x22p-5\x20flex','g>\x0a\x20\x20\x20\x20\x20\x20\x20','type','EOFpv','WCUCi','hớ\x20tạm!','grid-cols-','\x20\x20\x20\x20\x20\x20\x20<di','le\x20Sheets.','contentGri','console','img','propertyty','\x20ngủ</span','lick=\x22chan','className','um\x20mb-0.5\x22','YaXBm','rder-x\x20bor','openModal','ck=\x22event.','vKzAs','\x20\x20\x20\x20\x20\x20\x20</a','tOgMk','ainImg\x22\x20sr','then','ản\x20nào</h3','-3h6l2\x203h4','uwwvN','\x20</div>\x0a\x20\x20','pacity-60\x20','ớp.\x20Vui\x20lò','constructo','ton\x20onclic','kbUAE','-blue-500\x20','-600\x20text-','\x20tả\x20chi\x20ti','SV.\x20Vui\x20lò','Cấu\x20trúc\x20c','\x22M22\x2016.92','ap-3.5\x20mb-','tab-btn\x20fl','\x20\x20\x20\x20\x20\x20\x20\x20\x20','\x20py-1\x20roun','dow-sm','ById','4\x20sm:h-80\x20','-slate-50/','eJIFO','-lg\x20font-b','vh]\x22\x20oncli','16\x206\x2012\x202\x20','hrink-0\x20','nt-bold\x20te','5.3\x2078.4\x202','/path><cir','\x22\x20cy=\x2210\x22\x20','\x20text-slat','r\x22\x20stroke-','rounded-xl','rcle></svg','auto\x20grid\x20','ll\x20object-','ge(-1)\x22\x20cl','er\x22\x20class=','an\x20class=\x22','1197218iBnGUZ','\x20\x20\x20\x20<p\x20cla','2fYvHxI','-500/90\x20te','2\x202\x200\x200\x200\x20','5\x20transiti','vg>\x0a\x20\x20\x20\x20\x20\x20','.src=\x27http','rn\x20this\x22)(','ass=\x22text-','t-white','VXXMX','er\x20text-bl','2.5\x20rounde','100\x20text-b','2\x2085.3C21.','roperty-ca','\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','fyZry','-3\x20bg-whit','BvhMA','hật\x20địa\x20ch','.79\x2019.79\x20','roke=\x22curr','bg-slate-2','24\x22\x20fill=\x22','-sm\x20upperc','-slate-800','/text></sv','bg-zalo\x20ho','a\x20lại.','-400\x20font-','low-hidden','r\x20border-s','fhCro','\x20\x20\x20</div>\x0a','ate-400\x20cu','p-4\x20rounde','ện\x20tích</s','dashed\x20bor','\x20phòng','-bold\x20text','nType','e-800\x20text','-slate-50\x20','v\x20class=\x22a','\x20\x20\x20\x20\x20\x20</di','keydown','\x20\x20\x20\x20</a>\x0a\x20','https://im','\x22w-full\x20lg','string','5\x2018\x209\x2012\x20','lass=\x22text','21\x2010c0\x207-','ryXUH','00\x22>','t\x20x=\x2250\x22\x20y','lyline></s','AidGZ','EBctC','2a8\x208\x200\x200\x20','slate-200\x20','init','baths','0\x201-6-6\x2019','low-x-auto','\x202h3a2\x202\x200','lightboxCa','0\x20bg-slate','\x20<svg\x20widt','w-16\x20h-16\x20','\x20\x20\x20\x20<span\x20','</div>\x0a\x20\x20\x20','der-slate-','torAll','ont-medium','shrink-0\x22>','767970rKwcAD','e\x20points=\x22','over:bg-sl','while\x20(tru','\x22mr-1\x20text','-3.5\x20px-4\x20','ss=\x22absolu','Color\x22\x20str','bg-slate-9','lack/50\x20ho','e-clamp-2\x22','\x20\x20\x20<div\x20cl','x-3\x20py-1\x20r','tion-all\x20s','</h3>\x0a\x20\x20\x20\x20','return\x20(fu','items-cent','0\x2024\x2024\x22\x20f','one\x22\x20strok','ext-slate-','NumberForm','\x20\x20\x20\x20\x20<p\x20cl','mb-6\x22>\x0a\x20\x20\x20','0.5\x22>Phòng','cursor-poi','25\x208\x2012\x208\x20','\x20tắm/WC</p','stroke-wid','900\x20leadin','class=\x22fle','10Z\x22\x20fill=','\x22\x20onclick=','ass=\x22flex\x20','2\x2012.84\x2012','adow-md\x22>','data','ault','x\x20gap-2.5\x20','ite\x20rounde','.5\x20px-4\x20ro','yline><lin','slate-800','searchInpu','PqGMk','propertyTy','0\x200\x2024\x2024\x22','VND','1=\x226\x22\x20x2=\x22','nVbsp','test','\x20PN','00\x20hover:b','xsGZQ','a\x20href=\x22','llowed','px-3\x20round','none\x22\x20stro','preventDef','t-white\x20p-','></line><l','verflow-y-','ircle\x20cx=\x22','ke=\x22curren','LvefM','\x20\x20\x20\x20<butto','7\x2086.6C28.','\x5c(\x20*\x5c)','\x20\x20\x20Chat\x20Za','width=\x2214\x22','\x20\x20\x20\x20</div>','yrPEu','late-200\x20s','e-400\x20font','d-3xl\x20w-fu','er\x20text-sl','.tab-btn','\x22\x20fill=\x22no','5\x2079.4C43.','ke-width=\x22','C90\x2024.5\x207','s=\x22col-spa','search/?ap','le></svg>\x0a','ex-none\x20px','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20','class=\x22tex','olor\x22\x20stro','\x20\x20\x20\x20\x20','r\x20gap-1\x20mt','KLxnA','font-semib','y-20\x20bg-wh','sition-all','99212TLXNGX',':bg-slate-','<button\x20on','one\x22><path','>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20','độ\x20\x22Xuất\x20b','s\x20shadow-l','\x22font-bold','-1\x20rounded','3\x20gap-1\x20bo','\x20gap-2.5\x22>','te\x20text-bl','3\x20top-1/2\x20','ass=\x22absol','\x200\x201\x202\x201.7','add','g\x20mb-4\x20lin','ider\x20mb-1\x22','ont-semibo','0\x20mb-2\x22>Mô','-200\x20hover','-0.5\x22>Phòn','transactio','ation()\x22>\x0a','\x20\x20<span\x20cl','center\x22>\x0a\x20','oMeBc','MtoMu','pathname','12\x22\x20viewBo','\x20duration-','innerHTML','lnCzD','bg-emerald','6\x22\x20y2=\x2218\x22','=\x22w-12\x20h-1','\x20<a\x20href=\x22','late-900\x20l','trống','Thử\x20mở\x20rộn','auto\x22>\x0a\x20\x20\x20','ản\x20lên\x20Web','1\x2018\x200z\x22><','\x206l1.27-1.','zxVYQ','=\x22font-bol','remove','toLowerCas','>\x0a\x20\x20\x20\x20\x20\x20\x20\x20','hite\x20borde','9\x200\x200\x201-8.','rxYEm','pre-line\x22>','old\x20text-b','shadow-md\x20','Box=\x220\x200\x202','-sm\x20border','18\x200z\x22></p','late-800\x20m','all\x20bg-whi','g\x20từ\x20khóa\x20','>Diện\x20tích','\x220\x200\x2024\x2024','n\x20Đồ\x0a\x20\x20\x20\x20\x20','ex-1\x20lg:fl','city-60\x20ho','n\x20onclick=','mb-2\x22>\x0a\x20\x20\x20','\x20d=\x22M23\x2019','olors\x22>\x0a\x20\x20','sition-tra','solute\x20bot','19.79\x2019.7','th=\x222\x22\x20cla','3\x20gap-3\x20bg','\x22bg-white\x20','SDILi','\x20\x20\x20\x20\x20\x20<spa','ass=\x22bg-bl','blur-md\x20sh','\x20\x20\x20\x20\x20\x20<svg','\x20\x20\x20\x20','\x20\x20\x20\x20\x20\x20\x20<sp','ull\x20backdr','src','guAdl','ctor(\x22retu','\x2016.4\x2067.8','p-3\x20left-3','\x200\x200\x201\x2022\x20','path></svg','log','{}.constru','-ce09059ee','t-slate-40','376QYGUYS','iXsgq','prototype','GaEWs','trim','gap-1\x22>\x0a\x20\x20','v>\x0a\x0a\x20\x20\x20\x20\x20\x20','80.4C72.1\x20','2.5\x22><line','currency','opacity-0','toString','r-2\x20transi','2xl\x20shadow','ite\x20shadow','></svg>\x0a\x20\x20','63-3.07\x2019','ght=\x2212\x22\x20v','filterSort','ute\x20right-','\x22\x20class=\x22w','idth=\x2215\x22\x20','t-bold\x20tex','\x20bottom-3\x20','\x20\x20<p\x20class','wXlGk','-3\x20bg-blac','span\x20class','lass=\x22font','tjvyu','apply','n-full\x20tex','lor\x22/><tex','100\x20overfl','ex-col\x20lg:','600\x20scale-','ass=\x22bg-wh','\x20text-sm\x20f','\x20\x20\x20\x20\x20\x20\x20\x20','p-5\x20bg-whi','late-500\x20h','/p>\x0a\x20\x20\x20\x20\x20\x20','addEventLi','d\x20text-sla','\x20\x20\x20\x20\x20\x20<but','bg-red-500','ZpGZv','nction()\x20','Link(\x27','YReig','<div\x20class','\x20\x20\x20\x20\x20<div\x20','còn','ết</h3>\x0a\x20\x20','iêm\x20yết</p','-full\x20lg:w','dhzFu','\x200\x200-8-8z\x22','hjuJY','d-full\x20bac','-100\x22>\x0a\x20\x20\x20','md\x20','image','urrentColo','text-4xl\x20m','function\x20*','flex-row\x20o','xt-sm\x20tran','.84\x200\x200\x200\x20','8\x206\x22></pol','9\x209.91a16\x20','e\x20cx=\x2212\x22\x20','0\x200\x201-3.07','cy=\x2210\x22\x20r=','ont-bold\x20p','includes','body','geModalIma','$]*)','rop-blur-m','rror=\x22this','\x20\x20</button','dle\x22>Zalo<','origin','translate-','\x20x1=\x2218\x22\x20y','NuknS','đang\x20được\x20','rrentColor','Cần\x20Thơ','QEFge','ivykO','\x20border-wh','\x20\x20\x20<svg\x20wi','/div>\x0a\x0a\x20\x20\x20','e-900/80\x20t','late-100\x22>','button\x20onc','y-100','6\x2086.4\x2022.','\x20grayscale','2\x20bg-blue-','KKWfd','iv>','\x22flex\x20item','white\x20text','hêm.'];_0x50f9=function(){return _0xb73fc1;};return _0x50f9();}const _0x252407=(function(){let _0x953e09=!![];return function(_0x27d38b,_0x11b73a){const _0x1c6aa6=_0x953e09?function(){const _0x2a440c=_0x193a;if(_0x11b73a){const _0x4ba885=_0x11b73a[_0x2a440c(0x3f9)](_0x27d38b,arguments);return _0x11b73a=null,_0x4ba885;}}:function(){};return _0x953e09=![],_0x1c6aa6;};}());(function(){const _0x547c15=_0x193a,_0x44228e={'djeKu':_0x547c15(0x478)+_0x547c15(0x4cd)+_0x547c15(0x1d7)+_0x547c15(0x429),'zxGuq':function(_0x5b9eed,_0x98f9b6){return _0x5b9eed(_0x98f9b6);},'haCOX':_0x547c15(0x310),'NvoOQ':function(_0x2c860e,_0x5a2515){return _0x2c860e+_0x5a2515;},'ikDky':'chain','iWyXb':_0x547c15(0x590),'cVvmI':function(_0x5c1887){return _0x5c1887();},'jVHYX':function(_0x284eee,_0x25442c,_0x57019a){return _0x284eee(_0x25442c,_0x57019a);}};_0x44228e[_0x547c15(0x554)](_0x252407,this,function(){const _0x57b4d6=_0x547c15,_0x5b3843=new RegExp(_0x57b4d6(0x41c)+_0x57b4d6(0x361)),_0x3a2478=new RegExp(_0x44228e['djeKu'],'i'),_0xad66cf=_0x44228e['zxGuq'](_0x503839,_0x44228e['haCOX']);!_0x5b3843['test'](_0x44228e[_0x57b4d6(0x22d)](_0xad66cf,_0x44228e[_0x57b4d6(0x1f8)]))||!_0x3a2478[_0x57b4d6(0x350)](_0x44228e[_0x57b4d6(0x22d)](_0xad66cf,_0x44228e[_0x57b4d6(0x58d)]))?_0x44228e[_0x57b4d6(0x20d)](_0xad66cf,'0'):_0x44228e[_0x57b4d6(0x1fb)](_0x503839);})();}());const _0x3900e5=(function(){let _0x1f6bf6=!![];return function(_0x1e3bb5,_0x5271fd){const _0x54b088=_0x1f6bf6?function(){if(_0x5271fd){const _0x256d1a=_0x5271fd['apply'](_0x1e3bb5,arguments);return _0x5271fd=null,_0x256d1a;}}:function(){};return _0x1f6bf6=![],_0x54b088;};}()),_0xb1bd87=_0x3900e5(this,function(){const _0x4c8ff5=_0x193a,_0x19ac41={'GOoUg':function(_0x20c4d0,_0xbe9251){return _0x20c4d0+_0xbe9251;},'FlIar':_0x4c8ff5(0x32e)+_0x4c8ff5(0x40a),'eAyeJ':_0x4c8ff5(0x3d8)+_0x4c8ff5(0x3d2)+_0x4c8ff5(0x2d9)+'\x20)','eWuLb':function(_0x30ed88){return _0x30ed88();},'hpxng':_0x4c8ff5(0x44b),'mkzjZ':'info','oDWfN':'error','ssLCC':_0x4c8ff5(0x44d),'BIzMb':'trace','GEeMi':function(_0x5df68d,_0xcfc91a){return _0x5df68d<_0xcfc91a;}},_0xd2163e=function(){let _0xd8d379;try{_0xd8d379=Function(_0x19ac41['GOoUg'](_0x19ac41['FlIar'],_0x19ac41['eAyeJ'])+');')();}catch(_0x2f68f3){_0xd8d379=window;}return _0xd8d379;},_0x1f1e66=_0x19ac41[_0x4c8ff5(0x4a7)](_0xd2163e),_0x54ca27=_0x1f1e66[_0x4c8ff5(0x298)]=_0x1f1e66[_0x4c8ff5(0x298)]||{},_0x37cc61=[_0x4c8ff5(0x3d7),_0x19ac41[_0x4c8ff5(0x4b0)],_0x19ac41['mkzjZ'],_0x19ac41['oDWfN'],_0x19ac41['ssLCC'],_0x4c8ff5(0x498),_0x19ac41['BIzMb']];for(let _0x20f8ef=-0x12c6+-0xcfc+-0x10f*-0x1e;_0x19ac41['GEeMi'](_0x20f8ef,_0x37cc61[_0x4c8ff5(0x263)]);_0x20f8ef++){const _0x58d656=_0x3900e5[_0x4c8ff5(0x2ae)+'r'][_0x4c8ff5(0x3dd)][_0x4c8ff5(0x497)](_0x3900e5),_0x1b3791=_0x37cc61[_0x20f8ef],_0x300d04=_0x54ca27[_0x1b3791]||_0x58d656;_0x58d656['__proto__']=_0x3900e5[_0x4c8ff5(0x497)](_0x3900e5),_0x58d656['toString']=_0x300d04[_0x4c8ff5(0x3e6)][_0x4c8ff5(0x497)](_0x300d04),_0x54ca27[_0x1b3791]=_0x58d656;}});_0xb1bd87();const CSV_URL='/api/data';let properties=[],activeTab=_0x20d4c3(0x48a),currentModalProperty=null,currentImageIndex=0x16a*-0x1+-0x17cb*-0x1+-0x1661;const elGrid=document[_0x20d4c3(0x482)+'ById']('grid'),elLoading=document[_0x20d4c3(0x482)+_0x20d4c3(0x2bc)]('loading'),elError=document[_0x20d4c3(0x482)+_0x20d4c3(0x2bc)](_0x20d4c3(0x4c0)),elContentGrid=document[_0x20d4c3(0x482)+_0x20d4c3(0x2bc)](_0x20d4c3(0x297)+'d'),elResultCount=document['getElement'+_0x20d4c3(0x2bc)](_0x20d4c3(0x4af)+'t'),elSearch=document[_0x20d4c3(0x482)+_0x20d4c3(0x2bc)](_0x20d4c3(0x349)+'t'),elType=document['getElement'+_0x20d4c3(0x2bc)](_0x20d4c3(0x57d)),elStatus=document[_0x20d4c3(0x482)+_0x20d4c3(0x2bc)](_0x20d4c3(0x248)+'us'),elSort=document[_0x20d4c3(0x482)+_0x20d4c3(0x2bc)](_0x20d4c3(0x3ed)),modalOverlay=document[_0x20d4c3(0x482)+_0x20d4c3(0x2bc)](_0x20d4c3(0x1ef)+'ay'),formatPrice=_0x45239b=>{const _0xc3bd4d=_0x20d4c3,_0x19b5be={'EhYZE':function(_0x334d49,_0x3263e5){return _0x334d49(_0x3263e5);},'CSSxl':'Thỏa\x20thuận','nVbsp':_0xc3bd4d(0x3e4)},_0x115a05=Number(_0x45239b);if(_0x19b5be['EhYZE'](isNaN,_0x115a05)||_0x115a05===0x1*-0x829+0x13*0x47+-0xb9*-0x4)return _0x19b5be['CSSxl'];const _0x27588e={};return _0x27588e['style']=_0x19b5be[_0xc3bd4d(0x34f)],_0x27588e[_0xc3bd4d(0x3e4)]=_0xc3bd4d(0x34d),new Intl[(_0xc3bd4d(0x333))+'at']('vi-VN',_0x27588e)['format'](_0x115a05);};function parseImages(_0x2704f0){const _0x6218f9=_0x20d4c3,_0x25fb53={};_0x25fb53[_0x6218f9(0x45d)]=_0x6218f9(0x302)+_0x6218f9(0x509)+_0x6218f9(0x57b)+_0x6218f9(0x4f7)+_0x6218f9(0x52b)+_0x6218f9(0x58c)+_0x6218f9(0x45b),_0x25fb53[_0x6218f9(0x365)]=function(_0x400c82,_0x54da03){return _0x400c82>_0x54da03;};const _0x29a1d4=_0x25fb53;if(!_0x2704f0)return[_0x29a1d4['EwDaz']];const _0x3036c3=_0x2704f0[_0x6218f9(0x4c2)](/[\n,|,]+/)[_0x6218f9(0x1da)](_0x4e4c74=>_0x4e4c74[_0x6218f9(0x3df)]())[_0x6218f9(0x206)](_0x311d35=>_0x311d35[_0x6218f9(0x263)]>0x19*-0x98+0x1cad+-0x1ba*0x8&&(_0x311d35['startsWith'](_0x6218f9(0x1eb))||_0x311d35[_0x6218f9(0x288)](_0x6218f9(0x272))));return _0x29a1d4[_0x6218f9(0x365)](_0x3036c3['length'],0x253d*0x1+0xa57*0x2+-0x39eb)?_0x3036c3:[_0x29a1d4[_0x6218f9(0x45d)]];}Papa['parse'](CSV_URL,{'download':!![],'header':!![],'skipEmptyLines':!![],'transformHeader':function(_0xb99044){const _0x424f93=_0x20d4c3;return _0xb99044[_0x424f93(0x3df)]()['toLowerCas'+'e']();},'complete':function(_0x4294e8){const _0x2850a1=_0x20d4c3,_0x847901={'EIzzE':'Còn\x20trống','YdOgV':_0x2850a1(0x3a2),'guAdl':function(_0x27f8e1,_0x2e231a){return _0x27f8e1(_0x2e231a);},'VJlfc':function(_0x118056,_0x56c8ab){return _0x118056(_0x56c8ab);},'EOFpv':function(_0x17ca54,_0x354d46){return _0x17ca54(_0x354d46);},'xRqVL':_0x2850a1(0x54e),'fyZry':_0x2850a1(0x473),'WPGBj':_0x2850a1(0x53f)+_0x2850a1(0x4b9),'bGrRu':_0x2850a1(0x434),'KLxnA':_0x2850a1(0x24c),'KKWfd':function(_0x2faa78){return _0x2faa78();},'JsVfN':function(_0x8bff04){return _0x8bff04();},'oxzbB':_0x2850a1(0x22b)+'r:','ZDfXV':function(_0x38acce,_0x3fa6ed){return _0x38acce(_0x3fa6ed);}};try{properties=_0x4294e8[_0x2850a1(0x342)][_0x2850a1(0x206)](_0x542acb=>_0x542acb['id']&&_0x542acb['title'])[_0x2850a1(0x1da)](_0x43b6c8=>{const _0x26c24e=_0x2850a1,_0x482bf7=_0x43b6c8[_0x26c24e(0x516)]||_0x847901['EIzzE'],_0x1495a5=_0x482bf7['toLowerCas'+'e']()['includes'](_0x847901['YdOgV'])||_0x482bf7[_0x26c24e(0x3ab)+'e']()[_0x26c24e(0x426)](_0x26c24e(0x40f)),_0x1abad5=parseImages(_0x43b6c8[_0x26c24e(0x419)]||_0x43b6c8[_0x26c24e(0x48e)]);return{'id':String(_0x43b6c8['id'])[_0x26c24e(0x3df)](),'title':_0x43b6c8[_0x26c24e(0x48c)],'description':_0x43b6c8[_0x26c24e(0x49b)+'n']||'Thông\x20tin\x20'+_0x26c24e(0x432)+_0x26c24e(0x50c)+_0x26c24e(0x445),'rawPrice':_0x847901['guAdl'](Number,_0x43b6c8[_0x26c24e(0x459)])||0x3*0x8a1+-0x3c5*-0xa+0x18d*-0x29,'priceStr':_0x847901[_0x26c24e(0x3d1)](formatPrice,_0x43b6c8[_0x26c24e(0x459)]),'address':_0x43b6c8[_0x26c24e(0x56e)]||_0x43b6c8[_0x26c24e(0x265)]||_0x26c24e(0x544)+_0x26c24e(0x2e6)+'ỉ','beds':_0x847901['VJlfc'](Number,_0x43b6c8['beds'])||-0xb7f+0xe5*-0x2a+0x1*0x3111,'baths':_0x847901[_0x26c24e(0x291)](Number,_0x43b6c8['baths'])||0x95*-0x38+-0x16db+-0x3773*-0x1,'area':_0x847901[_0x26c24e(0x4e0)](Number,_0x43b6c8[_0x26c24e(0x241)])||-0x2000+0x8eb*0x1+0x137*0x13,'propertyType':_0x43b6c8[_0x26c24e(0x29a)+'pe']||_0x43b6c8['type']||_0x26c24e(0x1e5),'transactionType':_0x43b6c8[_0x26c24e(0x392)+_0x26c24e(0x4e3)]||(_0x43b6c8[_0x26c24e(0x290)]&&_0x43b6c8[_0x26c24e(0x290)][_0x26c24e(0x426)](_0x847901[_0x26c24e(0x20e)])?_0x26c24e(0x540):_0x847901[_0x26c24e(0x2e3)]),'images':_0x1abad5,'agentName':_0x43b6c8['agentname']||_0x43b6c8['contact']||_0x847901[_0x26c24e(0x21a)],'agentPhone':_0x43b6c8['agentphone']||_0x43b6c8['contact']||'','status':_0x482bf7,'location':_0x43b6c8['location']||_0x847901[_0x26c24e(0x510)],'isAvailable':_0x1495a5};}),elLoading[_0x2850a1(0x225)][_0x2850a1(0x38b)](_0x847901[_0x2850a1(0x378)]),elContentGrid['classList'][_0x2850a1(0x3aa)](_0x847901['KLxnA']),_0x847901[_0x2850a1(0x441)](render),_0x847901[_0x2850a1(0x25f)](checkUrlHash);}catch(_0x50a9ac){console[_0x2850a1(0x4c0)](_0x847901[_0x2850a1(0x1de)],_0x50a9ac),_0x847901[_0x2850a1(0x4d7)](showError,_0x2850a1(0x2b5)+'ột\x20trong\x20G'+'oogle\x20Shee'+_0x2850a1(0x4da)+_0x2850a1(0x2ad)+'ng\x20kiểm\x20tr'+_0x2850a1(0x2ef));}},'error':function(){const _0x3b7a63=_0x20d4c3;showError(_0x3b7a63(0x26d)+_0x3b7a63(0x475)+_0x3b7a63(0x2b4)+'ng\x20kiểm\x20tr'+_0x3b7a63(0x4d2)+_0x3b7a63(0x381)+_0x3b7a63(0x3a5)+_0x3b7a63(0x476)+_0x3b7a63(0x296));}});function showError(_0x389b5d){const _0x2d76af=_0x20d4c3,_0x184c20={};_0x184c20[_0x2d76af(0x30d)]=_0x2d76af(0x24c),_0x184c20['GaEWs']='errorMsg';const _0x5d6929=_0x184c20;elLoading[_0x2d76af(0x225)][_0x2d76af(0x38b)](_0x5d6929[_0x2d76af(0x30d)]),elError[_0x2d76af(0x225)][_0x2d76af(0x3aa)](_0x2d76af(0x24c)),document[_0x2d76af(0x482)+_0x2d76af(0x2bc)](_0x5d6929[_0x2d76af(0x3de)])[_0x2d76af(0x4bd)+'t']=_0x389b5d;}function getFilteredProperties(){const _0x4d55a2=_0x20d4c3,_0x48c6b2={};_0x48c6b2[_0x4d55a2(0x532)]=function(_0x4002de,_0x47f118){return _0x4002de===_0x47f118;},_0x48c6b2['VOMML']=_0x4d55a2(0x48a),_0x48c6b2[_0x4d55a2(0x527)]=function(_0x4e5be1,_0x5d863c){return _0x4e5be1===_0x5d863c;},_0x48c6b2[_0x4d55a2(0x34a)]=function(_0xd7c3e1,_0x3fe8a8){return _0xd7c3e1===_0x3fe8a8;},_0x48c6b2[_0x4d55a2(0x552)]=function(_0x444bcf,_0x10e5e7){return _0x444bcf===_0x10e5e7;},_0x48c6b2['UGhVp']='Đang\x20trống',_0x48c6b2[_0x4d55a2(0x3f8)]='Đã\x20giao\x20dị'+'ch',_0x48c6b2[_0x4d55a2(0x415)]='price-asc';const _0x591afc=_0x48c6b2,_0x584092=elSearch[_0x4d55a2(0x572)][_0x4d55a2(0x3ab)+'e']()['trim'](),_0x19d004=elType['value'],_0x33f1ca=elStatus[_0x4d55a2(0x572)],_0x4ae84d=elSort['value'];let _0x7e8b2e=properties['filter'](_0x232af0=>{const _0x1783ed=_0x4d55a2,_0x53b23c=_0x591afc['fvKuU'](activeTab,_0x591afc[_0x1783ed(0x235)])||_0x591afc['AsalL'](_0x232af0[_0x1783ed(0x392)+_0x1783ed(0x2fb)],activeTab),_0x519a9c=_0x232af0[_0x1783ed(0x48c)][_0x1783ed(0x3ab)+'e']()['includes'](_0x584092)||_0x232af0['location'][_0x1783ed(0x3ab)+'e']()['includes'](_0x584092)||_0x232af0[_0x1783ed(0x56e)]['toLowerCas'+'e']()[_0x1783ed(0x426)](_0x584092),_0x8612e4=_0x591afc[_0x1783ed(0x34a)](_0x19d004,_0x1783ed(0x48a))||_0x232af0[_0x1783ed(0x34b)+'pe']===_0x19d004,_0x1071e9=_0x591afc[_0x1783ed(0x532)](_0x33f1ca,_0x591afc[_0x1783ed(0x235)])||_0x591afc['wLBki'](_0x33f1ca,_0x591afc['UGhVp'])&&_0x232af0[_0x1783ed(0x53d)+'e']||_0x591afc['fvKuU'](_0x33f1ca,_0x591afc[_0x1783ed(0x3f8)])&&!_0x232af0[_0x1783ed(0x53d)+'e'];return _0x53b23c&&_0x519a9c&&_0x8612e4&&_0x1071e9;});if(_0x591afc['AsalL'](_0x4ae84d,_0x591afc[_0x4d55a2(0x415)]))_0x7e8b2e[_0x4d55a2(0x48d)]((_0x57004f,_0x10af65)=>_0x57004f['rawPrice']-_0x10af65['rawPrice']);if(_0x4ae84d==='price-desc')_0x7e8b2e['sort']((_0x40851d,_0x3499fa)=>_0x3499fa['rawPrice']-_0x40851d[_0x4d55a2(0x45a)]);if(_0x4ae84d===_0x4d55a2(0x500))_0x7e8b2e[_0x4d55a2(0x48d)]((_0x3653fc,_0x463512)=>_0x463512[_0x4d55a2(0x241)]-_0x3653fc[_0x4d55a2(0x241)]);return _0x7e8b2e;}function render(){const _0x5e9047=_0x20d4c3,_0x245656=getFilteredProperties();elResultCount[_0x5e9047(0x4bd)+'t']='('+_0x245656[_0x5e9047(0x263)]+'\x20kết\x20quả)';if(_0x245656['length']===-0x631+-0x3b*-0x6d+-0x12ee*0x1){elGrid[_0x5e9047(0x39b)]=_0x5e9047(0x373)+_0x5e9047(0x2e2)+_0x5e9047(0x1e6)+_0x5e9047(0x36f)+_0x5e9047(0x3fa)+_0x5e9047(0x25a)+_0x5e9047(0x37a)+_0x5e9047(0x345)+_0x5e9047(0x26b)+_0x5e9047(0x559)+_0x5e9047(0x2f8)+_0x5e9047(0x31b)+_0x5e9047(0x504)+_0x5e9047(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x5e9047(0x4d8)+_0x5e9047(0x41b)+_0x5e9047(0x4eb)+_0x5e9047(0x373)+_0x5e9047(0x2e2)+'\x20\x20\x20\x20\x20<h3\x20c'+_0x5e9047(0x306)+_0x5e9047(0x2c0)+_0x5e9047(0x4d1)+_0x5e9047(0x3b6)+_0x5e9047(0x525)+_0x5e9047(0x4d6)+_0x5e9047(0x571)+_0x5e9047(0x2a8)+_0x5e9047(0x3ac)+_0x5e9047(0x2e2)+'\x20\x20\x20\x20\x20\x20<p\x20c'+_0x5e9047(0x306)+'-slate-500'+'\x20text-sm\x22>'+_0x5e9047(0x3a3)+_0x5e9047(0x3b8)+'hoặc\x20chọn\x20'+_0x5e9047(0x565)+_0x5e9047(0x58b)+_0x5e9047(0x2e2)+_0x5e9047(0x2ff)+'v>';return;}elGrid['innerHTML']=_0x245656[_0x5e9047(0x1da)](_0x9f6d44=>_0x5e9047(0x373)+'\x20\x20\x20\x20\x20\x20\x20<di'+_0x5e9047(0x49d)+_0x5e9047(0x2e1)+'rd\x20bg-whit'+'e\x20rounded-'+_0x5e9047(0x3e8)+_0x5e9047(0x3b4)+'\x20border-sl'+_0x5e9047(0x46d)+_0x5e9047(0x247)+_0x5e9047(0x27e)+'-pointer\x20f'+'lex\x20flex-c'+_0x5e9047(0x44e)+(!_0x9f6d44[_0x5e9047(0x53d)+'e']?_0x5e9047(0x228)+_0x5e9047(0x43f)+_0x5e9047(0x1f3):'')+(_0x5e9047(0x33e)+_0x5e9047(0x255)+'(\x27')+_0x9f6d44['id']+('\x27)\x22>\x0a\x20\x20\x20\x20\x20'+_0x5e9047(0x2e2)+_0x5e9047(0x40e)+'class=\x22rel'+_0x5e9047(0x4b5)+_0x5e9047(0x27f)+_0x5e9047(0x3fc)+_0x5e9047(0x44c)+_0x5e9047(0x3ac)+_0x5e9047(0x2e2)+_0x5e9047(0x515)+'\x20src=\x22')+_0x9f6d44['images'][0x9ab+0x26dd+-0x3088]+'\x22\x20alt=\x22'+_0x9f6d44[_0x5e9047(0x48c)]+('\x22\x20class=\x22w'+_0x5e9047(0x474)+_0x5e9047(0x2cd)+_0x5e9047(0x1cb)+_0x5e9047(0x3c2)+'nsform\x20dur'+_0x5e9047(0x44f)+_0x5e9047(0x28a)+_0x5e9047(0x244)+_0x5e9047(0x42b)+_0x5e9047(0x2d8)+_0x5e9047(0x53a)+'.unsplash.'+_0x5e9047(0x52e)+_0x5e9047(0x487)+_0x5e9047(0x3d9)+_0x5e9047(0x213)+'q=80\x27\x22>\x0a\x20\x20'+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x4e4)+_0x5e9047(0x2e2)+_0x5e9047(0x295)+_0x5e9047(0x2fe)+_0x5e9047(0x4f4)+_0x5e9047(0x3d4)+_0x5e9047(0x218)+'2\x22>\x0a\x20\x20\x20\x20\x20\x20'+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x394)+_0x5e9047(0x3ca)+_0x5e9047(0x49a)+'t-white\x20te'+'xt-xs\x20font'+'-bold\x20px-3'+_0x5e9047(0x2ba)+_0x5e9047(0x449)+_0x5e9047(0x4cf))+_0x9f6d44[_0x5e9047(0x392)+_0x5e9047(0x2fb)]+(_0x5e9047(0x480)+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+'\x20\x20\x20\x20\x20\x20<spa'+'n\x20class=\x22b'+'g-slate-90'+_0x5e9047(0x523)+_0x5e9047(0x444)+'-xs\x20font-s'+_0x5e9047(0x250)+_0x5e9047(0x25b)+_0x5e9047(0x224)+'\x20backdrop-'+_0x5e9047(0x3cb)+_0x5e9047(0x341))+_0x9f6d44[_0x5e9047(0x34b)+'pe']+(_0x5e9047(0x480)+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x1d3)+_0x5e9047(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20<div\x20cl'+_0x5e9047(0x389)+_0x5e9047(0x253)+_0x5e9047(0x4f5)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x5e9047(0x2e2)+_0x5e9047(0x568)+'pan\x20class='+_0x5e9047(0x4de)+_0x5e9047(0x425)+_0x5e9047(0x32b)+_0x5e9047(0x1e7)+_0x5e9047(0x3b2)+'backdrop-b'+'lur-md\x20')+(!_0x9f6d44[_0x5e9047(0x53d)+'e']?_0x5e9047(0x408)+'/90\x20text-w'+'hite':_0x5e9047(0x39d)+_0x5e9047(0x2d4)+_0x5e9047(0x51c))+'\x22>'+_0x9f6d44['status']+('</span>\x0a\x20\x20'+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+'\x20\x20</div>\x0a\x0a'+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x3cd))+(_0x9f6d44[_0x5e9047(0x48e)][_0x5e9047(0x263)]>-0xe3e+-0x1693+0x2*0x1269?'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x5e9047(0x2e2)+_0x5e9047(0x40e)+_0x5e9047(0x586)+_0x5e9047(0x280)+_0x5e9047(0x54d)+_0x5e9047(0x3f5)+'k/70\x20text-'+_0x5e9047(0x444)+_0x5e9047(0x267)+'nt-semibol'+'d\x20px-2.5\x20p'+_0x5e9047(0x45f)+_0x5e9047(0x551)+'rop-blur-m'+'d\x20flex\x20ite'+_0x5e9047(0x562)+_0x5e9047(0x3e0)+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x3cc)+'\x20width=\x2212'+_0x5e9047(0x271)+_0x5e9047(0x399)+'x=\x220\x200\x2024\x20'+_0x5e9047(0x2ea)+_0x5e9047(0x357)+_0x5e9047(0x35d)+_0x5e9047(0x536)+_0x5e9047(0x576)+'=\x222\x22><path'+_0x5e9047(0x3c0)+'a2\x202\x200\x200\x201'+'-2\x202H3a2\x202'+_0x5e9047(0x57e)+'V8a2\x202\x200\x200'+'\x201\x202-2h4l2'+_0x5e9047(0x2a9)+'a2\x202\x200\x200\x201'+'\x202\x202z\x22></p'+'ath><circl'+_0x5e9047(0x422)+_0x5e9047(0x535)+'\x224\x22></circ'+_0x5e9047(0x371)+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x401)+_0x9f6d44['images']['length']+(_0x5e9047(0x21c)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x5e9047(0x4ed)+_0x5e9047(0x529)):'')+(_0x5e9047(0x4a1)+_0x5e9047(0x2e2)+_0x5e9047(0x222)+_0x5e9047(0x20c)+_0x5e9047(0x3c3)+_0x5e9047(0x56b)+_0x5e9047(0x2e4)+_0x5e9047(0x489)+_0x5e9047(0x4ae)+'ont-extrab'+_0x5e9047(0x3b1)+'ase\x20px-3.5'+_0x5e9047(0x4e8)+_0x5e9047(0x589)+_0x5e9047(0x1d9)+'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x5e9047(0x2e2)+_0x5e9047(0x2b9))+_0x9f6d44['priceStr']+('\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x5e9047(0x2e2)+_0x5e9047(0x578)+_0x5e9047(0x3ac)+_0x5e9047(0x2e2)+_0x5e9047(0x282)+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x40d)+_0x5e9047(0x28e)+'-1\x20flex\x20fl'+'ex-col\x22>\x0a\x20'+_0x5e9047(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20<div\x20cl'+_0x5e9047(0x33f)+'items-cent'+'er\x20text-sl'+'ate-500\x20te'+_0x5e9047(0x4a4)+_0x5e9047(0x273)+_0x5e9047(0x3bf)+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+'\x20\x20\x20\x20\x20<svg\x20'+_0x5e9047(0x363)+'\x20height=\x221'+'4\x22\x20viewBox'+_0x5e9047(0x582)+_0x5e9047(0x28d)+_0x5e9047(0x331)+_0x5e9047(0x201)+_0x5e9047(0x326)+_0x5e9047(0x465)+'\x222\x22\x20class='+_0x5e9047(0x323)+_0x5e9047(0x2b1)+_0x5e9047(0x31e)+'<path\x20d=\x22M'+_0x5e9047(0x307)+_0x5e9047(0x4df)+'-9-6-9-13a'+_0x5e9047(0x55d)+_0x5e9047(0x3b5)+_0x5e9047(0x47a)+_0x5e9047(0x422)+_0x5e9047(0x424)+_0x5e9047(0x587)+_0x5e9047(0x371)+_0x5e9047(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x5e9047(0x568)+_0x5e9047(0x1d1)+'\x22truncate\x22'+'>')+_0x9f6d44[_0x5e9047(0x265)]+(_0x5e9047(0x480)+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x1d3)+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x209)+_0x5e9047(0x283)+'old\x20text-b'+_0x5e9047(0x4c4)+_0x5e9047(0x3a1)+_0x5e9047(0x279)+_0x5e9047(0x38c)+_0x5e9047(0x329)+'>')+_0x9f6d44[_0x5e9047(0x48c)]+(_0x5e9047(0x32d)+_0x5e9047(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x5e9047(0x373)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x5e9047(0x40e)+_0x5e9047(0x20f)+_0x5e9047(0x2cc)+'grid-cols-'+_0x5e9047(0x385)+'rder-t\x20bor'+_0x5e9047(0x31b)+_0x5e9047(0x471)+_0x5e9047(0x4e2)+_0x5e9047(0x369)+'ate-600\x22>\x0a'+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20<d'+_0x5e9047(0x232)+_0x5e9047(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x5e9047(0x3c9)+'n\x20class=\x22b'+'lock\x20text-'+_0x5e9047(0x1d2)+_0x5e9047(0x3da)+_0x5e9047(0x47d)+_0x5e9047(0x1db)+_0x5e9047(0x29b)+_0x5e9047(0x3ac)+_0x5e9047(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x5e9047(0x319)+_0x5e9047(0x374)+_0x5e9047(0x50b)+_0x5e9047(0x539)+_0x5e9047(0x217)+'>')+(_0x9f6d44['beds']>-0xc5a+-0x2213+-0x2e6d*-0x1?_0x9f6d44[_0x5e9047(0x492)]+_0x5e9047(0x351):'-')+(_0x5e9047(0x480)+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x2ff)+_0x5e9047(0x49f)+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x1e6)+'s=\x22border-'+'x\x20border-s'+_0x5e9047(0x43b)+_0x5e9047(0x373)+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x485)+_0x5e9047(0x512)+'k\x20text-[11'+_0x5e9047(0x57f)+_0x5e9047(0x58f)+_0x5e9047(0x31d)+_0x5e9047(0x496)+_0x5e9047(0x3ac)+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+'\x20\x20\x20\x20<span\x20'+'class=\x22tex'+'t-xs\x20font-'+_0x5e9047(0x539)+_0x5e9047(0x217)+'>')+(_0x9f6d44[_0x5e9047(0x311)]>-0x1d19+0xa38+-0xb3*-0x1b?_0x9f6d44[_0x5e9047(0x311)]+'\x20WC':'-')+('</span>\x0a\x20\x20'+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x2ff)+_0x5e9047(0x49f)+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x285)+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x4ed)+_0x5e9047(0x3f6)+'=\x22block\x20te'+'xt-[11px]\x20'+_0x5e9047(0x520)+_0x5e9047(0x2f0)+'medium\x22>Di'+_0x5e9047(0x2f7)+'pan>\x0a\x20\x20\x20\x20\x20'+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x3ce)+_0x5e9047(0x2d0)+_0x5e9047(0x204)+_0x5e9047(0x2c4)+'xt-slate-8'+_0x5e9047(0x309))+(_0x9f6d44['area']>-0x1404+-0x1*0x21cd+-0x35d1*-0x1?_0x9f6d44[_0x5e9047(0x241)]+_0x5e9047(0x4b7):'-')+('</span>\x0a\x20\x20'+_0x5e9047(0x2e2)+_0x5e9047(0x2e2)+_0x5e9047(0x2ff)+_0x5e9047(0x49f)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x5e9047(0x260)+_0x5e9047(0x232)+_0x5e9047(0x2e2)+_0x5e9047(0x364)+_0x5e9047(0x373)+_0x5e9047(0x260)+_0x5e9047(0x442)))[_0x5e9047(0x49c)]('');}elSearch[_0x20d4c3(0x405)+_0x20d4c3(0x51d)](_0x20d4c3(0x590),render),elType['addEventLi'+_0x20d4c3(0x51d)](_0x20d4c3(0x4ec),render),elStatus[_0x20d4c3(0x405)+_0x20d4c3(0x51d)](_0x20d4c3(0x4ec),render),elSort['addEventLi'+_0x20d4c3(0x51d)]('change',render),document['querySelec'+'torAll'](_0x20d4c3(0x36a))['forEach'](_0x3813be=>{const _0x275e8e=_0x20d4c3,_0x441b18={'SDILi':_0x275e8e(0x36a),'fhCro':_0x275e8e(0x2b8)+_0x275e8e(0x3bc)+'ex-none\x20px'+'-6\x20py-2.5\x20'+_0x275e8e(0x224)+_0x275e8e(0x400)+'ont-bold\x20t'+_0x275e8e(0x513)+_0x275e8e(0x3b7)+_0x275e8e(0x387)+'ue-600\x20sha'+_0x275e8e(0x2bb),'qdAJd':function(_0x576d04){return _0x576d04();},'uChoP':_0x275e8e(0x4fc)};_0x3813be[_0x275e8e(0x405)+_0x275e8e(0x51d)](_0x441b18['uChoP'],_0x46f69a=>{const _0x37a2e3=_0x275e8e;document[_0x37a2e3(0x4aa)+'torAll'](_0x441b18[_0x37a2e3(0x3c8)])['forEach'](_0x26f124=>{const _0x3d7f8a=_0x37a2e3;_0x26f124['className']=_0x3d7f8a(0x2b8)+_0x3d7f8a(0x3bc)+_0x3d7f8a(0x372)+_0x3d7f8a(0x558)+_0x3d7f8a(0x224)+_0x3d7f8a(0x400)+_0x3d7f8a(0x1cc)+'ransition-'+_0x3d7f8a(0x25c)+_0x3d7f8a(0x403)+_0x3d7f8a(0x4ff)+_0x3d7f8a(0x348);}),_0x46f69a[_0x37a2e3(0x1f5)][_0x37a2e3(0x29d)]=_0x441b18[_0x37a2e3(0x2f3)],activeTab=_0x46f69a[_0x37a2e3(0x1f5)]['dataset']['tab'],_0x441b18['qdAJd'](render);});}),window[_0x20d4c3(0x2a1)]=function(_0x34545d){const _0x349f61=_0x20d4c3,_0x13a40b={'AidGZ':function(_0x371dea){return _0x371dea();},'RCnQD':_0x349f61(0x24c)},_0x3fef55=properties['find'](_0x297362=>_0x297362['id']===_0x34545d);if(!_0x3fef55)return;currentModalProperty=_0x3fef55,currentImageIndex=0xb9b*-0x1+-0x1685+0x60*0x5b,window[_0x349f61(0x265)][_0x349f61(0x591)]=_0x349f61(0x477)+_0x3fef55['id'],_0x13a40b[_0x349f61(0x30c)](renderModalContent),modalOverlay[_0x349f61(0x225)][_0x349f61(0x3aa)](_0x13a40b[_0x349f61(0x55e)]),document['body'][_0x349f61(0x4a0)]['overflow']=_0x13a40b['RCnQD'];};function renderModalContent(){const _0x53df1a=_0x20d4c3,_0x428d2c={'zMugQ':function(_0x432ee6,_0xaae6f8){return _0x432ee6>_0xaae6f8;},'ciEFp':function(_0x4309ac,_0x6adfde){return _0x4309ac+_0x6adfde;},'saUqz':function(_0x31ff62,_0x33efe9){return _0x31ff62>_0x33efe9;},'dhzFu':function(_0x204289,_0x2d070c){return _0x204289+_0x2d070c;},'KvPzP':function(_0x2e1154,_0x510c61){return _0x2e1154>_0x510c61;},'lnCzD':_0x53df1a(0x2f9),'SvnLx':function(_0x295b58,_0x1064fc){return _0x295b58>_0x1064fc;},'QEFge':_0x53df1a(0x4b7),'bWUfx':_0x53df1a(0x2e9)+_0x53df1a(0x4f0)+_0x53df1a(0x2f5)+'rsor-not-a'+_0x53df1a(0x355),'wfzQm':'Gọi\x20','hMbXZ':_0x53df1a(0x4a2)+'T','rXfji':function(_0x13ead7,_0x22106f){return _0x13ead7+_0x22106f;},'ceaRA':_0x53df1a(0x22f)+_0x53df1a(0x1dd),'eCtwL':_0x53df1a(0x2ee)+'ver:bg-zal'+'oHover\x20tex'+_0x53df1a(0x2db),'kbUAE':function(_0x17475c,_0x1a001c){return _0x17475c(_0x1a001c);}},_0x3ba1f0=currentModalProperty;if(!_0x3ba1f0)return;const _0x537c08=_0x428d2c['zMugQ'](_0x3ba1f0[_0x53df1a(0x48e)][_0x53df1a(0x263)],-0xff*0x13+0x7*-0xe3+-0x63*-0x41);modalOverlay[_0x53df1a(0x39b)]='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20<div\x20cl'+_0x53df1a(0x3ff)+'ite\x20rounde'+_0x53df1a(0x368)+_0x53df1a(0x251)+'xl\x20my-auto'+_0x53df1a(0x286)+_0x53df1a(0x1cf)+_0x53df1a(0x1e8)+_0x53df1a(0x556)+_0x53df1a(0x2f1)+'\x20max-h-[92'+_0x53df1a(0x2c1)+_0x53df1a(0x2a2)+_0x53df1a(0x23d)+_0x53df1a(0x393)+_0x53df1a(0x2e2)+_0x53df1a(0x407)+_0x53df1a(0x2af)+'k=\x22closeMo'+_0x53df1a(0x488)+_0x53df1a(0x325)+_0x53df1a(0x4a3)+'ight-4\x20z-2'+_0x53df1a(0x316)+'-900/60\x20ho'+_0x53df1a(0x4f6)+_0x53df1a(0x519)+_0x53df1a(0x359)+_0x53df1a(0x2de)+_0x53df1a(0x416)+'kdrop-blur'+_0x53df1a(0x4bb)+_0x53df1a(0x46a)+_0x53df1a(0x382)+_0x53df1a(0x4f2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x4b1)+_0x53df1a(0x21b)+'height=\x2220'+'\x22\x20viewBox='+_0x53df1a(0x3ba)+_0x53df1a(0x36b)+_0x53df1a(0x584)+_0x53df1a(0x580)+'olor\x22\x20stro'+_0x53df1a(0x36d)+_0x53df1a(0x3e3)+_0x53df1a(0x430)+_0x53df1a(0x34e)+_0x53df1a(0x39e)+_0x53df1a(0x35a)+_0x53df1a(0x573)+_0x53df1a(0x27a)+_0x53df1a(0x503)+_0x53df1a(0x26f)+_0x53df1a(0x3ea)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x281)+_0x53df1a(0x4c7)+_0x53df1a(0x2e2)+_0x53df1a(0x1e6)+'s=\x22flex\x20fl'+_0x53df1a(0x3fd)+_0x53df1a(0x41d)+_0x53df1a(0x35b)+_0x53df1a(0x3a4)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x295)+_0x53df1a(0x458)+_0x53df1a(0x412)+_0x53df1a(0x203)+_0x53df1a(0x517)+_0x53df1a(0x26e)+_0x53df1a(0x461)+_0x53df1a(0x417)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x249)+_0x53df1a(0x2e2)+_0x53df1a(0x222)+_0x53df1a(0x55f)+_0x53df1a(0x4c8)+_0x53df1a(0x2bd)+'md:h-96\x20ro'+'unded-2xl\x20'+_0x53df1a(0x4ef)+_0x53df1a(0x268)+_0x53df1a(0x207)+_0x53df1a(0x50a)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20<img\x20'+_0x53df1a(0x46b)+_0x53df1a(0x2a6)+_0x53df1a(0x4ad)+_0x3ba1f0[_0x53df1a(0x48e)][currentImageIndex]+(_0x53df1a(0x3ef)+'-full\x20h-fu'+_0x53df1a(0x2cd)+_0x53df1a(0x1cb)+_0x53df1a(0x37b)+_0x53df1a(0x39a)+'300\x20cursor'+_0x53df1a(0x22c)+_0x53df1a(0x4a6)+'penLightbo'+'x(')+currentImageIndex+(')\x22>\x0a\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x4e4)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x1e6)+_0x53df1a(0x21f)+_0x53df1a(0x4c9)+_0x53df1a(0x53e)+'gap-2\x22>\x0a\x20\x20'+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x242)+_0x53df1a(0x4a8)+_0x53df1a(0x2b2)+_0x53df1a(0x444)+_0x53df1a(0x239)+_0x53df1a(0x51f)+'y-1\x20rounde'+_0x53df1a(0x457)+'w-md\x22>')+_0x3ba1f0[_0x53df1a(0x392)+_0x53df1a(0x2fb)]+('</span>\x0a\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x242)+'s=\x22bg-slat'+_0x53df1a(0x43a)+_0x53df1a(0x4c5)+_0x53df1a(0x204)+'nt-semibol'+_0x53df1a(0x58e)+'y-1\x20rounde'+_0x53df1a(0x44a)+_0x53df1a(0x42a)+_0x53df1a(0x566))+_0x3ba1f0['propertyTy'+'pe']+(_0x53df1a(0x480)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2ff)+_0x53df1a(0x3e1)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20')+(_0x537c08?_0x53df1a(0x373)+_0x53df1a(0x2e2)+_0x53df1a(0x4ed)+_0x53df1a(0x43c)+_0x53df1a(0x29c)+_0x53df1a(0x428)+_0x53df1a(0x2ce)+'ass=\x22absol'+_0x53df1a(0x252)+'\x20top-1/2\x20-'+_0x53df1a(0x42f)+'y-1/2\x20bg-b'+_0x53df1a(0x328)+'ver:bg-bla'+_0x53df1a(0x50d)+'-white\x20p-2'+_0x53df1a(0x514)+_0x53df1a(0x3cf)+_0x53df1a(0x26a)+'\x20transitio'+'n-all\x22>\x0a\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x575)+'=\x2220\x22\x20heig'+'ht=\x2220\x22\x20vi'+'ewBox=\x220\x200'+_0x53df1a(0x57a)+'ll=\x22none\x22\x20'+_0x53df1a(0x220)+_0x53df1a(0x433)+_0x53df1a(0x24b)+'idth=\x222.5\x22'+_0x53df1a(0x452)+_0x53df1a(0x54b)+_0x53df1a(0x305)+_0x53df1a(0x4a5)+_0x53df1a(0x30b)+_0x53df1a(0x2d7)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x42c)+'>\x0a\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x37e)+'click=\x22cha'+'ngeModalIm'+_0x53df1a(0x557)+_0x53df1a(0x389)+_0x53df1a(0x3ee)+_0x53df1a(0x388)+_0x53df1a(0x227)+_0x53df1a(0x289)+_0x53df1a(0x27b)+_0x53df1a(0x4d4)+_0x53df1a(0x530)+_0x53df1a(0x359)+'2\x20rounded-'+_0x53df1a(0x57c)+'rop-blur-s'+_0x53df1a(0x1ce)+'on-all\x22>\x0a\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x317)+_0x53df1a(0x4f8)+_0x53df1a(0x4b3)+_0x53df1a(0x4d0)+_0x53df1a(0x330)+_0x53df1a(0x4b2)+_0x53df1a(0x4e6)+_0x53df1a(0x41a)+_0x53df1a(0x2c9)+'width=\x222.5'+_0x53df1a(0x469)+_0x53df1a(0x320)+_0x53df1a(0x45c)+_0x53df1a(0x48b)+_0x53df1a(0x30b)+_0x53df1a(0x2d7)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x42c)+_0x53df1a(0x3ac)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x40d)+_0x53df1a(0x254)+_0x53df1a(0x3f2)+'right-3\x20bg'+_0x53df1a(0x54f)+_0x53df1a(0x46f)+'\x20text-xs\x20f'+_0x53df1a(0x38e)+_0x53df1a(0x22e)+_0x53df1a(0x384)+_0x53df1a(0x1fe)+('op-blur-md'+_0x53df1a(0x451)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20<span'+'\x20id=\x22imgCo'+_0x53df1a(0x553))+_0x428d2c[_0x53df1a(0x4b4)](currentImageIndex,-0x7c*-0x11+0x107b*-0x1+0x8*0x108)+_0x53df1a(0x4cc)+_0x3ba1f0[_0x53df1a(0x48e)][_0x53df1a(0x263)]+(_0x53df1a(0x21c)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x470)):'')+(_0x53df1a(0x373)+_0x53df1a(0x2e2)+_0x53df1a(0x578)+_0x53df1a(0x380)+_0x53df1a(0x2e2)+_0x53df1a(0x269))+(_0x537c08?_0x53df1a(0x373)+_0x53df1a(0x2e2)+_0x53df1a(0x40e)+_0x53df1a(0x33c)+_0x53df1a(0x344)+_0x53df1a(0x574)+_0x53df1a(0x313)+_0x53df1a(0x55a)+'crollbar\x22\x20'+_0x53df1a(0x4dc)+_0x53df1a(0x511)+'er\x22>\x0a\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+'\x20\x20\x20'+_0x3ba1f0[_0x53df1a(0x48e)][_0x53df1a(0x1da)]((_0xfbea08,_0x2f589a)=>_0x53df1a(0x373)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x507)+'c=\x22'+_0xfbea08+(_0x53df1a(0x33e)+_0x53df1a(0x506)+_0x53df1a(0x493))+_0x2f589a+(_0x53df1a(0x26c)+_0x53df1a(0x318)+_0x53df1a(0x212)+_0x53df1a(0x468)+_0x53df1a(0x1d5)+_0x53df1a(0x577)+_0x53df1a(0x337)+'nter\x20borde'+'r-2\x20transi'+_0x53df1a(0x32c)+_0x53df1a(0x2c3))+(_0x2f589a===currentImageIndex?'border-blu'+_0x53df1a(0x234)+'e-95\x20opaci'+_0x53df1a(0x4ca)+'dow-md':'border-tra'+_0x53df1a(0x276)+_0x53df1a(0x2ac)+'hover:opac'+_0x53df1a(0x481))+(_0x53df1a(0x451)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+'\x20'))[_0x53df1a(0x49c)]('')+('\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20</div'+'>'):'')+(_0x53df1a(0x4a1)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20<div'+_0x53df1a(0x45e)+_0x53df1a(0x447)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x32a)+_0x53df1a(0x33f)+_0x53df1a(0x32f)+_0x53df1a(0x2dd)+'ue-600\x20tex'+'t-sm\x20font-'+_0x53df1a(0x533)+_0x53df1a(0x24f)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x568)+_0x53df1a(0x24d)+_0x53df1a(0x463)+_0x53df1a(0x528)+_0x53df1a(0x3b3)+_0x53df1a(0x1e0)+_0x53df1a(0x231)+_0x53df1a(0x2e8)+'entColor\x22\x20'+_0x53df1a(0x33a)+_0x53df1a(0x3c5)+_0x53df1a(0x1ff)+_0x53df1a(0x52c)+_0x53df1a(0x588)+_0x53df1a(0x53b)+_0x53df1a(0x262)+_0x53df1a(0x4ac)+_0x53df1a(0x3a6)+_0x53df1a(0x2c6)+'cle\x20cx=\x2212'+_0x53df1a(0x2c7)+_0x53df1a(0x4bf)+_0x53df1a(0x2cb)+'>\x0a\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x3cd))+_0x3ba1f0[_0x53df1a(0x56e)]+(_0x53df1a(0x373)+_0x53df1a(0x2e2)+_0x53df1a(0x4ed)+_0x53df1a(0x547)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x4c3)+'ass=\x22text-'+'2xl\x20font-e'+_0x53df1a(0x4f9)+_0x53df1a(0x332)+_0x53df1a(0x33b)+'g-tight\x20mb'+'-4\x22>')+_0x3ba1f0[_0x53df1a(0x48c)]+('</h1>\x0a\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x1f6)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+'\x20\x20\x20<div\x20cl'+'ass=\x22grid\x20'+_0x53df1a(0x294)+_0x53df1a(0x3c6)+_0x53df1a(0x2fd)+_0x53df1a(0x2f6)+_0x53df1a(0x28b)+'\x20border\x20bo'+'rder-slate'+'-100\x20text-'+_0x53df1a(0x395)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x285)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x1d8)+_0x53df1a(0x216)+_0x53df1a(0x2c8)+_0x53df1a(0x367)+'-medium\x20mb'+_0x53df1a(0x391)+'g\x20ngủ</p>\x0a'+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20<p\x20c'+_0x53df1a(0x3f7)+_0x53df1a(0x2fa)+_0x53df1a(0x2ec)+'\x20text-base'+'\x22>')+(_0x428d2c['saUqz'](_0x3ba1f0['beds'],-0x249+0x2*0x8f7+-0xf*0x10b)?_0x428d2c['dhzFu'](_0x3ba1f0[_0x53df1a(0x492)],_0x53df1a(0x2f9)):'-')+(_0x53df1a(0x275)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x260)+_0x53df1a(0x232)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20<div'+_0x53df1a(0x56c)+_0x53df1a(0x2a0)+_0x53df1a(0x31b)+_0x53df1a(0x1d6)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x3f3)+_0x53df1a(0x585)+_0x53df1a(0x520)+_0x53df1a(0x2f0)+_0x53df1a(0x261)+_0x53df1a(0x336)+_0x53df1a(0x339)+'>\x0a\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x560)+'\x20class=\x22fo'+'nt-bold\x20te'+'xt-slate-8'+'00\x20text-ba'+'se\x22>')+(_0x428d2c['KvPzP'](_0x3ba1f0[_0x53df1a(0x311)],-0x17e9*0x1+0x5*-0x311+-0x2*-0x139f)?_0x428d2c[_0x53df1a(0x413)](_0x3ba1f0[_0x53df1a(0x311)],_0x428d2c[_0x53df1a(0x39c)]):'-')+(_0x53df1a(0x275)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x260)+_0x53df1a(0x232)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20<div'+_0x53df1a(0x3ac)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x560)+_0x53df1a(0x53c)+_0x53df1a(0x543)+'-slate-400'+_0x53df1a(0x56d)+_0x53df1a(0x29e)+_0x53df1a(0x3b9)+_0x53df1a(0x275)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x4be)+_0x53df1a(0x383)+_0x53df1a(0x2c8)+_0x53df1a(0x2fc)+_0x53df1a(0x4fe))+(_0x428d2c['SvnLx'](_0x3ba1f0[_0x53df1a(0x241)],-0x18bd+0x1086+0x837)?_0x428d2c[_0x53df1a(0x4b4)](_0x3ba1f0['area'],_0x428d2c[_0x53df1a(0x435)]):'-')+('</p>\x0a\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x260)+_0x53df1a(0x232)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+'\x20\x20</div>\x0a\x0a'+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x4bc)+_0x53df1a(0x232)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x284)+_0x53df1a(0x374)+_0x53df1a(0x1e2)+_0x53df1a(0x3f1)+'t-slate-90'+_0x53df1a(0x38f)+_0x53df1a(0x2b3)+_0x53df1a(0x410)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x4d8)+_0x53df1a(0x520)+_0x53df1a(0x2b2)+_0x53df1a(0x46e)+_0x53df1a(0x51e)+'hitespace-'+_0x53df1a(0x3b0))+_0x3ba1f0[_0x53df1a(0x49b)+'n']+(_0x53df1a(0x275)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x2f4)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x364)+_0x53df1a(0x373)+_0x53df1a(0x2e2)+_0x53df1a(0x538)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x4ed)+_0x53df1a(0x1e1)+_0x53df1a(0x303)+_0x53df1a(0x555)+_0x53df1a(0x25d)+_0x53df1a(0x2be)+_0x53df1a(0x472)+_0x53df1a(0x534)+_0x53df1a(0x521)+_0x53df1a(0x1f0)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20<'+'div>\x0a\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20<div\x20cl'+'ass=\x22mb-6\x20'+_0x53df1a(0x402)+_0x53df1a(0x277)+_0x53df1a(0x258)+'r\x20border-s'+_0x53df1a(0x366)+'hadow-sm\x22>'+_0x53df1a(0x373)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x1d8)+'s=\x22text-xs'+_0x53df1a(0x2c8)+_0x53df1a(0x367)+_0x53df1a(0x273)+'uppercase\x20'+_0x53df1a(0x467)+_0x53df1a(0x38d)+'>Mức\x20giá\x20n'+_0x53df1a(0x411)+'>\x0a\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2d2)+_0x53df1a(0x266)+'xl\x20font-bl'+_0x53df1a(0x22a)+_0x53df1a(0x274)+_0x53df1a(0x581)+'ht\x22>')+_0x3ba1f0['priceStr']+(_0x53df1a(0x275)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x2f4)+_0x53df1a(0x373)+_0x53df1a(0x2e2)+_0x53df1a(0x4ed)+_0x53df1a(0x1e1)+_0x53df1a(0x3c7)+_0x53df1a(0x47e)+_0x53df1a(0x26b)+'er\x20border-'+_0x53df1a(0x30f)+_0x53df1a(0x1ee)+_0x53df1a(0x335)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x4ed)+_0x53df1a(0x1e1)+_0x53df1a(0x443)+_0x53df1a(0x502)+_0x53df1a(0x2b7)+'5\x22>\x0a\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x40d)+_0x53df1a(0x39f)+_0x53df1a(0x440)+_0x53df1a(0x2df)+'lue-600\x20ro'+'unded-full'+'\x20flex\x20item'+_0x53df1a(0x1e3)+_0x53df1a(0x526)+_0x53df1a(0x4b8)+_0x53df1a(0x4f1)+_0x53df1a(0x215)+_0x53df1a(0x437)+_0x53df1a(0x3e9)+_0x53df1a(0x2eb)+_0x53df1a(0x4f3)+_0x53df1a(0x518)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x376))+_0x3ba1f0[_0x53df1a(0x56a)]['charAt'](-0x1*-0xa1f+-0x3*-0x290+0x61*-0x2f)+(_0x53df1a(0x373)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20</d'+_0x53df1a(0x232)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+'<div\x20class'+_0x53df1a(0x1e9)+'>\x0a\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x3f3)+_0x53df1a(0x3a9)+_0x53df1a(0x406)+_0x53df1a(0x50e)+'ncate\x22>')+_0x3ba1f0[_0x53df1a(0x56a)]+('</p>\x0a\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x334)+_0x53df1a(0x2da)+'xs\x20text-em'+'erald-600\x20'+_0x53df1a(0x379)+_0x53df1a(0x454)+'tems-cente'+_0x53df1a(0x377)+'-0.5\x22>\x0a\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+'\x20<svg\x20widt'+_0x53df1a(0x24a)+_0x53df1a(0x3ec)+_0x53df1a(0x4d0)+_0x53df1a(0x330)+_0x53df1a(0x4b2)+_0x53df1a(0x4e6)+_0x53df1a(0x41a)+_0x53df1a(0x2c9)+_0x53df1a(0x25e)+_0x53df1a(0x469)+_0x53df1a(0x320)+_0x53df1a(0x264)+'4\x2012\x22></po'+'lyline></s'+'vg>\x20Đối\x20tá'+_0x53df1a(0x453)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x4ed)+_0x53df1a(0x404)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x31a)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x4ed)+_0x53df1a(0x439)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20<'+_0x53df1a(0x1e1)+'\x22space-y-2'+_0x53df1a(0x202)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x3a0))+(_0x3ba1f0[_0x53df1a(0x233)]?_0x428d2c[_0x53df1a(0x4b4)](_0x53df1a(0x4d5),_0x3ba1f0[_0x53df1a(0x233)]):'#')+(_0x53df1a(0x3ef)+_0x53df1a(0x446)+_0x53df1a(0x346)+_0x53df1a(0x56f)+_0x53df1a(0x20b)+'center\x20jus'+'tify-cente'+'r\x20gap-2\x20fo'+_0x53df1a(0x2c4)+_0x53df1a(0x41e)+'sition-all'+'\x20shadow-md'+'\x20')+(_0x3ba1f0[_0x53df1a(0x233)]?_0x53df1a(0x327)+_0x53df1a(0x352)+_0x53df1a(0x456)+_0x53df1a(0x50f)+'te':_0x428d2c[_0x53df1a(0x256)])+(_0x53df1a(0x451)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20<svg\x20wi'+_0x53df1a(0x1ec)+_0x53df1a(0x4ba)+'\x20viewBox=\x22'+_0x53df1a(0x34c)+'\x20fill=\x22non'+'e\x22\x20stroke='+_0x53df1a(0x52d)+_0x53df1a(0x221)+_0x53df1a(0x524)+'\x22><path\x20d='+_0x53df1a(0x2b6)+'v3a2\x202\x200\x200'+_0x53df1a(0x49e)+_0x53df1a(0x3c4)+_0x53df1a(0x3ae)+_0x53df1a(0x3eb)+_0x53df1a(0x4d9)+_0x53df1a(0x312)+_0x53df1a(0x2e7)+_0x53df1a(0x423)+_0x53df1a(0x1f2)+_0x53df1a(0x4ea)+_0x53df1a(0x314)+_0x53df1a(0x38a)+_0x53df1a(0x340)+_0x53df1a(0x41f)+'.7\x202.81\x202\x20'+_0x53df1a(0x564)+_0x53df1a(0x27d)+_0x53df1a(0x421)+_0x53df1a(0x450)+_0x53df1a(0x3a7)+_0x53df1a(0x4ab)+'\x201\x202.11-.4'+'5\x2012.84\x2012'+_0x53df1a(0x41f)+_0x53df1a(0x1fc)+_0x53df1a(0x3d5)+'16.92z\x22></'+_0x53df1a(0x3d6)+_0x53df1a(0x3ac)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20')+(_0x3ba1f0[_0x53df1a(0x233)]?_0x428d2c[_0x53df1a(0x4b4)](_0x428d2c['wfzQm'],_0x3ba1f0[_0x53df1a(0x233)]):_0x428d2c[_0x53df1a(0x54c)])+('\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2a4)+_0x53df1a(0x380)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x4ed)+_0x53df1a(0x354))+(_0x3ba1f0[_0x53df1a(0x233)]?_0x428d2c['rXfji'](_0x428d2c['ceaRA'],_0x3ba1f0['agentPhone']):'#')+('\x22\x20target=\x22'+_0x53df1a(0x4fd)+'l=\x22noopene'+'r\x20noreferr'+_0x53df1a(0x2cf)+_0x53df1a(0x4cb)+_0x53df1a(0x324)+_0x53df1a(0x2ca)+'\x20flex\x20item'+_0x53df1a(0x1e3)+_0x53df1a(0x526)+_0x53df1a(0x563)+_0x53df1a(0x23f)+_0x53df1a(0x55c)+'ansition-a'+'ll\x20shadow-'+_0x53df1a(0x418))+(_0x3ba1f0[_0x53df1a(0x233)]?_0x428d2c['eCtwL']:_0x53df1a(0x2e9)+_0x53df1a(0x4f0)+_0x53df1a(0x2f5)+_0x53df1a(0x583)+'llowed')+(_0x53df1a(0x451)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x438)+_0x53df1a(0x245)+'eight=\x2220\x22'+_0x53df1a(0x4db)+'0\x200\x20100\x2010'+_0x53df1a(0x21e)+_0x53df1a(0x37f)+_0x53df1a(0x223)+_0x53df1a(0x47b)+'0\x2026.1\x2010\x20'+_0x53df1a(0x51a)+_0x53df1a(0x3d3)+_0x53df1a(0x48f)+_0x53df1a(0x2c5)+'2.3\x2084.6\x202'+_0x53df1a(0x2e0)+_0x53df1a(0x43e)+'8\x2087.2\x2023.'+_0x53df1a(0x360)+_0x53df1a(0x270)+'3\x2080.5\x2040.'+_0x53df1a(0x36c)+_0x53df1a(0x226)+_0x53df1a(0x1f1)+_0x53df1a(0x3e2)+_0x53df1a(0x211)+_0x53df1a(0x46c)+_0x53df1a(0x36e)+'2.1\x2010\x2050\x20'+_0x53df1a(0x33d)+'\x22currentCo'+_0x53df1a(0x3fb)+_0x53df1a(0x30a)+'=\x2256\x22\x20font'+_0x53df1a(0x499)+'rial\x22\x20font'+_0x53df1a(0x23b)+_0x53df1a(0x4c6)+_0x53df1a(0x531)+'ill=\x22#0068'+_0x53df1a(0x51b)+'nchor=\x22mid'+_0x53df1a(0x42d)+_0x53df1a(0x2ed)+_0x53df1a(0x28f)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x362)+'lo\x20Ngay\x0a\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x301)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+'\x20</div>\x0a\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2ff)+'v>\x0a\x0a\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x259)+'ss=\x22grid\x20g'+_0x53df1a(0x466)+_0x53df1a(0x386)+_0x53df1a(0x373)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20<a\x20href'+_0x53df1a(0x448)+_0x53df1a(0x214)+_0x53df1a(0x1ed)+_0x53df1a(0x370)+_0x53df1a(0x4e7))+_0x428d2c[_0x53df1a(0x2b0)](encodeURIComponent,_0x3ba1f0[_0x53df1a(0x56e)])+(_0x53df1a(0x455)+_0x53df1a(0x52a)+_0x53df1a(0x4fb)+_0x53df1a(0x356)+'ed-xl\x20bg-w'+_0x53df1a(0x3ad)+_0x53df1a(0x2f2)+_0x53df1a(0x278)+_0x53df1a(0x321)+_0x53df1a(0x23c)+_0x53df1a(0x4e1)+_0x53df1a(0x52f)+_0x53df1a(0x24e)+_0x53df1a(0x483)+_0x53df1a(0x1e3)+_0x53df1a(0x526)+_0x53df1a(0x229)+_0x53df1a(0x2d6)+'on-colors\x22'+_0x53df1a(0x3ac)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x568)+'vg\x20width=\x22'+_0x53df1a(0x47f)+_0x53df1a(0x1fa)+_0x53df1a(0x3b3)+'4\x2024\x22\x20fill'+'=\x22none\x22\x20st'+_0x53df1a(0x2e8)+'entColor\x22\x20'+_0x53df1a(0x33a)+_0x53df1a(0x246)+_0x53df1a(0x4a9)+_0x53df1a(0x30e)+_0x53df1a(0x501)+_0x53df1a(0x338)+'12s8-6.75\x20'+'8-12a8\x208\x200'+_0x53df1a(0x414)+_0x53df1a(0x1e4)+_0x53df1a(0x35c)+_0x53df1a(0x561)+_0x53df1a(0x219)+'circle></s'+_0x53df1a(0x495)+_0x53df1a(0x3bb)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20</a'+_0x53df1a(0x3ac)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x35f)+_0x53df1a(0x3be)+_0x53df1a(0x567)+_0x53df1a(0x40b))+_0x3ba1f0['id']+('\x27)\x22\x20class='+'\x22py-3\x20px-3'+'\x20rounded-x'+_0x53df1a(0x23e)+'\x20border\x20bo'+'rder-slate'+_0x53df1a(0x390)+_0x53df1a(0x37d)+'100\x20text-s'+_0x53df1a(0x1cd)+_0x53df1a(0x1cc)+'ext-xs\x20fle'+_0x53df1a(0x230)+_0x53df1a(0x236)+'fy-center\x20'+'gap-1.5\x20tr'+_0x53df1a(0x542)+_0x53df1a(0x3c1)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x4b1)+_0x53df1a(0x3f0)+_0x53df1a(0x1ea)+'\x22\x20viewBox='+_0x53df1a(0x3ba)+_0x53df1a(0x36b)+_0x53df1a(0x584)+_0x53df1a(0x580)+_0x53df1a(0x375)+'ke-width=\x22'+_0x53df1a(0x208)+_0x53df1a(0x23a)+_0x53df1a(0x2d5)+'2\x202h12a2\x202'+_0x53df1a(0x4e5)+_0x53df1a(0x494)+_0x53df1a(0x210)+_0x53df1a(0x320)+_0x53df1a(0x2c2)+_0x53df1a(0x420)+_0x53df1a(0x347)+'e\x20x1=\x2212\x22\x20'+_0x53df1a(0x4ce)+_0x53df1a(0x27c)+_0x53df1a(0x4c1)+_0x53df1a(0x4b6)+'a\x20Sẻ\x20Link\x0a'+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+'\x20\x20</button'+'>\x0a\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2e2)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x31a)+_0x53df1a(0x2e2)+_0x53df1a(0x2e2)+_0x53df1a(0x2ab)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x287)+_0x53df1a(0x462)+'\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x53df1a(0x2ab)+_0x53df1a(0x2e2)+'</div>');}function changeModalImage(_0x35f7cb){const _0x2297e0=_0x20d4c3,_0x3a3bd5={};_0x3a3bd5[_0x2297e0(0x2a5)]=function(_0x5d49b5,_0x212e12){return _0x5d49b5%_0x212e12;},_0x3a3bd5[_0x2297e0(0x549)]=function(_0x223d0f,_0xa50258){return _0x223d0f+_0xa50258;},_0x3a3bd5[_0x2297e0(0x2e5)]=function(_0x62f592,_0x4ff7cd){return _0x62f592+_0x4ff7cd;};const _0x21aae1=_0x3a3bd5;if(!currentModalProperty)return;const _0xb15f2d=currentModalProperty[_0x2297e0(0x48e)]['length'];currentImageIndex=_0x21aae1[_0x2297e0(0x2a5)](_0x21aae1[_0x2297e0(0x549)](_0x21aae1[_0x2297e0(0x2e5)](currentImageIndex,_0x35f7cb),_0xb15f2d),_0xb15f2d),updateModalImageView();}function selectModalImage(_0x3754cb){const _0x2325f0=_0x20d4c3,_0x805954={'vKzAs':function(_0xf03f0a){return _0xf03f0a();}};currentImageIndex=_0x3754cb,_0x805954[_0x2325f0(0x2a3)](updateModalImageView);}function updateModalImageView(){const _0x19e5f7=_0x20d4c3,_0x3aceee={};_0x3aceee[_0x19e5f7(0x353)]=function(_0x28ee60,_0x39159d){return _0x28ee60===_0x39159d;},_0x3aceee['oMllJ']=_0x19e5f7(0x318)+_0x19e5f7(0x212)+_0x19e5f7(0x468)+_0x19e5f7(0x1d5)+_0x19e5f7(0x577)+_0x19e5f7(0x337)+_0x19e5f7(0x569)+_0x19e5f7(0x3e7)+_0x19e5f7(0x32c)+_0x19e5f7(0x570)+_0x19e5f7(0x1d4)+_0x19e5f7(0x3fe)+_0x19e5f7(0x479)+_0x19e5f7(0x1df)+_0x19e5f7(0x200),_0x3aceee['NuknS']='w-16\x20h-16\x20'+_0x19e5f7(0x212)+_0x19e5f7(0x468)+_0x19e5f7(0x1d5)+'ounded-xl\x20'+_0x19e5f7(0x337)+'nter\x20borde'+_0x19e5f7(0x3e7)+_0x19e5f7(0x32c)+_0x19e5f7(0x570)+_0x19e5f7(0x58a)+_0x19e5f7(0x1f7)+_0x19e5f7(0x3bd)+'ver:opacit'+_0x19e5f7(0x43d),_0x3aceee[_0x19e5f7(0x2dc)]='modalMainI'+'mg',_0x3aceee[_0x19e5f7(0x3f4)]=_0x19e5f7(0x491);const _0x426a08=_0x3aceee,_0xfbf5f6=document[_0x19e5f7(0x482)+_0x19e5f7(0x2bc)](_0x426a08[_0x19e5f7(0x2dc)]),_0x5d679a=document['getElement'+_0x19e5f7(0x2bc)](_0x426a08[_0x19e5f7(0x3f4)]);if(_0xfbf5f6)_0xfbf5f6[_0x19e5f7(0x3d0)]=currentModalProperty[_0x19e5f7(0x48e)][currentImageIndex];if(_0x5d679a)_0x5d679a[_0x19e5f7(0x4bd)+'t']=currentImageIndex+(-0x330+0x31c*0x3+-0x623);const _0x2d9fff=document[_0x19e5f7(0x4aa)+_0x19e5f7(0x31c)](_0x19e5f7(0x54a)+'Container\x20'+_0x19e5f7(0x299));_0x2d9fff['forEach']((_0x37c013,_0x50f04a)=>{const _0x3aa64a=_0x19e5f7;_0x426a08[_0x3aa64a(0x353)](_0x50f04a,currentImageIndex)?_0x37c013[_0x3aa64a(0x29d)]=_0x426a08['oMllJ']:_0x37c013['className']=_0x426a08[_0x3aa64a(0x431)];});}function closeModal(){const _0x104df0=_0x20d4c3,_0x5b1509={};_0x5b1509[_0x104df0(0x409)]=_0x104df0(0x24c);const _0x11e6b7=_0x5b1509;modalOverlay['classList']['add'](_0x11e6b7[_0x104df0(0x409)]),document[_0x104df0(0x427)]['style'][_0x104df0(0x550)]='',window['location'][_0x104df0(0x591)]='',currentModalProperty=null;}function openLightbox(_0xbf5a0d){const _0x37c4d5=_0x20d4c3,_0x2ba48c={};_0x2ba48c[_0x37c4d5(0x397)]=_0x37c4d5(0x4e9)+_0x37c4d5(0x1f4),_0x2ba48c['KJmcM']=_0x37c4d5(0x537)+'g',_0x2ba48c[_0x37c4d5(0x2aa)]=function(_0x53e72e,_0x125264){return _0x53e72e+_0x125264;},_0x2ba48c[_0x37c4d5(0x308)]='hidden';const _0x75bff6=_0x2ba48c;if(!currentModalProperty)return;const _0x4e54e2=document[_0x37c4d5(0x482)+'ById'](_0x75bff6[_0x37c4d5(0x397)]),_0x481f54=document[_0x37c4d5(0x482)+_0x37c4d5(0x2bc)](_0x75bff6[_0x37c4d5(0x579)]),_0x1416cf=document[_0x37c4d5(0x482)+_0x37c4d5(0x2bc)](_0x37c4d5(0x315)+_0x37c4d5(0x1d0));_0x481f54['src']=currentModalProperty['images'][_0xbf5a0d],_0x1416cf['textConten'+'t']=currentModalProperty[_0x37c4d5(0x48c)]+'\x20('+_0x75bff6[_0x37c4d5(0x2aa)](_0xbf5a0d,0x497+0xc5f*0x2+-0x1d54)+'/'+currentModalProperty['images'][_0x37c4d5(0x263)]+')',_0x4e54e2[_0x37c4d5(0x225)]['remove'](_0x75bff6[_0x37c4d5(0x308)]);}function closeLightbox(){const _0x4234cf=_0x20d4c3,_0x15e920={};_0x15e920['osPmu']=_0x4234cf(0x24c);const _0xa3ac6f=_0x15e920;document[_0x4234cf(0x482)+'ById']('lightboxOv'+_0x4234cf(0x1f4))['classList']['add'](_0xa3ac6f['osPmu']);}function copyShareLink(_0x44f0f7){const _0x299b4f=_0x20d4c3,_0x494c5b={'oMeBc':function(_0x202fbf,_0x47bfc4){return _0x202fbf(_0x47bfc4);},'xSbuL':'Đã\x20chép\x20đư'+'ờng\x20dẫn\x20BĐ'+_0x299b4f(0x484)+_0x299b4f(0x293)},_0x326626=''+window[_0x299b4f(0x265)][_0x299b4f(0x42e)]+window['location'][_0x299b4f(0x398)]+_0x299b4f(0x237)+_0x44f0f7;navigator[_0x299b4f(0x508)][_0x299b4f(0x546)](_0x326626)[_0x299b4f(0x2a7)](()=>{const _0x1477d4=_0x299b4f;_0x494c5b[_0x1477d4(0x396)](showToast,_0x494c5b['xSbuL']);});}function showToast(_0x4f6096){const _0x2a027a=_0x20d4c3,_0x2560e8={'RVXPt':_0x2a027a(0x42f)+_0x2a027a(0x4ee),'fExIR':_0x2a027a(0x3e5),'fyBDK':function(_0x76a632,_0x3291dd,_0x58f985){return _0x76a632(_0x3291dd,_0x58f985);}},_0x1d199d=document[_0x2a027a(0x482)+'ById']('toast');document[_0x2a027a(0x482)+'ById']('toastMsg')[_0x2a027a(0x4bd)+'t']=_0x4f6096,_0x1d199d[_0x2a027a(0x225)][_0x2a027a(0x3aa)](_0x2560e8['RVXPt'],_0x2560e8[_0x2a027a(0x21d)]),_0x2560e8['fyBDK'](setTimeout,()=>{const _0x12e4d8=_0x2a027a;_0x1d199d[_0x12e4d8(0x225)][_0x12e4d8(0x38b)](_0x2560e8['RVXPt'],_0x12e4d8(0x3e5));},0x5e5+-0xb*-0x26d+0x6*-0x37a);}function checkUrlHash(){const _0x228d4f=_0x20d4c3,_0x3358dd={'iXsgq':_0x228d4f(0x477),'bQqwt':function(_0x7f44de,_0x43b2c6){return _0x7f44de(_0x43b2c6);}},_0x25568c=window[_0x228d4f(0x265)][_0x228d4f(0x591)];if(_0x25568c&&_0x25568c[_0x228d4f(0x426)](_0x3358dd[_0x228d4f(0x3dc)])){const _0x17054f=_0x25568c[_0x228d4f(0x4c2)](_0x3358dd[_0x228d4f(0x3dc)])[0x3*0xbd0+-0x1c6f+0x7*-0x100];_0x3358dd[_0x228d4f(0x4fa)](openModal,_0x17054f);}}modalOverlay['addEventLi'+_0x20d4c3(0x51d)](_0x20d4c3(0x4fc),closeModal),document[_0x20d4c3(0x405)+'stener'](_0x20d4c3(0x55b)+'u',_0x325c13=>_0x325c13[_0x20d4c3(0x358)+_0x20d4c3(0x343)]()),document['addEventLi'+_0x20d4c3(0x51d)](_0x20d4c3(0x300),_0x14a585=>{const _0x5646d5=_0x20d4c3,_0x5c7a4a={};_0x5c7a4a['rxYEm']=function(_0x2704ef,_0x6b2c40){return _0x2704ef===_0x6b2c40;};const _0xc5e4fb=_0x5c7a4a;if(_0x14a585[_0x5646d5(0x4dd)]===0xd4c+-0x108c+0x1*0x3bb||_0x14a585[_0x5646d5(0x548)]&&_0x14a585[_0x5646d5(0x545)]&&(_0xc5e4fb['rxYEm'](_0x14a585[_0x5646d5(0x4dd)],0x575+0x163a+-0x1b66)||_0xc5e4fb[_0x5646d5(0x3af)](_0x14a585['keyCode'],-0x22d*-0x7+0x4e9*0x1+-0x13da)||_0xc5e4fb[_0x5646d5(0x3af)](_0x14a585['keyCode'],0x1*0x1c23+0x1fad+-0x1*0x3b8d))||_0x14a585[_0x5646d5(0x548)]&&_0xc5e4fb['rxYEm'](_0x14a585[_0x5646d5(0x4dd)],0x243f+-0x25c8+0x1de))return _0x14a585[_0x5646d5(0x358)+_0x5646d5(0x343)](),![];}),setInterval(()=>{const _0x27bf93=_0x20d4c3,_0x3580d7={};_0x3580d7[_0x27bf93(0x35e)]=function(_0x18c4a9,_0x39970d){return _0x18c4a9>_0x39970d;},_0x3580d7['IUlRC']=function(_0x1009fd,_0xcb3971){return _0x1009fd-_0xcb3971;};const _0x4b59f2=_0x3580d7,_0x1f93d9=performance[_0x27bf93(0x205)]();debugger;const _0xa2efa1=performance[_0x27bf93(0x205)]();_0x4b59f2[_0x27bf93(0x35e)](_0x4b59f2[_0x27bf93(0x238)](_0xa2efa1,_0x1f93d9),0x477+-0x4*0x6e1+-0x161*-0x11)&&window[_0x27bf93(0x265)][_0x27bf93(0x240)]();},-0x1373*-0x2+0x66c+0x2*-0x14b5);function _0x503839(_0x9de1c6){const _0x1fdc24=_0x20d4c3,_0x122c63={'OszQT':function(_0x4fbdd1,_0x13f613){return _0x4fbdd1===_0x13f613;},'xmTUb':_0x1fdc24(0x304),'WCUCi':_0x1fdc24(0x322)+_0x1fdc24(0x257),'ivykO':function(_0x16c929,_0x50b2d3){return _0x16c929+_0x50b2d3;},'PMhYL':_0x1fdc24(0x263),'EPhVy':function(_0x55e54a,_0x3f6083){return _0x55e54a%_0x3f6083;},'OlULv':'gger','YReig':'action','zxVYQ':'debu','gWwDn':'stateObjec'+'t','YaXBm':function(_0x14e930,_0x1e9b20){return _0x14e930(_0x1e9b20);}};function _0x5f4548(_0x55d034){const _0x58f24f=_0x1fdc24;if(_0x122c63['OszQT'](typeof _0x55d034,_0x122c63[_0x58f24f(0x47c)]))return function(_0x1f8a9a){}['constructo'+'r'](_0x122c63[_0x58f24f(0x292)])[_0x58f24f(0x3f9)]('counter');else _0x122c63[_0x58f24f(0x436)]('',_0x55d034/_0x55d034)[_0x122c63[_0x58f24f(0x243)]]!==-0x1e8d+-0x262b+0xf1*0x49||_0x122c63['OszQT'](_0x122c63[_0x58f24f(0x20a)](_0x55d034,-0x3a7+0x1dbb+-0x1a00),0x1a3*-0x11+-0x7*0x33f+0x328c)?function(){return!![];}[_0x58f24f(0x2ae)+'r'](_0x122c63[_0x58f24f(0x436)](_0x58f24f(0x1fd),_0x122c63[_0x58f24f(0x505)]))[_0x58f24f(0x4d3)](_0x122c63[_0x58f24f(0x40c)]):function(){return![];}[_0x58f24f(0x2ae)+'r'](_0x122c63[_0x58f24f(0x436)](_0x122c63[_0x58f24f(0x3a8)],_0x122c63['OlULv']))[_0x58f24f(0x3f9)](_0x122c63[_0x58f24f(0x486)]);_0x122c63[_0x58f24f(0x29f)](_0x5f4548,++_0x55d034);}try{if(_0x9de1c6)return _0x5f4548;else _0x122c63[_0x1fdc24(0x29f)](_0x5f4548,-0x253d+-0x2*-0x17a+0x2249);}catch(_0x520ff9){}}
+        const CSV_URL = '/api/data';
+
+        let properties = [];
+        let activeTab = 'Tất cả';
+        let currentModalProperty = null;
+        let currentImageIndex = 0;
+
+        const elGrid = document.getElementById('grid');
+        const elLoading = document.getElementById('loading');
+        const elError = document.getElementById('error');
+        const elContentGrid = document.getElementById('contentGrid');
+        const elResultCount = document.getElementById('resultCount');
+        
+        const elHeroSearch = document.getElementById('heroSearchInput');
+        const elHeaderSearch = document.getElementById('headerSearchInput');
+
+        const elType = document.getElementById('filterType');
+        const elStatus = document.getElementById('filterStatus');
+        const elSort = document.getElementById('filterSort');
+        const modalOverlay = document.getElementById('modalOverlay');
+
+        // ĐỒNG BỘ NỘI DUNG TÌM KIẾM GIỮA 2 THANH
+        function syncSearch(e) {
+            const val = e.target.value;
+            if (e.target.id === 'heroSearchInput') elHeaderSearch.value = val;
+            else elHeroSearch.value = val;
+            render();
+        }
+        elHeroSearch.addEventListener('input', syncSearch);
+        elHeaderSearch.addEventListener('input', syncSearch);
+
+        // Scroll đến nội dung
+        const scrollToContent = () => {
+            const offset = 120; // Chiều cao Header + Filter
+            const topPos = document.getElementById('content').getBoundingClientRect().top + window.pageYOffset - offset;
+            window.scrollTo({ top: topPos, behavior: 'smooth' });
+        };
+        document.getElementById('btnHeroSearch').addEventListener('click', scrollToContent);
+        elHeroSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') scrollToContent(); });
+        elHeaderSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') scrollToContent(); });
+
+        const formatPrice = (price) => {
+            const num = Number(price);
+            if (isNaN(num) || num === 0) return 'Thỏa thuận';
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(num);
+        };
+
+        function parseImages(imgStr) {
+            if (!imgStr) return ['https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80'];
+            const urls = imgStr.split(/[\n,|,]+/).map(s => s.trim()).filter(s => s.length > 5 && (s.startsWith('http://') || s.startsWith('https://')));
+            return urls.length > 0 ? urls : ['https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80'];
+        }
+
+        Papa.parse(CSV_URL, {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            transformHeader: function(h) { return h.trim().toLowerCase(); },
+            complete: function(results) {
+                try {
+                    properties = results.data.filter(item => item.id && item.title).map(item => {
+                        const rawStatus = item.status || 'Còn trống';
+                        const isAvailable = rawStatus.toLowerCase().includes('trống') || rawStatus.toLowerCase().includes('còn');
+
+                        return {
+                            id: String(item.id).trim(),
+                            title: item.title,
+                            description: item.description || 'Thông tin đang cập nhật.',
+                            rawPrice: Number(item.price) || 0,
+                            priceStr: formatPrice(item.price),
+                            address: item.address || item.location || 'Đang cập nhật địa chỉ',
+                            beds: Number(item.beds) || 0,
+                            baths: Number(item.baths) || 0,
+                            area: Number(item.area) || 0,
+                            propertyType: item.propertytype || item.type || 'BĐS',
+                            transactionType: item.transactiontype || (item.type && item.type.includes('thuê') ? 'Cho thuê' : 'Bán'),
+                            images: parseImages(item.image || item.images),
+                            agentName: item.agentname || item.contact || 'Chủ nhà / Môi giới',
+                            agentPhone: item.agentphone || item.contact || '',
+                            status: rawStatus,
+                            location: item.location || 'Chưa rõ',
+                            isAvailable: isAvailable
+                        };
+                    });
+
+                    elLoading.classList.add('hidden');
+                    elContentGrid.classList.remove('hidden');
+                    render();
+                    checkUrlHash();
+                } catch(err) {
+                    showError('Cấu trúc cột trong Google Sheet không khớp. Vui lòng kiểm tra lại.');
+                }
+            },
+            error: function() { showError('Không thể tải file CSV. Vui lòng kiểm tra lại link web.'); }
+        });
+
+        function showError(msg) {
+            elLoading.classList.add('hidden');
+            elError.classList.remove('hidden');
+            document.getElementById('errorMsg').textContent = msg;
+        }
+
+        function getFilteredProperties() {
+            const search = elHeaderSearch.value.toLowerCase().trim();
+            const type = elType.value;
+            const status = elStatus.value;
+            const sort = elSort.value;
+
+            let result = properties.filter(p => {
+                const matchTab = activeTab === 'Tất cả' || p.transactionType === activeTab;
+                const matchSearch = p.title.toLowerCase().includes(search) || p.location.toLowerCase().includes(search) || p.address.toLowerCase().includes(search);
+                const matchType = type === 'Tất cả' || p.propertyType === type;
+                const matchStatus = status === 'Tất cả' || (status === 'Đang trống' && p.isAvailable) || (status === 'Đã giao dịch' && !p.isAvailable);
+
+                return matchTab && matchSearch && matchType && matchStatus;
+            });
+
+            if (sort === 'price-asc') result.sort((a, b) => a.rawPrice - b.rawPrice);
+            if (sort === 'price-desc') result.sort((a, b) => b.rawPrice - a.rawPrice);
+            if (sort === 'area-desc') result.sort((a, b) => b.area - a.area);
+
+            return result;
+        }
+
+        function render() {
+            const filtered = getFilteredProperties();
+            elResultCount.textContent = `(${filtered.length} kết quả)`;
+
+            if (filtered.length === 0) {
+                elGrid.innerHTML = `
+                    <div class="col-span-full text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
+                        <p class="text-4xl mb-3">🔍</p>
+                        <h3 class="text-lg font-bold text-slate-800 mb-1">Không tìm thấy bất động sản nào</h3>
+                        <p class="text-slate-500 text-sm">Thử mở rộng từ khóa hoặc chọn lại bộ lọc.</p>
+                    </div>`;
+                return;
+            }
+
+            elGrid.innerHTML = filtered.map(p => `
+                <div class="property-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden cursor-pointer flex flex-col ${!p.isAvailable ? 'opacity-75 grayscale-[20%]' : ''}" onclick="openModal('${p.id}')">
+                    <div class="relative h-56 bg-slate-100 overflow-hidden">
+                        <img src="${p.images[0]}" alt="${p.title}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80'">
+                        
+                        <div class="absolute top-3 left-3 flex gap-2">
+                            <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-lg shadow-md">${p.transactionType}</span>
+                            <span class="bg-slate-900/80 text-white text-xs font-semibold px-2.5 py-1 rounded-lg backdrop-blur-md shadow-md">${p.propertyType}</span>
+                        </div>
+                        <div class="absolute top-3 right-3">
+                            <span class="text-xs font-bold px-3 py-1 rounded-lg shadow-md backdrop-blur-md ${!p.isAvailable ? 'bg-red-500/90 text-white' : 'bg-emerald-500/90 text-white'}">${p.status}</span>
+                        </div>
+
+                        ${p.images.length > 1 ? `
+                        <div class="absolute bottom-3 right-3 bg-black/70 text-white text-[11px] font-semibold px-2.5 py-1 rounded-md backdrop-blur-md flex items-center gap-1">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                            ${p.images.length} ảnh
+                        </div>` : ''}
+
+                        <div class="absolute bottom-3 left-3 bg-white/95 text-blue-600 font-extrabold text-base px-3.5 py-1.5 rounded-xl shadow-lg">
+                            ${p.priceStr}
+                        </div>
+                    </div>
+
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-center text-slate-500 text-xs font-semibold mb-2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1 text-blue-500 shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span class="truncate">${p.location}</span>
+                        </div>
+                        <h3 class="font-bold text-base text-slate-900 leading-snug mb-4 line-clamp-2">${p.title}</h3>
+                        
+                        <div class="mt-auto grid grid-cols-3 gap-1 border-t border-slate-100 pt-3.5 text-center text-slate-600">
+                            <div>
+                                <span class="block text-[11px] text-slate-400 font-medium">Phòng ngủ</span>
+                                <span class="text-xs font-bold text-slate-800">${p.beds > 0 ? p.beds + ' PN' : '-'}</span>
+                            </div>
+                            <div class="border-x border-slate-100">
+                                <span class="block text-[11px] text-slate-400 font-medium">WC</span>
+                                <span class="text-xs font-bold text-slate-800">${p.baths > 0 ? p.baths + ' WC' : '-'}</span>
+                            </div>
+                            <div>
+                                <span class="block text-[11px] text-slate-400 font-medium">Diện tích</span>
+                                <span class="text-xs font-bold text-slate-800">${p.area > 0 ? p.area + ' m²' : '-'}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>`).join('');
+        }
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    b.className = 'tab-btn shrink-0 flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold transition-all text-slate-500 hover:text-slate-800 hover:bg-slate-200/50';
+                });
+                e.target.className = 'tab-btn shrink-0 flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold transition-all bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50';
+                activeTab = e.target.dataset.tab;
+                render();
+            });
+        });
+
+        elType.addEventListener('change', render);
+        elStatus.addEventListener('change', render);
+        elSort.addEventListener('change', render);
+
+        window.openModal = function(id) {
+            const p = properties.find(item => item.id === id);
+            if(!p) return;
+
+            currentModalProperty = p;
+            currentImageIndex = 0;
+            window.location.hash = `id=${p.id}`;
+
+            renderModalContent();
+            modalOverlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function renderModalContent() {
+            const p = currentModalProperty;
+            if(!p) return;
+            const hasMultipleImages = p.images.length > 1;
+
+            modalOverlay.innerHTML = `
+            <div class="bg-white rounded-3xl w-full max-w-5xl my-auto shadow-2xl flex flex-col relative overflow-hidden max-h-[92vh]" onclick="event.stopPropagation()">
+                <button onclick="closeModal()" class="absolute top-4 right-4 z-20 bg-slate-900/60 hover:bg-slate-900 text-white p-2.5 rounded-full backdrop-blur-md transition-colors shadow-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+
+                <div class="flex flex-col lg:flex-row overflow-y-auto">
+                    <div class="w-full lg:w-3/5 p-4 sm:p-6 lg:border-r border-slate-100">
+                        <div class="relative h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden bg-slate-900 group">
+                            <img id="modalMainImg" src="${p.images[currentImageIndex]}" class="w-full h-full object-cover transition-all duration-300 cursor-zoom-in" onclick="openLightbox(${currentImageIndex})">
+                            
+                            <div class="absolute top-3 left-3 flex gap-2">
+                                <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-lg shadow-md">${p.transactionType}</span>
+                                <span class="bg-slate-900/80 text-white text-xs font-semibold px-2.5 py-1 rounded-lg backdrop-blur-md">${p.propertyType}</span>
+                            </div>
+
+                            ${hasMultipleImages ? `
+                            <button onclick="changeModalImage(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm transition-all">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                            </button>
+                            <button onclick="changeModalImage(1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm transition-all">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </button>
+                            <div class="absolute bottom-3 right-3 bg-black/70 text-white text-xs font-semibold px-3 py-1 rounded-lg backdrop-blur-md">
+                                <span id="imgCounter">${currentImageIndex + 1}</span> / ${p.images.length} ảnh
+                            </div>` : ''}
+                        </div>
+
+                        ${hasMultipleImages ? `
+                        <div class="flex gap-2.5 mt-3 overflow-x-auto pb-2 no-scrollbar" id="thumbnailContainer">
+                            ${p.images.map((img, idx) => `
+                                <img src="${img}" onclick="selectModalImage(${idx})" class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl cursor-pointer border-2 transition-all shrink-0 ${idx === currentImageIndex ? 'border-blue-600 scale-95 opacity-100 shadow-md' : 'border-transparent opacity-60 hover:opacity-100'}">
+                            `).join('')}
+                        </div>` : ''}
+
+                        <div class="mt-6">
+                            <div class="flex items-center text-blue-600 text-sm font-semibold mb-2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                ${p.address}
+                            </div>
+                            <h1 class="text-2xl font-extrabold text-slate-900 leading-tight mb-4">${p.title}</h1>
+                            
+                            <div class="grid grid-cols-3 gap-3 bg-slate-50 p-4 rounded-2xl mb-6 border border-slate-100 text-center">
+                                <div>
+                                    <p class="text-xs text-slate-400 font-medium mb-0.5">Phòng ngủ</p>
+                                    <p class="font-bold text-slate-800 text-base">${p.beds > 0 ? p.beds + ' phòng' : '-'}</p>
+                                </div>
+                                <div class="border-x border-slate-200">
+                                    <p class="text-xs text-slate-400 font-medium mb-0.5">Phòng tắm/WC</p>
+                                    <p class="font-bold text-slate-800 text-base">${p.baths > 0 ? p.baths + ' phòng' : '-'}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-400 font-medium mb-0.5">Diện tích</p>
+                                    <p class="font-bold text-slate-800 text-base">${p.area > 0 ? p.area + ' m²' : '-'}</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-base font-bold text-slate-900 mb-2">Mô tả chi tiết</h3>
+                                <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">${p.description}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full lg:w-2/5 p-4 sm:p-6 bg-slate-50/50 flex flex-col justify-between">
+                        <div>
+                            <div class="mb-6 p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                                <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-1">Mức giá niêm yết</p>
+                                <p class="text-3xl font-black text-blue-600 tracking-tight">${p.priceStr}</p>
+                            </div>
+
+                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-6">
+                                <div class="flex items-center gap-3.5 mb-5">
+                                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-lg border-2 border-white shadow-sm uppercase shrink-0">
+                                        ${p.agentName.charAt(0)}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="font-bold text-slate-900 truncate">${p.agentName}</p>
+                                        <p class="text-xs text-emerald-600 font-semibold flex items-center gap-1 mt-0.5">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Đối tác uy tín
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2.5">
+                                    <a href="${p.agentPhone ? 'tel:' + p.agentPhone : '#'}" class="w-full py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 font-bold text-sm transition-all shadow-md ${p.agentPhone ? 'bg-slate-900 hover:bg-slate-800 text-white' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                                        ${p.agentPhone ? 'Gọi ' + p.agentPhone : 'Chưa có SĐT'}
+                                    </a>
+
+                                    <a href="${p.agentPhone ? 'https://zalo.me/' + p.agentPhone : '#'}" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 font-bold text-sm transition-all shadow-md ${p.agentPhone ? 'bg-zalo hover:bg-zaloHover text-white' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}">
+                                        <svg width="20" height="20" viewBox="0 0 100 100" fill="none"><path d="M50 10C27.9 10 10 26.1 10 46C10 57.6 16.4 67.8 26.1 74C25.3 78.4 22.3 84.6 22 85.3C21.6 86.4 22.8 87.2 23.7 86.6C28.9 83.3 36.3 80.5 40.5 79.4C43.5 80.1 46.7 80.4 50 80.4C72.1 80.4 90 64.3 90 44.4C90 24.5 72.1 10 50 10Z" fill="currentColor"/><text x="50" y="56" font-family="Arial" font-size="26" font-weight="900" fill="#0068FF" text-anchor="middle">Zalo</text></svg>
+                                        Chat Zalo Ngay
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.address)}" target="_blank" class="py-3 px-3 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg> Bản Đồ
+                                </a>
+                                <button onclick="copyShareLink('${p.id}')" class="py-3 px-3 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg> Chia Sẻ Link
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        window.changeModalImage = function(direction) {
+            if(!currentModalProperty) return;
+            const total = currentModalProperty.images.length;
+            currentImageIndex = (currentImageIndex + direction + total) % total;
+            updateModalImageView();
+        }
+        window.selectModalImage = function(index) {
+            currentImageIndex = index;
+            updateModalImageView();
+        }
+        function updateModalImageView() {
+            const mainImg = document.getElementById('modalMainImg');
+            const counter = document.getElementById('imgCounter');
+            if(mainImg) mainImg.src = currentModalProperty.images[currentImageIndex];
+            if(counter) counter.textContent = currentImageIndex + 1;
+
+            const thumbs = document.querySelectorAll('#thumbnailContainer img');
+            thumbs.forEach((img, i) => {
+                img.className = i === currentImageIndex 
+                    ? "w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl cursor-pointer border-2 transition-all shrink-0 border-blue-600 scale-95 opacity-100 shadow-md"
+                    : "w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl cursor-pointer border-2 transition-all shrink-0 border-transparent opacity-60 hover:opacity-100";
+            });
+        }
+        window.closeModal = function() {
+            modalOverlay.classList.add('hidden');
+            document.body.style.overflow = '';
+            window.location.hash = '';
+            currentModalProperty = null;
+        }
+
+        window.openLightbox = function(index) {
+            if(!currentModalProperty) return;
+            document.getElementById('lightboxImg').src = currentModalProperty.images[index];
+            document.getElementById('lightboxCaption').textContent = `${currentModalProperty.title} (${index + 1}/${currentModalProperty.images.length})`;
+            document.getElementById('lightboxOverlay').classList.remove('hidden');
+        }
+        window.closeLightbox = function() {
+            document.getElementById('lightboxOverlay').classList.add('hidden');
+        }
+
+        window.copyShareLink = function(id) {
+            const shareUrl = `${window.location.origin}${window.location.pathname}#id=${id}`;
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                showToast('Đã chép đường dẫn BĐS vào bộ nhớ tạm!');
+            });
+        }
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
+        function checkUrlHash() {
+            const hash = window.location.hash;
+            if(hash && hash.includes('id=')) {
+                const id = hash.split('id=')[1];
+                openModal(id);
+            }
+        }
+        modalOverlay.addEventListener('click', closeModal);
     </script>
 </body>
 </html>
