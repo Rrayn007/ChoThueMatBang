@@ -589,15 +589,7 @@
             }
         });
         
-        // 3. Chặn bôi đen, chọn văn bản và kéo thả hình ảnh
-        document.addEventListener('selectstart', function (e) {
-            e.preventDefault();
-        });
-        document.addEventListener('dragstart', function (e) {
-            e.preventDefault();
-        });
-        
-        // 4. Bẫy Debugger đa tầng (Phát hiện người dùng ép mở DevTools)
+        // 3. Bẫy Debugger đa tầng (Phát hiện người dùng ép mở DevTools)
         (function () {
             const detectDevTool = function (allowedLag) {
                 const start = performance.now();
