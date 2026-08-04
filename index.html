@@ -554,6 +554,66 @@
             }
         }
         modalOverlay.addEventListener('click', closeModal);
+
+        /* ==========================================================
+           HỆ THỐNG BẢO MẬT & CHỐNG SOI MÃ NGUỒN (FULL SECURE SCRIPT)
+           ========================================================== */
+        
+        // 1. Chặn hoàn toàn click chuột phải
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // 2. Chặn các phím tắt mở DevTools, View Source, Save Page
+        document.addEventListener('keydown', function (e) {
+            // Chặn F12
+            if (e.keyCode === 123) {
+                e.preventDefault();
+                return false;
+            }
+            // Chặn Ctrl+Shift+I (Inspect), Ctrl+Shift+J (Console), Ctrl+Shift+C (Element Inspector)
+            if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
+                e.preventDefault();
+                return false;
+            }
+            // Chặn Ctrl+U (View Source) hoặc Ctrl+S (Save Page)
+            if (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83)) {
+                e.preventDefault();
+                return false;
+            }
+            // Chặn Ctrl+Shift+U
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 85) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // 3. Chặn bôi đen, chọn văn bản và kéo thả hình ảnh
+        document.addEventListener('selectstart', function (e) {
+            e.preventDefault();
+        });
+        document.addEventListener('dragstart', function (e) {
+            e.preventDefault();
+        });
+        
+        // 4. Bẫy Debugger đa tầng (Phát hiện người dùng ép mở DevTools)
+        (function () {
+            const detectDevTool = function (allowedLag) {
+                const start = performance.now();
+                debugger; // Điểm dừng khi DevTools đang mở
+                const end = performance.now();
+                if (end - start > allowedLag) {
+                    document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#0f172a;color:#fff;font-family:sans-serif;text-align:center;"><h2>Hệ thống phát hiện công cụ gỡ lỗi (DevTools). Truy cập bị từ chối!</h2></div>';
+                    window.location.href = "about:blank";
+                }
+            };
+        
+            // Chạy kiểm tra định kỳ mỗi 800ms
+            setInterval(function () {
+                detectDevTool(150);
+            }, 800);
+        })();
     </script>
 </body>
 </html>
