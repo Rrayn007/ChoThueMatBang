@@ -20,7 +20,6 @@
         }
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <style>
@@ -28,65 +27,83 @@
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .property-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .property-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.12); }
-        .loader {
-            border: 4px solid #f3f4f6; border-top: 4px solid #2563eb;
-            border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;
-        }
+        .loader { border: 4px solid #f3f4f6; border-top: 4px solid #2563eb; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Ẩn thanh cuộn cho các khu vực vuốt ngang trên Mobile */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Custom style cho thẻ select để hiển thị đẹp hơn */
+        .custom-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+        }
     </style>
 </head>
 <body class="antialiased">
 
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2 cursor-pointer" onclick="window.location.hash=''; location.reload();">
+    <header class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm transition-all h-16 flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex items-center justify-between gap-3 sm:gap-6">
+            
+            <div class="flex items-center gap-2 cursor-pointer shrink-0" onclick="window.location.hash=''; location.reload();">
                 <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-md shadow-blue-500/20">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                 </div>
-                <span class="font-black text-2xl tracking-tight text-slate-900">00<span class="text-blue-600">7</span></span>
+                <span class="font-black text-2xl tracking-tight text-slate-900 hidden sm:block">00<span class="text-blue-600">7</span></span>
             </div>
-            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
-                <a href="#" class="text-blue-600 border-b-2 border-blue-600 pb-1">Trang chủ</a>
+
+            <div id="headerSearch" class="flex-1 max-w-2xl transition-all duration-300 opacity-0 translate-y-2 pointer-events-none">
+                <div class="relative group">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="headerSearchInput" placeholder="Tìm địa điểm, dự án..." class="w-full bg-slate-100 border border-transparent rounded-full py-2 pl-10 pr-4 text-sm font-medium focus:outline-none focus:bg-white focus:border-blue-300 focus:ring-4 focus:ring-blue-500/10 transition-all text-slate-800">
+                </div>
+            </div>
+
+            <nav class="hidden md:flex items-center gap-6 text-sm font-semibold shrink-0">
+                <a href="#" class="text-blue-600">Trang chủ</a>
                 <a href="#content" class="text-slate-500 hover:text-slate-900 transition-colors">Danh sách BĐS</a>
             </nav>
         </div>
     </header>
 
-    <section class="bg-slate-900 text-white pt-16 pb-24 relative overflow-hidden">
+    <section id="heroSection" class="bg-slate-900 text-white pt-12 pb-20 relative overflow-hidden">
         <div class="absolute inset-0 opacity-25 bg-[url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2000')] bg-cover bg-center"></div>
         <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
             <h1 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight leading-tight">Tìm kiếm ngôi nhà & mặt bằng mơ ước</h1>
             <p class="text-slate-300 text-lg mb-8 max-w-2xl mx-auto font-normal">Cập nhật danh sách nhà trọ, mặt bằng kinh doanh, bán BĐS chính chủ liên tục.</p>
             
-            <div class="bg-white p-2.5 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-3xl mx-auto">
+            <div class="bg-white p-2 sm:p-2.5 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-3xl mx-auto">
                 <div class="flex-1 flex items-center bg-slate-50 rounded-xl px-4 py-3 border border-transparent focus-within:border-blue-500 focus-within:bg-white transition-colors">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-400 mr-3 shrink-0"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <input type="text" id="searchInput" placeholder="Nhập địa điểm, tên dự án, đường..." class="bg-transparent w-full text-slate-900 placeholder:text-slate-400 focus:outline-none text-sm md:text-base">
+                    <input type="text" id="heroSearchInput" placeholder="Nhập địa điểm, tên dự án, đường..." class="bg-transparent w-full text-slate-900 placeholder:text-slate-400 font-medium focus:outline-none text-sm md:text-base">
                 </div>
-                <button onclick="render()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 rounded-xl font-bold transition-all whitespace-nowrap shadow-md active:scale-95">
+                <button id="btnHeroSearch" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 rounded-xl font-bold transition-all whitespace-nowrap shadow-md active:scale-95">
                     Tìm kiếm
                 </button>
             </div>
         </div>
     </section>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 -mt-12 relative z-20" id="content">
-        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-8 flex flex-col lg:flex-row justify-between items-center gap-4">
+    <div id="stickyFilterBar" class="sticky top-[64px] z-40 bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-sm py-3 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             
-            <div class="flex bg-slate-100 p-1 rounded-xl w-full lg:w-auto" id="tabs-container">
-                <button data-tab="Tất cả" class="tab-btn flex-1 lg:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all bg-white text-blue-600 shadow-sm">Tất cả</button>
-                <button data-tab="Bán" class="tab-btn flex-1 lg:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all text-slate-500 hover:text-slate-800">Bán</button>
-                <button data-tab="Cho thuê" class="tab-btn flex-1 lg:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all text-slate-500 hover:text-slate-800">Cho thuê</button>
+            <div class="flex bg-slate-100 p-1 rounded-xl w-full md:w-auto overflow-x-auto no-scrollbar shrink-0" id="tabs-container">
+                <button data-tab="Tất cả" class="tab-btn shrink-0 flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50 transition-all">Tất cả</button>
+                <button data-tab="Bán" class="tab-btn shrink-0 flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 transition-all">Bán</button>
+                <button data-tab="Cho thuê" class="tab-btn shrink-0 flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 transition-all">Cho thuê</button>
             </div>
 
-            <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-                <div class="flex items-center text-xs font-bold text-slate-400 bg-slate-50 px-3 py-2.5 rounded-xl border border-slate-200 uppercase tracking-wider">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                    Lọc:
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar w-full md:w-auto pb-1 md:pb-0">
+                <div class="flex items-center text-xs font-bold text-slate-400 bg-slate-50 px-3 py-2.5 rounded-xl border border-slate-200 uppercase tracking-wider shrink-0 hidden sm:flex">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg> Lọc:
                 </div>
-                <select id="filterType" class="bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                
+                <select id="filterType" class="custom-select shrink-0 bg-slate-50 border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl px-4 py-2.5 outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all">
                     <option value="Tất cả">Loại hình (Tất cả)</option>
                     <option value="Mặt bằng">Mặt bằng</option>
                     <option value="Nhà trọ">Nhà trọ / KTX</option>
@@ -95,12 +112,14 @@
                     <option value="Biệt thự">Biệt thự</option>
                     <option value="Đất nền">Đất nền / BĐS</option>
                 </select>
-                <select id="filterStatus" class="bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                
+                <select id="filterStatus" class="custom-select shrink-0 bg-slate-50 border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl px-4 py-2.5 outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all">
                     <option value="Tất cả">Trạng thái (Tất cả)</option>
                     <option value="Đang trống">Còn trống</option>
                     <option value="Đã giao dịch">Đã giao dịch / Thuê</option>
                 </select>
-                <select id="filterSort" class="bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                
+                <select id="filterSort" class="custom-select shrink-0 bg-slate-50 border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl px-4 py-2.5 outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all">
                     <option value="default">Sắp xếp: Mới nhất</option>
                     <option value="price-asc">Giá: Thấp đến Cao</option>
                     <option value="price-desc">Giá: Cao đến Thấp</option>
@@ -108,22 +127,25 @@
                 </select>
             </div>
         </div>
+    </div>
 
-        <div id="loading" class="flex flex-col items-center justify-center py-24 text-blue-600">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 relative z-20 min-h-[50vh]" id="content">
+        
+        <div id="loading" class="flex flex-col items-center justify-center py-20 text-blue-600">
             <div class="loader mb-4"></div>
             <p class="font-semibold text-slate-600">Đang tải dữ liệu...</p>
         </div>
         
-        <div id="error" class="hidden text-center py-20 bg-red-50 rounded-2xl border border-red-200">
+        <div id="error" class="hidden text-center py-16 bg-red-50 rounded-2xl border border-red-200">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mx-auto text-red-500 mb-3"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
             <h3 class="text-lg font-bold text-red-700 mb-1">Không thể kết nối dữ liệu</h3>
             <p class="text-red-600 text-sm" id="errorMsg"></p>
         </div>
 
         <div id="contentGrid" class="hidden">
-            <div class="mb-6 flex justify-between items-end">
-                <h2 class="text-2xl font-bold text-slate-900">
-                    Danh sách Bất Động Sản <span id="resultCount" class="text-slate-400 font-normal text-lg ml-1">(0 kết quả)</span>
+            <div class="mb-5 flex justify-between items-end">
+                <h2 class="text-xl md:text-2xl font-bold text-slate-900">
+                    Danh sách Bất Động Sản <span id="resultCount" class="text-slate-400 font-medium text-base ml-1">(0 kết quả)</span>
                 </h2>
             </div>
             <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -131,10 +153,10 @@
         </div>
     </main>
 
-    <div id="modalOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/70 backdrop-blur-sm hidden overflow-y-auto">
+    <div id="modalOverlay" class="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-6 bg-slate-950/70 backdrop-blur-sm hidden overflow-y-auto">
         </div>
 
-    <div id="lightboxOverlay" class="fixed inset-0 z-[60] bg-black/95 hidden flex flex-col items-center justify-center p-4">
+    <div id="lightboxOverlay" class="fixed inset-0 z-[70] bg-black/95 hidden flex flex-col items-center justify-center p-4">
         <button onclick="closeLightbox()" class="absolute top-5 right-5 text-white/80 hover:text-white p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
@@ -142,17 +164,17 @@
         <p id="lightboxCaption" class="text-white/70 text-sm mt-4 font-medium"></p>
     </div>
 
-    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl font-medium text-sm flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 z-[70]">
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl font-medium text-sm flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 z-[80]">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
         <span id="toastMsg">Thành công</span>
     </div>
 
-    <footer class="bg-white border-t border-slate-200 py-8 mt-16 text-center text-slate-500 text-sm">
+    <footer class="bg-white border-t border-slate-200 py-8 mt-12 text-center text-slate-500 text-sm">
         <p>© 2026 RAYN SCOFIELD — ALL RIGHTS RESERVED.</p>
     </footer>
 
     <script>
-        // LINK GOOGLE SHEETS DẠNG CSV CỦA BẠN
+        // LINK GOOGLE SHEETS DẠNG CSV
         const CSV_URL = '/api/data';
 
         let properties = [];
@@ -160,35 +182,69 @@
         let currentModalProperty = null;
         let currentImageIndex = 0;
 
-        // Elements DOM
+        // Elements
         const elGrid = document.getElementById('grid');
         const elLoading = document.getElementById('loading');
         const elError = document.getElementById('error');
         const elContentGrid = document.getElementById('contentGrid');
         const elResultCount = document.getElementById('resultCount');
-        const elSearch = document.getElementById('searchInput');
+        
+        const elHeroSearch = document.getElementById('heroSearchInput');
+        const elHeaderSearch = document.getElementById('headerSearchInput');
+        const headerSearchContainer = document.getElementById('headerSearch');
+        const heroSection = document.getElementById('heroSection');
+
         const elType = document.getElementById('filterType');
         const elStatus = document.getElementById('filterStatus');
         const elSort = document.getElementById('filterSort');
         const modalOverlay = document.getElementById('modalOverlay');
 
-        // Hàm Format Tiền
+        // UX SCROLL: Kích hoạt thanh tìm kiếm trên header khi cuộn qua Hero
+        window.addEventListener('scroll', () => {
+            const heroRect = heroSection.getBoundingClientRect();
+            // Khi mép dưới của hero section gần biến mất
+            if (heroRect.bottom < 120) {
+                headerSearchContainer.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
+                headerSearchContainer.classList.add('opacity-100', 'translate-y-0');
+            } else {
+                headerSearchContainer.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
+                headerSearchContainer.classList.remove('opacity-100', 'translate-y-0');
+            }
+        });
+
+        // ĐỒNG BỘ NỘI DUNG TÌM KIẾM GIỮA 2 THANH
+        function syncSearch(e) {
+            const val = e.target.value;
+            if (e.target.id === 'heroSearchInput') elHeaderSearch.value = val;
+            else elHeroSearch.value = val;
+            render();
+        }
+        elHeroSearch.addEventListener('input', syncSearch);
+        elHeaderSearch.addEventListener('input', syncSearch);
+
+        // Cuộn mượt mà đến khu vực nội dung khi bấm Tìm kiếm hoặc Enter
+        const scrollToContent = () => {
+            const offset = document.getElementById('stickyFilterBar').offsetHeight + 64; // header + filter height
+            const topPos = document.getElementById('content').getBoundingClientRect().top + window.pageYOffset - offset - 20;
+            window.scrollTo({ top: topPos, behavior: 'smooth' });
+        };
+        document.getElementById('btnHeroSearch').addEventListener('click', scrollToContent);
+        elHeroSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') scrollToContent(); });
+        elHeaderSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') scrollToContent(); });
+
         const formatPrice = (price) => {
             const num = Number(price);
             if (isNaN(num) || num === 0) return 'Thỏa thuận';
             return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(num);
         };
 
-        // Hàm Tách Nhiều Link Ảnh từ Cột image (Phân tách bằng dấu phẩy, xuống dòng, hoặc ngoặc)
         function parseImages(imgStr) {
             if (!imgStr) return ['https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80'];
-            const urls = imgStr.split(/[\n,|,]+/)
-                               .map(s => s.trim())
-                               .filter(s => s.length > 5 && (s.startsWith('http://') || s.startsWith('https://')));
+            const urls = imgStr.split(/[\n,|,]+/).map(s => s.trim()).filter(s => s.length > 5 && (s.startsWith('http://') || s.startsWith('https://')));
             return urls.length > 0 ? urls : ['https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80'];
         }
 
-        // Tải & Xử lý dữ liệu từ CSV
+        // Tải Dữ Liệu
         Papa.parse(CSV_URL, {
             download: true,
             header: true,
@@ -200,12 +256,10 @@
                         const rawStatus = item.status || 'Còn trống';
                         const isAvailable = rawStatus.toLowerCase().includes('trống') || rawStatus.toLowerCase().includes('còn');
 
-                        const images = parseImages(item.image || item.images);
-
                         return {
                             id: String(item.id).trim(),
                             title: item.title,
-                            description: item.description || 'Thông tin đang được cập nhật thêm.',
+                            description: item.description || 'Thông tin đang cập nhật.',
                             rawPrice: Number(item.price) || 0,
                             priceStr: formatPrice(item.price),
                             address: item.address || item.location || 'Đang cập nhật địa chỉ',
@@ -214,11 +268,11 @@
                             area: Number(item.area) || 0,
                             propertyType: item.propertytype || item.type || 'BĐS',
                             transactionType: item.transactiontype || (item.type && item.type.includes('thuê') ? 'Cho thuê' : 'Bán'),
-                            images: images,
+                            images: parseImages(item.image || item.images),
                             agentName: item.agentname || item.contact || 'Chủ nhà / Môi giới',
                             agentPhone: item.agentphone || item.contact || '',
                             status: rawStatus,
-                            location: item.location || 'Cần Thơ',
+                            location: item.location || 'Chưa rõ',
                             isAvailable: isAvailable
                         };
                     });
@@ -226,18 +280,12 @@
                     elLoading.classList.add('hidden');
                     elContentGrid.classList.remove('hidden');
                     render();
-
-                    // Tự động mở Modal nếu đường link chứa Hash id (#id=1)
                     checkUrlHash();
-
                 } catch(err) {
-                    console.error("Parse Error:", err);
                     showError('Cấu trúc cột trong Google Sheet không khớp. Vui lòng kiểm tra lại.');
                 }
             },
-            error: function() {
-                showError('Không thể tải file CSV. Vui lòng kiểm tra lại chế độ "Xuất bản lên Web" của Google Sheets.');
-            }
+            error: function() { showError('Không thể tải file CSV. Vui lòng kiểm tra lại link web.'); }
         });
 
         function showError(msg) {
@@ -246,27 +294,21 @@
             document.getElementById('errorMsg').textContent = msg;
         }
 
-        // Logic Lọc & Sắp Xếp
         function getFilteredProperties() {
-            const search = elSearch.value.toLowerCase().trim();
+            const search = elHeroSearch.value.toLowerCase().trim(); // Đồng bộ từ 1 source
             const type = elType.value;
             const status = elStatus.value;
             const sort = elSort.value;
 
             let result = properties.filter(p => {
                 const matchTab = activeTab === 'Tất cả' || p.transactionType === activeTab;
-                const matchSearch = p.title.toLowerCase().includes(search) || 
-                                    p.location.toLowerCase().includes(search) || 
-                                    p.address.toLowerCase().includes(search);
+                const matchSearch = p.title.toLowerCase().includes(search) || p.location.toLowerCase().includes(search) || p.address.toLowerCase().includes(search);
                 const matchType = type === 'Tất cả' || p.propertyType === type;
-                const matchStatus = status === 'Tất cả' || 
-                                   (status === 'Đang trống' && p.isAvailable) || 
-                                   (status === 'Đã giao dịch' && !p.isAvailable);
+                const matchStatus = status === 'Tất cả' || (status === 'Đang trống' && p.isAvailable) || (status === 'Đã giao dịch' && !p.isAvailable);
 
                 return matchTab && matchSearch && matchType && matchStatus;
             });
 
-            // Sắp xếp
             if (sort === 'price-asc') result.sort((a, b) => a.rawPrice - b.rawPrice);
             if (sort === 'price-desc') result.sort((a, b) => b.rawPrice - a.rawPrice);
             if (sort === 'area-desc') result.sort((a, b) => b.area - a.area);
@@ -274,7 +316,6 @@
             return result;
         }
 
-        // Render Lưới Thẻ BĐS
         function render() {
             const filtered = getFilteredProperties();
             elResultCount.textContent = `(${filtered.length} kết quả)`;
@@ -338,26 +379,23 @@
                 </div>`).join('');
         }
 
-        // Bắt sự kiện lọc
-        elSearch.addEventListener('input', render);
-        elType.addEventListener('change', render);
-        elStatus.addEventListener('change', render);
-        elSort.addEventListener('change', render);
-
+        // Thay đổi Tabs
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 document.querySelectorAll('.tab-btn').forEach(b => {
-                    b.className = 'tab-btn flex-1 lg:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all text-slate-500 hover:text-slate-800';
+                    b.className = 'tab-btn shrink-0 flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold transition-all text-slate-500 hover:text-slate-800 hover:bg-slate-200/50';
                 });
-                e.target.className = 'tab-btn flex-1 lg:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all bg-white text-blue-600 shadow-sm';
+                e.target.className = 'tab-btn shrink-0 flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold transition-all bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50';
                 activeTab = e.target.dataset.tab;
                 render();
             });
         });
 
-        // ====================================================================
-        // MODAL CHI TIẾT & ALBUM NHIỀU ẢNH
-        // ====================================================================
+        elType.addEventListener('change', render);
+        elStatus.addEventListener('change', render);
+        elSort.addEventListener('change', render);
+
+        // ================= MODAL LOGIC =================
         window.openModal = function(id) {
             const p = properties.find(item => item.id === id);
             if(!p) return;
@@ -385,7 +423,6 @@
 
                 <div class="flex flex-col lg:flex-row overflow-y-auto">
                     <div class="w-full lg:w-3/5 p-4 sm:p-6 lg:border-r border-slate-100">
-                        
                         <div class="relative h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden bg-slate-900 group">
                             <img id="modalMainImg" src="${p.images[currentImageIndex]}" class="w-full h-full object-cover transition-all duration-300 cursor-zoom-in" onclick="openLightbox(${currentImageIndex})">
                             
@@ -477,7 +514,7 @@
 
                             <div class="grid grid-cols-2 gap-2.5">
                                 <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.address)}" target="_blank" class="py-3 px-3 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors">
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg> Xem Bản Đồ
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg> Bản Đồ
                                 </a>
                                 <button onclick="copyShareLink('${p.id}')" class="py-3 px-3 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors">
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg> Chia Sẻ Link
@@ -489,15 +526,14 @@
             </div>`;
         }
 
-        // Chuyển ảnh trong Modal
-        function changeModalImage(direction) {
+        window.changeModalImage = function(direction) {
             if(!currentModalProperty) return;
             const total = currentModalProperty.images.length;
             currentImageIndex = (currentImageIndex + direction + total) % total;
             updateModalImageView();
         }
 
-        function selectModalImage(index) {
+        window.selectModalImage = function(index) {
             currentImageIndex = index;
             updateModalImageView();
         }
@@ -508,45 +544,36 @@
             if(mainImg) mainImg.src = currentModalProperty.images[currentImageIndex];
             if(counter) counter.textContent = currentImageIndex + 1;
 
-            // Highlight thumbnail
             const thumbs = document.querySelectorAll('#thumbnailContainer img');
             thumbs.forEach((img, i) => {
-                if(i === currentImageIndex) {
-                    img.className = "w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl cursor-pointer border-2 transition-all shrink-0 border-blue-600 scale-95 opacity-100 shadow-md";
-                } else {
-                    img.className = "w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl cursor-pointer border-2 transition-all shrink-0 border-transparent opacity-60 hover:opacity-100";
-                }
+                img.className = i === currentImageIndex 
+                    ? "w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl cursor-pointer border-2 transition-all shrink-0 border-blue-600 scale-95 opacity-100 shadow-md"
+                    : "w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl cursor-pointer border-2 transition-all shrink-0 border-transparent opacity-60 hover:opacity-100";
             });
         }
 
-        function closeModal() {
+        window.closeModal = function() {
             modalOverlay.classList.add('hidden');
             document.body.style.overflow = '';
             window.location.hash = '';
             currentModalProperty = null;
         }
 
-        // Fullscreen Lightbox Mode
-        function openLightbox(index) {
+        window.openLightbox = function(index) {
             if(!currentModalProperty) return;
-            const lb = document.getElementById('lightboxOverlay');
-            const lbImg = document.getElementById('lightboxImg');
-            const lbCap = document.getElementById('lightboxCaption');
-
-            lbImg.src = currentModalProperty.images[index];
-            lbCap.textContent = `${currentModalProperty.title} (${index + 1}/${currentModalProperty.images.length})`;
-            lb.classList.remove('hidden');
+            document.getElementById('lightboxImg').src = currentModalProperty.images[index];
+            document.getElementById('lightboxCaption').textContent = `${currentModalProperty.title} (${index + 1}/${currentModalProperty.images.length})`;
+            document.getElementById('lightboxOverlay').classList.remove('hidden');
         }
 
-        function closeLightbox() {
+        window.closeLightbox = function() {
             document.getElementById('lightboxOverlay').classList.add('hidden');
         }
 
-        // Copy Link
-        function copyShareLink(id) {
+        window.copyShareLink = function(id) {
             const shareUrl = `${window.location.origin}${window.location.pathname}#id=${id}`;
             navigator.clipboard.writeText(shareUrl).then(() => {
-                showToast('Đã chép đường dẫn BĐS vào bộ nhớ tạm!');
+                showToast('Đã chép đường dẫn vào bộ nhớ tạm!');
             });
         }
 
@@ -554,9 +581,7 @@
             const toast = document.getElementById('toast');
             document.getElementById('toastMsg').textContent = msg;
             toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
         }
 
         function checkUrlHash() {
@@ -568,31 +593,6 @@
         }
 
         modalOverlay.addEventListener('click', closeModal);
-
-        // 1. Chặn bấm chuột phải
-        document.addEventListener('contextmenu', (e) => e.preventDefault());
-        
-        // 2. Chặn các phím tắt F12, Ctrl+U (Xem code), Ctrl+Shift+I / J / C (DevTools)
-        document.addEventListener('keydown', (e) => {
-            if (
-                e.keyCode === 123 || 
-                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
-                (e.ctrlKey && e.keyCode === 85)
-            ) {
-                e.preventDefault();
-                return false;
-            }
-        });
-        
-        // 3. Bẫy Debugger: Nếu cố tình mở F12 bằng menu trình duyệt sẽ làm DevTools bị đơ/Reload
-        setInterval(() => {
-            const startTime = performance.now();
-            debugger;
-            const endTime = performance.now();
-            if (endTime - startTime > 100) {
-                window.location.reload();
-            }
-        }, 1000);
     </script>
 </body>
 </html>
