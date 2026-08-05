@@ -33,7 +33,7 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-       .custom-select {
+        .custom-select {
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -41,14 +41,27 @@
             background-repeat: no-repeat;
             background-position: right 0.75rem center;
             background-size: 1rem;
-            padding-right: 3.2rem !important; /* Đẩy chữ né xa icon mũi tên ra */
+            padding-right: 3.2rem !important;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+
+        /* Tuỳ chỉnh thanh cuộn đẹp hơn cho Modal */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 20px;
         }
     </style>
 </head>
 <body class="antialiased">
 
+    <!-- HEADER STICKY -->
     <header class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm py-2 sm:h-16 flex items-center">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-6">
             
@@ -73,6 +86,7 @@
         </div>
     </header>
 
+    <!-- HERO SECTION -->
     <section id="heroSection" class="bg-slate-900 text-white pt-12 pb-20 relative overflow-hidden">
         <div class="absolute inset-0 opacity-25 bg-[url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2000')] bg-cover bg-center"></div>
         <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
@@ -81,6 +95,7 @@
         </div>
     </section>
 
+    <!-- STICKY FILTER BAR -->
     <div id="stickyFilterBar" class="sticky top-[104px] sm:top-[64px] z-40 bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-sm py-3 transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             
@@ -117,6 +132,7 @@
         </div>
     </div>
 
+    <!-- MAIN CONTENT -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 relative z-20 min-h-[50vh]" id="content">
         <div id="loading" class="flex flex-col items-center justify-center py-20 text-blue-600">
             <div class="loader mb-4"></div>
@@ -135,12 +151,17 @@
                 </h2>
             </div>
             <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                </div>
+                <!-- Data renders here -->
+            </div>
         </div>
     </main>
 
-    <div id="modalOverlay" class="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-6 bg-slate-950/70 backdrop-blur-sm hidden overflow-y-auto"></div>
+    <!-- MODAL CHI TIẾT SẢN PHẨM -->
+    <div id="modalOverlay" class="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-5 bg-slate-950/70 backdrop-blur-sm hidden">
+        <!-- Đã dời thuộc tính cuộn (overflow-y-auto) vào khung trắng bên trong để fix lỗi UI -->
+    </div>
 
+    <!-- LIGHTBOX -->
     <div id="lightboxOverlay" class="fixed inset-0 z-[70] bg-black/95 hidden flex flex-col items-center justify-center p-4">
         <button onclick="closeLightbox()" class="absolute top-5 right-5 text-white/80 hover:text-white p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -149,6 +170,7 @@
         <p id="lightboxCaption" class="text-white/70 text-sm mt-4 font-medium"></p>
     </div>
 
+    <!-- TOAST -->
     <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl font-medium text-sm flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 z-[80]">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
         <span id="toastMsg">Thành công</span>
@@ -158,8 +180,9 @@
         <p>© 2026 RAYN SCOFIELD — ALL RIGHTS RESERVED.</p>
     </footer>
 
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        const CSV_URL = '/api/data';
+        const CSV_URL = '/api/data'; // ĐỪNG QUÊN THAY LINK NÀY KHI CHẠY THẬT
 
         let properties = [];
         let activeTab = 'Tất cả';
@@ -245,11 +268,8 @@
         // AUTO-SCROLL THÔNG MINH (KHI NHẬP TÌM KIẾM)
         function triggerSearchAndScroll() {
             render();
-            // Lấy vị trí của khu vực Content
             const contentRect = document.getElementById('content').getBoundingClientRect();
-            const topPos = contentRect.top + window.pageYOffset - 150; // -150 để bù đắp chiều cao Header + Filter
-            
-            // Chỉ scroll nếu màn hình đang ở phía trên khu vực danh sách
+            const topPos = contentRect.top + window.pageYOffset - 150;
             if(contentRect.top > 250) {
                 window.scrollTo({ top: topPos, behavior: 'smooth' });
             }
@@ -358,7 +378,7 @@
         elStatus.addEventListener('change', render);
         elSort.addEventListener('change', render);
 
-        // ================= MODAL & LIGHTBOX =================
+        // ================= NÂNG CẤP GIAO DIỆN MODAL =================
         window.openModal = function(id) {
             const p = properties.find(item => item.id === id);
             if(!p) return;
@@ -378,14 +398,17 @@
             const hasMultipleImages = p.images.length > 1;
 
             modalOverlay.innerHTML = `
-            <div class="bg-white rounded-3xl w-full max-w-5xl my-auto shadow-2xl flex flex-col relative overflow-hidden max-h-[92vh] px-6 sm:px-8 pt-10 pb-8" onclick="event.stopPropagation()">
-                <!-- Nút đóng X đặt gọn gàng, cách đều cạnh trên và phải -->
-                <button onclick="closeModal()" class="absolute top-5 right-5 z-20 bg-slate-100 hover:bg-slate-200 text-slate-700 p-2 rounded-full transition-colors shadow-sm">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <!-- FIX 1: Chuyển cuộn (overflow-y-auto) vào đây, fix lỗi lề (p-6) cho cân bằng -->
+            <div class="bg-white rounded-3xl w-full max-w-5xl shadow-2xl relative max-h-full overflow-y-auto custom-scrollbar flex flex-col" onclick="event.stopPropagation()">
+                
+                <!-- FIX 2: Nút đóng dán chặt góc phải (absolute), cách lề đẹp mắt -->
+                <button onclick="closeModal()" class="absolute top-4 right-4 z-20 bg-slate-100 hover:bg-slate-200 text-slate-600 p-2.5 rounded-full transition-colors focus:outline-none">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
 
-                <div class="flex flex-col lg:flex-row overflow-y-auto">
-                    <div class="w-full lg:w-3/5 p-4 sm:p-6 lg:border-r border-slate-100">
+                <div class="flex flex-col lg:flex-row p-6 lg:p-8 gap-8">
+                    <!-- Khu vực Ảnh -->
+                    <div class="w-full lg:w-3/5 flex flex-col gap-4">
                         <div class="relative h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden bg-slate-900 group">
                             <img id="modalMainImg" src="${p.images[currentImageIndex]}" class="w-full h-full object-cover transition-all duration-300 cursor-zoom-in" onclick="openLightbox(${currentImageIndex})">
                             
@@ -395,10 +418,10 @@
                             </div>
 
                             ${hasMultipleImages ? `
-                            <button onclick="changeModalImage(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm transition-all">
+                            <button onclick="changeModalImage(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm transition-all focus:outline-none">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
                             </button>
-                            <button onclick="changeModalImage(1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm transition-all">
+                            <button onclick="changeModalImage(1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm transition-all focus:outline-none">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                             </button>
                             <div class="absolute bottom-3 right-3 bg-black/70 text-white text-xs font-semibold px-3 py-1 rounded-lg backdrop-blur-md">
@@ -407,81 +430,65 @@
                         </div>
 
                         ${hasMultipleImages ? `
-                        <div class="flex gap-2.5 mt-3 overflow-x-auto pb-2 no-scrollbar" id="thumbnailContainer">
+                        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1" id="thumbnailContainer">
                             ${p.images.map((img, idx) => `
                                 <img src="${img}" onclick="selectModalImage(${idx})" class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl cursor-pointer border-2 transition-all shrink-0 ${idx === currentImageIndex ? 'border-blue-600 scale-95 opacity-100 shadow-md' : 'border-transparent opacity-60 hover:opacity-100'}">
                             `).join('')}
                         </div>` : ''}
-
-                        <div class="mt-6">
-                            <div class="flex items-center text-blue-600 text-sm font-semibold mb-2">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                ${p.address}
-                            </div>
-                            <h1 class="text-2xl font-extrabold text-slate-900 leading-tight mb-4">${p.title}</h1>
-                            
-                            <div class="grid grid-cols-3 gap-3 bg-slate-50 p-4 rounded-2xl mb-6 border border-slate-100 text-center">
-                                <div>
-                                    <p class="text-xs text-slate-400 font-medium mb-0.5">Phòng ngủ</p>
-                                    <p class="font-bold text-slate-800 text-base">${p.beds > 0 ? p.beds + ' phòng' : '-'}</p>
-                                </div>
-                                <div class="border-x border-slate-200">
-                                    <p class="text-xs text-slate-400 font-medium mb-0.5">Phòng tắm/WC</p>
-                                    <p class="font-bold text-slate-800 text-base">${p.baths > 0 ? p.baths + ' phòng' : '-'}</p>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-slate-400 font-medium mb-0.5">Diện tích</p>
-                                    <p class="font-bold text-slate-800 text-base">${p.area > 0 ? p.area + ' m²' : '-'}</p>
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 class="text-base font-bold text-slate-900 mb-2">Mô tả chi tiết</h3>
-                                <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">${p.description}</p>
-                            </div>
-                        </div>
                     </div>
 
-                    <div class="w-full lg:w-2/5 p-4 sm:p-6 bg-slate-50/50 flex flex-col justify-between">
-                        <div>
-                            <div class="mb-6 p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
-                                <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-1">Mức giá niêm yết</p>
-                                <p class="text-3xl font-black text-blue-600 tracking-tight">${p.priceStr}</p>
+                    <!-- Khu vực Thông tin -->
+                    <div class="w-full lg:w-2/5 flex flex-col">
+                        <div class="flex items-center text-blue-600 text-sm font-semibold mb-2">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            ${p.address}
+                        </div>
+                        <h1 class="text-2xl font-extrabold text-slate-900 leading-tight mb-4">${p.title}</h1>
+                        <p class="text-3xl font-black text-blue-600 tracking-tight mb-6">${p.priceStr}</p>
+                        
+                        <div class="grid grid-cols-3 gap-3 bg-slate-50 p-4 rounded-2xl mb-6 border border-slate-100 text-center">
+                            <div>
+                                <p class="text-xs text-slate-400 font-medium mb-0.5">Phòng ngủ</p>
+                                <p class="font-bold text-slate-800 text-base">${p.beds > 0 ? p.beds + ' PN' : '-'}</p>
                             </div>
+                            <div class="border-x border-slate-200">
+                                <p class="text-xs text-slate-400 font-medium mb-0.5">Phòng tắm</p>
+                                <p class="font-bold text-slate-800 text-base">${p.baths > 0 ? p.baths + ' WC' : '-'}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-400 font-medium mb-0.5">Diện tích</p>
+                                <p class="font-bold text-slate-800 text-base">${p.area > 0 ? p.area + ' m²' : '-'}</p>
+                            </div>
+                        </div>
 
-                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-6">
-                                <div class="flex items-center gap-3.5 mb-5">
-                                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-lg border-2 border-white shadow-sm uppercase shrink-0">
-                                        ${p.agentName.charAt(0)}
-                                    </div>
-                                    <div class="min-w-0">
-                                        <p class="font-bold text-slate-900 truncate">${p.agentName}</p>
-                                        <p class="text-xs text-emerald-600 font-semibold flex items-center gap-1 mt-0.5">
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Đối tác uy tín
-                                        </p>
-                                    </div>
+                        <div class="mb-8">
+                            <h3 class="text-sm font-bold text-slate-900 mb-2">Mô tả chi tiết</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">${p.description}</p>
+                        </div>
+                        
+                        <div class="mt-auto bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-lg border-2 border-white shadow-sm uppercase shrink-0">
+                                    ${p.agentName.charAt(0)}
                                 </div>
-
-                                <div class="space-y-2.5">
-                                    <a href="${p.agentPhone ? 'tel:' + p.agentPhone : '#'}" class="w-full py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 font-bold text-sm transition-all shadow-md ${p.agentPhone ? 'bg-slate-900 hover:bg-slate-800 text-white' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                                        ${p.agentPhone ? 'Gọi ' + p.agentPhone : 'Chưa có SĐT'}
-                                    </a>
-
-                                    <a href="${p.agentPhone ? 'https://zalo.me/' + p.agentPhone : '#'}" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 font-bold text-sm transition-all shadow-md ${p.agentPhone ? 'bg-zalo hover:bg-zaloHover text-white' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}">
-                                        <svg width="20" height="20" viewBox="0 0 100 100" fill="none"><path d="M50 10C27.9 10 10 26.1 10 46C10 57.6 16.4 67.8 26.1 74C25.3 78.4 22.3 84.6 22 85.3C21.6 86.4 22.8 87.2 23.7 86.6C28.9 83.3 36.3 80.5 40.5 79.4C43.5 80.1 46.7 80.4 50 80.4C72.1 80.4 90 64.3 90 44.4C90 24.5 72.1 10 50 10Z" fill="currentColor"/><text x="50" y="56" font-family="Arial" font-size="26" font-weight="900" fill="#0068FF" text-anchor="middle">Zalo</text></svg>
-                                        Chat Zalo Ngay
-                                    </a>
+                                <div class="min-w-0">
+                                    <p class="font-bold text-slate-900 truncate">${p.agentName}</p>
+                                    <p class="text-[11px] text-emerald-600 font-bold flex items-center gap-1">
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Đối tác uy tín
+                                    </p>
                                 </div>
                             </div>
-
-                            <div class="grid grid-cols-2 gap-2.5">
-                                <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.address)}" target="_blank" class="py-3 px-3 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors">
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg> Bản Đồ
+                            <div class="space-y-2">
+                                <a href="${p.agentPhone ? 'tel:' + p.agentPhone : '#'}" class="w-full py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white flex items-center justify-center gap-2 font-bold text-sm transition-all shadow-md">
+                                    ${p.agentPhone ? 'Gọi: ' + p.agentPhone : 'Chưa có SĐT'}
                                 </a>
-                                <button onclick="copyShareLink('${p.id}')" class="py-3 px-3 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors">
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg> Chia Sẻ Link
-                                </button>
+                                <a href="${p.agentPhone ? 'https://zalo.me/' + p.agentPhone : '#'}" target="_blank" class="w-full py-3 px-4 rounded-xl bg-zalo hover:bg-zaloHover text-white flex items-center justify-center gap-2 font-bold text-sm transition-all shadow-md">
+                                    Chat Zalo Ngay
+                                </a>
+                            </div>
+                            <div class="flex gap-2 mt-2">
+                                <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.address)}" target="_blank" class="flex-1 py-2 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-xs flex justify-center items-center transition-colors">Bản Đồ</a>
+                                <button onclick="copyShareLink('${p.id}')" class="flex-1 py-2 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-xs flex justify-center items-center transition-colors">Copy Link</button>
                             </div>
                         </div>
                     </div>
@@ -554,52 +561,32 @@
            HỆ THỐNG BẢO MẬT & CHỐNG SOI MÃ NGUỒN
            ========================================================== */
         
-        // 1. Chặn hoàn toàn click chuột phải
         document.addEventListener('contextmenu', function (e) {
             e.preventDefault();
             return false;
         });
         
-        // 2. Chặn các phím tắt mở DevTools, View Source, Save Page
         document.addEventListener('keydown', function (e) {
-            // Chặn F12
-            if (e.keyCode === 123) {
-                e.preventDefault();
-                return false;
-            }
-            // Chặn Ctrl+Shift+I (Inspect), Ctrl+Shift+J (Console), Ctrl+Shift+C (Element Inspector)
-            if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
-                e.preventDefault();
-                return false;
-            }
-            // Chặn Ctrl+U (View Source) hoặc Ctrl+S (Save Page)
-            if (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83)) {
-                e.preventDefault();
-                return false;
-            }
-            // Chặn Ctrl+Shift+U
-            if (e.ctrlKey && e.shiftKey && e.keyCode === 85) {
+            if (e.keyCode === 123 || 
+               (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
+               (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83)) ||
+               (e.ctrlKey && e.shiftKey && e.keyCode === 85)) {
                 e.preventDefault();
                 return false;
             }
         });
         
-        // 3. Bẫy Debugger đa tầng (Phát hiện người dùng ép mở DevTools)
         (function () {
             const detectDevTool = function (allowedLag) {
                 const start = performance.now();
-                debugger; // Điểm dừng khi DevTools đang mở
+                debugger;
                 const end = performance.now();
                 if (end - start > allowedLag) {
                     document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#0f172a;color:#fff;font-family:sans-serif;text-align:center;"><h2>Hệ thống phát hiện công cụ gỡ lỗi (DevTools). Truy cập bị từ chối!</h2></div>';
                     window.location.href = "about:blank";
                 }
             };
-        
-            // Chạy kiểm tra định kỳ mỗi 800ms
-            setInterval(function () {
-                detectDevTool(150);
-            }, 800);
+            setInterval(function () { detectDevTool(150); }, 800);
         })();
     </script>
 </body>
