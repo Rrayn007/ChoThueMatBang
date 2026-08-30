@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>007 — Hệ thống Bất Động Sản & Cho Thuê</title>
+    <!-- 007 PROPERTY SYSTEM — FINAL CLEAN BUILD -->
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -25,8 +26,6 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; }
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .property-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .property-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.12); }
         .loader { border: 4px solid #f3f4f6; border-top: 4px solid #2563eb; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
@@ -259,10 +258,10 @@
 
         .logo-007 {
             display: block;
-            width: 150px;
+            width: 120px;
             height: auto;
             overflow: visible;
-            filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.06));
+            filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.07));
         }
 
         .logo-007 .logo-white {
@@ -288,16 +287,18 @@
         .modal-panel {
             position: relative;
             overflow: visible;
-            max-height: 90vh;
+            max-height: calc(100vh - 32px);
+            box-sizing: border-box;
         }
 
         .modal-scroll-area {
             min-height: 0;
-            max-height: 90vh;
+            max-height: calc(100vh - 32px);
             overflow-x: hidden;
             overflow-y: auto;
             scrollbar-gutter: stable;
             border-radius: 1.5rem;
+            box-sizing: border-box;
         }
 
         .modal-close-btn {
@@ -305,8 +306,8 @@
             top: -12px;
             right: -12px;
             z-index: 100;
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -315,15 +316,23 @@
         }
 
         @media (max-width: 640px) {
+            .modal-panel {
+                max-height: calc(100vh - 24px);
+            }
+
+            .modal-scroll-area {
+                max-height: calc(100vh - 24px);
+            }
+
             .logo-007 {
-                width: 126px;
+                width: 104px;
             }
 
             .modal-close-btn {
                 top: -8px;
                 right: -8px;
-                width: 40px;
-                height: 40px;
+                width: 38px;
+                height: 38px;
             }
         }
 
@@ -740,9 +749,9 @@
                         </svg>
                     </button>
 
-                    <div class="modal-scroll-area custom-scrollbar p-5 sm:p-7 pt-6 sm:pt-7">
-                        <div class="flex flex-col lg:flex-row gap-6 sm:gap-8 items-start pt-2">
-                        <div class="w-full lg:w-3/5 flex flex-col gap-4">
+                    <div class="modal-scroll-area custom-scrollbar p-5 sm:p-7">
+                        <div class="flex flex-col lg:flex-row gap-6 sm:gap-8 items-start">
+                            <div class="w-full lg:w-3/5 flex flex-col gap-4">
                             <div class="relative h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden bg-slate-900 group">
                                 <img id="modalMainImg"
                                      src="${escapeHtml(p.images[state.currentImageIndex])}"
@@ -814,9 +823,9 @@
                                     <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">${escapeHtml(p.description)}</p>
                                 </div>
                             </div>
-                        </div>
+                            </div>
 
-                        <div class="w-full lg:w-2/5 flex flex-col gap-4">
+                            <div class="w-full lg:w-2/5 flex flex-col gap-4">
                             <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100">
                                 <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-1">Mức giá niêm yết</p>
                                 <p class="text-3xl font-black text-blue-600 tracking-tight">${escapeHtml(p.priceStr)}</p>
