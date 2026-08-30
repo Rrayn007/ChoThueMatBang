@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>007 - Hệ thống Bất Động Sản & Cho Thuê</title>
+    <title>007 — Hệ thống Bất Động Sản & Cho Thuê</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -57,6 +57,138 @@
             background-color: #cbd5e1;
             border-radius: 20px;
         }
+
+        /* ==========================================================
+           MOTION SYSTEM — chuyển động nhẹ, mượt, không giật layout
+           ========================================================== */
+        :root {
+            --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+            --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+            --motion-fast: 180ms;
+            --motion-normal: 300ms;
+            --motion-slow: 500ms;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        .property-card {
+            transition:
+                transform var(--motion-normal) var(--ease-smooth),
+                box-shadow var(--motion-normal) var(--ease-smooth),
+                border-color var(--motion-normal) var(--ease-standard),
+                opacity var(--motion-normal) var(--ease-standard);
+            will-change: transform;
+        }
+
+        .property-card:hover {
+            transform: translate3d(0, -5px, 0);
+            box-shadow: 0 16px 34px -8px rgba(0, 0, 0, 0.14);
+        }
+
+        .property-card .property-image {
+            transition: transform 650ms var(--ease-smooth), filter 350ms var(--ease-standard);
+            will-change: transform;
+        }
+
+        .property-card:hover .property-image {
+            transform: scale(1.045);
+        }
+
+        .property-card .card-content {
+            transition: background-color var(--motion-normal) var(--ease-standard);
+        }
+
+        .filter-control,
+        .tab-btn,
+        .modal-action,
+        .lightbox-control {
+            transition:
+                transform var(--motion-fast) var(--ease-smooth),
+                background-color var(--motion-fast) var(--ease-standard),
+                border-color var(--motion-fast) var(--ease-standard),
+                box-shadow var(--motion-fast) var(--ease-standard),
+                color var(--motion-fast) var(--ease-standard),
+                opacity var(--motion-fast) var(--ease-standard);
+        }
+
+        .filter-control:active,
+        .tab-btn:active,
+        .modal-action:active,
+        .lightbox-control:active {
+            transform: scale(0.98);
+        }
+
+        #modalOverlay,
+        #lightboxOverlay {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition:
+                opacity 260ms var(--ease-standard),
+                visibility 260ms var(--ease-standard);
+        }
+
+        #modalOverlay.is-open,
+        #lightboxOverlay.is-open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        #modalOverlay > .modal-panel {
+            opacity: 0;
+            transform: translate3d(0, 18px, 0) scale(0.985);
+            transition:
+                opacity 320ms var(--ease-smooth),
+                transform 420ms var(--ease-smooth);
+        }
+
+        #modalOverlay.is-open > .modal-panel {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale(1);
+        }
+
+        #lightboxImg {
+            opacity: 0;
+            transform: scale(0.97);
+            transition:
+                opacity 240ms var(--ease-standard),
+                transform 360ms var(--ease-smooth);
+        }
+
+        #lightboxOverlay.is-open #lightboxImg {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        #toast {
+            transition:
+                transform 360ms var(--ease-smooth),
+                opacity 260ms var(--ease-standard);
+            will-change: transform, opacity;
+        }
+
+        .grid-enter {
+            animation: gridEnter 420ms var(--ease-smooth) both;
+        }
+
+        @keyframes gridEnter {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *,
+            *::before,
+            *::after {
+                animation-duration: 1ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 1ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
     </style>
 </head>
 <body class="antialiased">
@@ -157,12 +289,12 @@
     </main>
 
     <!-- MODAL CHI TIẾT SẢN PHẨM -->
-    <div id="modalOverlay" class="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-5 bg-slate-950/70 backdrop-blur-sm hidden">
+    <div id="modalOverlay" class="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-5 bg-slate-950/70 backdrop-blur-sm">
         <!-- Đã dời thuộc tính cuộn (overflow-y-auto) vào khung trắng bên trong để fix lỗi UI -->
     </div>
 
     <!-- LIGHTBOX -->
-    <div id="lightboxOverlay" class="fixed inset-0 z-[70] bg-black/95 hidden flex flex-col items-center justify-center p-4">
+    <div id="lightboxOverlay" class="fixed inset-0 z-[70] bg-black/95 flex flex-col items-center justify-center p-4">
         <button onclick="closeLightbox()" class="absolute top-5 right-5 text-white/80 hover:text-white p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
@@ -182,130 +314,160 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const CSV_URL = '/api/data'; // ĐỪNG QUÊN THAY LINK NÀY KHI CHẠY THẬT
+        /* ==========================================================
+           007 PROPERTY SYSTEM — CLEAN / SMOOTH / OPTIMIZED
+           ========================================================== */
 
-        let properties = [];
-        let activeTab = 'Tất cả';
-        let currentModalProperty = null;
-        let currentImageIndex = 0;
+        const CSV_URL = '/api/data';
+        const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80';
 
-        const elGrid = document.getElementById('grid');
-        const elLoading = document.getElementById('loading');
-        const elError = document.getElementById('error');
-        const elContentGrid = document.getElementById('contentGrid');
-        const elResultCount = document.getElementById('resultCount');
-        const elHeaderSearch = document.getElementById('headerSearchInput');
-
-        const elType = document.getElementById('filterType');
-        const elStatus = document.getElementById('filterStatus');
-        const elSort = document.getElementById('filterSort');
-        const modalOverlay = document.getElementById('modalOverlay');
-
-        // FORMAT TIỀN
-        const formatPrice = (price) => {
-            const num = Number(price);
-            if (isNaN(num) || num === 0) return 'Thỏa thuận';
-            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(num);
+        const state = {
+            properties: [],
+            activeTab: 'Tất cả',
+            currentProperty: null,
+            currentImageIndex: 0,
+            searchTimer: null,
+            toastTimer: null
         };
 
-        // PARSE ẢNH
-        function parseImages(imgStr) {
-            if (!imgStr) return ['https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80'];
-            const urls = imgStr.split(/[\n,|,]+/).map(s => s.trim()).filter(s => s.length > 5 && (s.startsWith('http://') || s.startsWith('https://')));
-            return urls.length > 0 ? urls : ['https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80'];
+        const $ = (selector, root = document) => root.querySelector(selector);
+        const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+
+        const els = {
+            grid: $('#grid'),
+            loading: $('#loading'),
+            error: $('#error'),
+            contentGrid: $('#contentGrid'),
+            resultCount: $('#resultCount'),
+            search: $('#headerSearchInput'),
+            type: $('#filterType'),
+            status: $('#filterStatus'),
+            sort: $('#filterSort'),
+            modal: $('#modalOverlay'),
+            lightbox: $('#lightboxOverlay'),
+            lightboxImg: $('#lightboxImg'),
+            lightboxCaption: $('#lightboxCaption'),
+            toast: $('#toast'),
+            toastMsg: $('#toastMsg')
+        };
+
+        const formatPrice = (price) => {
+            const num = Number(price);
+            if (!Number.isFinite(num) || num === 0) return 'Thỏa thuận';
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(num);
+        };
+
+        const escapeHtml = (value = '') =>
+            String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+
+        const parseImages = (value) => {
+            if (!value) return [FALLBACK_IMAGE];
+
+            const urls = String(value)
+                .split(/[\n,|]+/)
+                .map(url => url.trim())
+                .filter(url => /^https?:\/\/.{5,}/i.test(url));
+
+            return urls.length ? urls : [FALLBACK_IMAGE];
+        };
+
+        const normalizeProperty = (item) => {
+            const rawStatus = String(item.status || 'Còn trống').trim();
+            const lowerStatus = rawStatus.toLowerCase();
+
+            return {
+                id: String(item.id || '').trim(),
+                title: String(item.title || '').trim(),
+                description: String(item.description || 'Thông tin đang cập nhật.'),
+                rawPrice: Number(item.price) || 0,
+                priceStr: formatPrice(item.price),
+                address: String(item.address || item.location || 'Đang cập nhật địa chỉ'),
+                beds: Number(item.beds) || 0,
+                baths: Number(item.baths) || 0,
+                area: Number(item.area) || 0,
+                propertyType: String(item.propertytype || item.type || 'BĐS'),
+                transactionType: String(
+                    item.transactiontype ||
+                    (String(item.type || '').toLowerCase().includes('thuê') ? 'Cho thuê' : 'Bán')
+                ),
+                images: parseImages(item.image || item.images),
+                agentName: String(item.agentname || item.contact || 'Chủ nhà / Môi giới'),
+                agentPhone: String(item.agentphone || item.contact || ''),
+                status: rawStatus,
+                location: String(item.location || 'Cần Thơ'),
+                isAvailable: lowerStatus.includes('trống') || lowerStatus.includes('còn')
+            };
+        };
+
+        function showError(message) {
+            els.loading.classList.add('hidden');
+            els.contentGrid.classList.add('hidden');
+            els.error.classList.remove('hidden');
+            $('#errorMsg').textContent = message;
         }
 
-        // TẢI DATA
-        Papa.parse(CSV_URL, {
-            download: true,
-            header: true,
-            skipEmptyLines: true,
-            transformHeader: function(h) { return h.trim().toLowerCase(); },
-            complete: function(results) {
-                try {
-                    properties = results.data.filter(item => item.id && item.title).map(item => {
-                        const rawStatus = item.status || 'Còn trống';
-                        const isAvailable = rawStatus.toLowerCase().includes('trống') || rawStatus.toLowerCase().includes('còn');
-
-                        return {
-                            id: String(item.id).trim(),
-                            title: item.title,
-                            description: item.description || 'Thông tin đang cập nhật.',
-                            rawPrice: Number(item.price) || 0,
-                            priceStr: formatPrice(item.price),
-                            address: item.address || item.location || 'Đang cập nhật địa chỉ',
-                            beds: Number(item.beds) || 0,
-                            baths: Number(item.baths) || 0,
-                            area: Number(item.area) || 0,
-                            propertyType: item.propertytype || item.type || 'BĐS',
-                            transactionType: item.transactiontype || (item.type && item.type.includes('thuê') ? 'Cho thuê' : 'Bán'),
-                            images: parseImages(item.image || item.images),
-                            agentName: item.agentname || item.contact || 'Chủ nhà / Môi giới',
-                            agentPhone: item.agentphone || item.contact || '',
-                            status: rawStatus,
-                            location: item.location || 'Cần Thơ',
-                            isAvailable: isAvailable
-                        };
-                    });
-
-                    elLoading.classList.add('hidden');
-                    elContentGrid.classList.remove('hidden');
-                    render();
-                    checkUrlHash();
-                } catch(err) {
-                    showError('Cấu trúc cột trong Google Sheet không khớp. Vui lòng kiểm tra lại.');
-                }
-            },
-            error: function() { showError('Không thể tải file CSV. Vui lòng kiểm tra lại link web.'); }
-        });
-
-        function showError(msg) {
-            elLoading.classList.add('hidden');
-            elError.classList.remove('hidden');
-            document.getElementById('errorMsg').textContent = msg;
-        }
-
-        // AUTO-SCROLL THÔNG MINH (KHI NHẬP TÌM KIẾM)
-        function triggerSearchAndScroll() {
-            render();
-            const contentRect = document.getElementById('content').getBoundingClientRect();
-            const topPos = contentRect.top + window.pageYOffset - 150;
-            if(contentRect.top > 250) {
-                window.scrollTo({ top: topPos, behavior: 'smooth' });
-            }
-        }
-        elHeaderSearch.addEventListener('input', triggerSearchAndScroll);
-
-        // LỌC & RENDER DỮ LIỆU
         function getFilteredProperties() {
-            const search = elHeaderSearch.value.toLowerCase().trim();
-            const type = elType.value;
-            const status = elStatus.value;
-            const sort = elSort.value;
+            const search = els.search.value.toLowerCase().trim();
+            const type = els.type.value;
+            const status = els.status.value;
+            const sort = els.sort.value;
 
-            let result = properties.filter(p => {
-                const matchTab = activeTab === 'Tất cả' || p.transactionType === activeTab;
-                const matchSearch = p.title.toLowerCase().includes(search) || p.location.toLowerCase().includes(search) || p.address.toLowerCase().includes(search);
-                const matchType = type === 'Tất cả' || p.propertyType === type;
-                const matchStatus = status === 'Tất cả' || (status === 'Đang trống' && p.isAvailable) || (status === 'Đã giao dịch' && !p.isAvailable);
+            const result = state.properties.filter(property => {
+                const searchable = [
+                    property.title,
+                    property.location,
+                    property.address,
+                    property.propertyType
+                ].join(' ').toLowerCase();
+
+                const matchTab =
+                    state.activeTab === 'Tất cả' ||
+                    property.transactionType === state.activeTab;
+
+                const matchSearch = !search || searchable.includes(search);
+
+                const matchType =
+                    type === 'Tất cả' ||
+                    property.propertyType === type;
+
+                const matchStatus =
+                    status === 'Tất cả' ||
+                    (status === 'Đang trống' && property.isAvailable) ||
+                    (status === 'Đã giao dịch' && !property.isAvailable);
 
                 return matchTab && matchSearch && matchType && matchStatus;
             });
 
-            if (sort === 'price-asc') result.sort((a, b) => a.rawPrice - b.rawPrice);
-            if (sort === 'price-desc') result.sort((a, b) => b.rawPrice - a.rawPrice);
-            if (sort === 'area-desc') result.sort((a, b) => b.area - a.area);
+            switch (sort) {
+                case 'price-asc':
+                    result.sort((a, b) => a.rawPrice - b.rawPrice);
+                    break;
+                case 'price-desc':
+                    result.sort((a, b) => b.rawPrice - a.rawPrice);
+                    break;
+                case 'area-desc':
+                    result.sort((a, b) => b.area - a.area);
+                    break;
+            }
 
             return result;
         }
 
         function render() {
             const filtered = getFilteredProperties();
-            elResultCount.textContent = `(${filtered.length} kết quả)`;
+            els.resultCount.textContent = `(${filtered.length} kết quả)`;
 
-            if (filtered.length === 0) {
-                elGrid.innerHTML = `
-                    <div class="col-span-full text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
+            if (!filtered.length) {
+                els.grid.innerHTML = `
+                    <div class="col-span-full text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300 grid-enter">
                         <p class="text-4xl mb-3">🔍</p>
                         <h3 class="text-lg font-bold text-slate-800 mb-1">Không tìm thấy bất động sản nào</h3>
                         <p class="text-slate-500 text-sm">Thử mở rộng từ khóa hoặc chọn lại bộ lọc.</p>
@@ -313,296 +475,530 @@
                 return;
             }
 
-            elGrid.innerHTML = filtered.map(p => `
-                <div class="property-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden cursor-pointer flex flex-col ${!p.isAvailable ? 'opacity-75 grayscale-[20%]' : ''}" onclick="openModal('${p.id}')">
-                    <div class="relative h-56 bg-slate-100 overflow-hidden">
-                        <img src="${p.images[0]}" alt="${p.title}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80'">
-                        
-                        <div class="absolute top-3 left-3 flex gap-2">
-                            <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-lg shadow-md">${p.transactionType}</span>
-                            <span class="bg-slate-900/80 text-white text-xs font-semibold px-2.5 py-1 rounded-lg backdrop-blur-md shadow-md">${p.propertyType}</span>
-                        </div>
-                        <div class="absolute top-3 right-3">
-                            <span class="text-xs font-bold px-3 py-1 rounded-lg shadow-md backdrop-blur-md ${!p.isAvailable ? 'bg-red-500/90 text-white' : 'bg-emerald-500/90 text-white'}">${p.status}</span>
+            els.grid.innerHTML = filtered.map(property => {
+                const p = property;
+                const safeId = escapeHtml(p.id);
+                const safeTitle = escapeHtml(p.title);
+
+                return `
+                    <article
+                        class="property-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden cursor-pointer flex flex-col ${!p.isAvailable ? 'opacity-75 grayscale-[20%]' : ''} grid-enter"
+                        data-property-id="${safeId}"
+                        tabindex="0"
+                        role="button"
+                        aria-label="Xem chi tiết ${safeTitle}">
+
+                        <div class="relative h-56 bg-slate-100 overflow-hidden">
+                            <img
+                                src="${escapeHtml(p.images[0])}"
+                                alt="${safeTitle}"
+                                class="property-image w-full h-full object-cover"
+                                loading="lazy"
+                                decoding="async"
+                                onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'">
+
+                            <div class="absolute top-3 left-3 flex gap-2">
+                                <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-lg shadow-md">${escapeHtml(p.transactionType)}</span>
+                                <span class="bg-slate-900/80 text-white text-xs font-semibold px-2.5 py-1 rounded-lg backdrop-blur-md shadow-md">${escapeHtml(p.propertyType)}</span>
+                            </div>
+
+                            <div class="absolute top-3 right-3">
+                                <span class="text-xs font-bold px-3 py-1 rounded-lg shadow-md backdrop-blur-md ${!p.isAvailable ? 'bg-red-500/90 text-white' : 'bg-emerald-500/90 text-white'}">${escapeHtml(p.status)}</span>
+                            </div>
+
+                            ${p.images.length > 1 ? `
+                                <div class="absolute bottom-3 right-3 bg-black/70 text-white text-[11px] font-semibold px-2.5 py-1 rounded-md backdrop-blur-md flex items-center gap-1">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                        <circle cx="12" cy="13" r="4"></circle>
+                                    </svg>
+                                    ${p.images.length} ảnh
+                                </div>` : ''}
+
+                            <div class="absolute bottom-3 left-3 bg-white/95 text-blue-600 font-extrabold text-base px-3.5 py-1.5 rounded-xl shadow-lg">
+                                ${escapeHtml(p.priceStr)}
+                            </div>
                         </div>
 
-                        ${p.images.length > 1 ? `
-                        <div class="absolute bottom-3 right-3 bg-black/70 text-white text-[11px] font-semibold px-2.5 py-1 rounded-md backdrop-blur-md flex items-center gap-1">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-                            ${p.images.length} ảnh
-                        </div>` : ''}
+                        <div class="card-content p-5 flex-1 flex flex-col">
+                            <div class="flex items-center text-slate-500 text-xs font-semibold mb-2">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1 text-blue-500 shrink-0">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                <span class="truncate">${escapeHtml(p.location)}</span>
+                            </div>
 
-                        <div class="absolute bottom-3 left-3 bg-white/95 text-blue-600 font-extrabold text-base px-3.5 py-1.5 rounded-xl shadow-lg">
-                            ${p.priceStr}
-                        </div>
-                    </div>
+                            <h3 class="font-bold text-base text-slate-900 leading-snug mb-4 line-clamp-2">${safeTitle}</h3>
 
-                    <div class="p-5 flex-1 flex flex-col">
-                        <div class="flex items-center text-slate-500 text-xs font-semibold mb-2">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1 text-blue-500 shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                            <span class="truncate">${p.location}</span>
-                        </div>
-                        <h3 class="font-bold text-base text-slate-900 leading-snug mb-4 line-clamp-2">${p.title}</h3>
-                        
-                        <div class="mt-auto grid grid-cols-3 gap-1 border-t border-slate-100 pt-3.5 text-center text-slate-600">
-                            <div>
-                                <span class="block text-[11px] text-slate-400 font-medium">Phòng ngủ</span>
-                                <span class="text-xs font-bold text-slate-800">${p.beds > 0 ? p.beds + ' PN' : '-'}</span>
-                            </div>
-                            <div class="border-x border-slate-100">
-                                <span class="block text-[11px] text-slate-400 font-medium">WC</span>
-                                <span class="text-xs font-bold text-slate-800">${p.baths > 0 ? p.baths + ' WC' : '-'}</span>
-                            </div>
-                            <div>
-                                <span class="block text-[11px] text-slate-400 font-medium">Diện tích</span>
-                                <span class="text-xs font-bold text-slate-800">${p.area > 0 ? p.area + ' m²' : '-'}</span>
+                            <div class="mt-auto grid grid-cols-3 gap-1 border-t border-slate-100 pt-3.5 text-center text-slate-600">
+                                <div>
+                                    <span class="block text-[11px] text-slate-400 font-medium">Phòng ngủ</span>
+                                    <span class="text-xs font-bold text-slate-800">${p.beds > 0 ? p.beds + ' PN' : '-'}</span>
+                                </div>
+                                <div class="border-x border-slate-100">
+                                    <span class="block text-[11px] text-slate-400 font-medium">WC</span>
+                                    <span class="text-xs font-bold text-slate-800">${p.baths > 0 ? p.baths + ' WC' : '-'}</span>
+                                </div>
+                                <div>
+                                    <span class="block text-[11px] text-slate-400 font-medium">Diện tích</span>
+                                    <span class="text-xs font-bold text-slate-800">${p.area > 0 ? p.area + ' m²' : '-'}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>`).join('');
+                    </article>`;
+            }).join('');
         }
 
-        // TABS VÀ SELECT FILTER
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.tab-btn').forEach(b => {
-                    b.className = 'tab-btn shrink-0 flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold transition-all text-slate-500 hover:text-slate-800 hover:bg-slate-200/50';
-                });
-                e.target.className = 'tab-btn shrink-0 flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold transition-all bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50';
-                activeTab = e.target.dataset.tab;
+        function triggerSearchAndScroll() {
+            clearTimeout(state.searchTimer);
+
+            state.searchTimer = setTimeout(() => {
                 render();
+
+                const content = $('#content');
+                if (!content) return;
+
+                const rect = content.getBoundingClientRect();
+
+                if (rect.top > 250) {
+                    window.scrollTo({
+                        top: rect.top + window.scrollY - 150,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 120);
+        }
+
+        function setActiveTab(tab) {
+            state.activeTab = tab;
+
+            $$('.tab-btn').forEach(button => {
+                const active = button.dataset.tab === tab;
+                button.className = active
+                    ? 'tab-btn shrink-0 flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold transition-all bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50'
+                    : 'tab-btn shrink-0 flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold transition-all text-slate-500 hover:text-slate-800 hover:bg-slate-200/50';
             });
-        });
 
-        elType.addEventListener('change', render);
-        elStatus.addEventListener('change', render);
-        elSort.addEventListener('change', render);
-
-        // ================= NÂNG CẤP GIAO DIỆN MODAL =================
-        window.openModal = function(id) {
-            const p = properties.find(item => item.id === id);
-            if(!p) return;
-
-            currentModalProperty = p;
-            currentImageIndex = 0;
-            window.location.hash = `id=${p.id}`;
-
-            renderModalContent();
-            modalOverlay.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+            render();
         }
 
         function renderModalContent() {
-            const p = currentModalProperty;
-            if(!p) return;
+            const p = state.currentProperty;
+            if (!p) return;
+
             const hasMultipleImages = p.images.length > 1;
 
-            modalOverlay.innerHTML = `
-            <!-- Khung Modal chính: Tối ưu padding top chỉ còn pt-5 sm:pt-6 -->
-            <div class="bg-white rounded-3xl w-full max-w-5xl shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar flex flex-col p-5 sm:p-7" onclick="event.stopPropagation()">
-                
-                <!-- NÚT X MÀU TRẮNG - NỀN ĐỎ MỜ -->
-                <button onclick="closeModal()" class="absolute top-4 right-4 z-30 bg-red-500/80 hover:bg-red-600 text-white p-2 rounded-full backdrop-blur-sm shadow-md transition-all focus:outline-none">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
+            els.modal.innerHTML = `
+                <div class="modal-panel bg-white rounded-3xl w-full max-w-5xl shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar flex flex-col p-5 sm:p-7" onclick="event.stopPropagation()">
+                    <button onclick="closeModal()" class="absolute top-4 right-4 z-30 bg-red-500/80 hover:bg-red-600 text-white p-2 rounded-full backdrop-blur-sm shadow-md transition-all focus:outline-none" aria-label="Đóng">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
 
-                <!-- Bố cục 2 Cột: Loại bỏ padding lặp lại ở các div con để lề trên-dưới-trái-phải đều tăm tắp -->
-                <div class="flex flex-col lg:flex-row gap-6 sm:gap-8 items-start pt-2">
-                    
-                    <!-- CỘT BÊN TRÁI: Ảnh & Mô tả -->
-                    <div class="w-full lg:w-3/5 flex flex-col gap-4">
-                        <div class="relative h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden bg-slate-900 group">
-                            <img id="modalMainImg" src="${p.images[currentImageIndex]}" class="w-full h-full object-cover transition-all duration-300 cursor-zoom-in" onclick="openLightbox(${currentImageIndex})">
-                            
-                            <div class="absolute top-3 left-3 flex gap-2">
-                                <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-lg shadow-md">${p.transactionType}</span>
-                                <span class="bg-slate-900/80 text-white text-xs font-semibold px-2.5 py-1 rounded-lg backdrop-blur-md">${p.propertyType}</span>
+                    <div class="flex flex-col lg:flex-row gap-6 sm:gap-8 items-start pt-2">
+                        <div class="w-full lg:w-3/5 flex flex-col gap-4">
+                            <div class="relative h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden bg-slate-900 group">
+                                <img id="modalMainImg"
+                                     src="${escapeHtml(p.images[state.currentImageIndex])}"
+                                     alt="${escapeHtml(p.title)}"
+                                     class="w-full h-full object-cover transition-all duration-300 cursor-zoom-in"
+                                     decoding="async"
+                                     onclick="openLightbox(${state.currentImageIndex})">
+
+                                <div class="absolute top-3 left-3 flex gap-2">
+                                    <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-lg shadow-md">${escapeHtml(p.transactionType)}</span>
+                                    <span class="bg-slate-900/80 text-white text-xs font-semibold px-2.5 py-1 rounded-lg backdrop-blur-md">${escapeHtml(p.propertyType)}</span>
+                                </div>
+
+                                ${hasMultipleImages ? `
+                                    <button onclick="changeModalImage(-1)" class="modal-action absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm focus:outline-none" aria-label="Ảnh trước">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <polyline points="15 18 9 12 15 6"></polyline>
+                                        </svg>
+                                    </button>
+                                    <button onclick="changeModalImage(1)" class="modal-action absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm focus:outline-none" aria-label="Ảnh sau">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </button>
+                                    <div class="absolute bottom-3 right-3 bg-black/70 text-white text-xs font-semibold px-3 py-1 rounded-lg backdrop-blur-md">
+                                        <span id="imgCounter">${state.currentImageIndex + 1}</span> / ${p.images.length} ảnh
+                                    </div>` : ''}
                             </div>
 
                             ${hasMultipleImages ? `
-                            <button onclick="changeModalImage(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm transition-all focus:outline-none">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                            </button>
-                            <button onclick="changeModalImage(1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm transition-all focus:outline-none">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                            </button>
-                            <div class="absolute bottom-3 right-3 bg-black/70 text-white text-xs font-semibold px-3 py-1 rounded-lg backdrop-blur-md">
-                                <span id="imgCounter">${currentImageIndex + 1}</span> / ${p.images.length} ảnh
-                            </div>` : ''}
+                                <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1" id="thumbnailContainer">
+                                    ${p.images.map((img, idx) => `
+                                        <img src="${escapeHtml(img)}"
+                                             alt="Ảnh ${idx + 1}"
+                                             onclick="selectModalImage(${idx})"
+                                             loading="lazy"
+                                             class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl cursor-pointer border-2 transition-all shrink-0 ${idx === state.currentImageIndex ? 'border-blue-600 scale-95 opacity-100 shadow-md' : 'border-transparent opacity-60 hover:opacity-100'}">
+                                    `).join('')}
+                                </div>` : ''}
+
+                            <div class="mt-2">
+                                <div class="flex items-center text-blue-600 text-sm font-semibold mb-1.5">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1.5">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                    ${escapeHtml(p.address)}
+                                </div>
+
+                                <h1 class="text-2xl font-extrabold text-slate-900 leading-tight mb-4">${escapeHtml(p.title)}</h1>
+
+                                <div class="grid grid-cols-3 gap-3 bg-slate-50 p-4 rounded-2xl mb-5 border border-slate-100 text-center">
+                                    <div>
+                                        <p class="text-xs text-slate-400 font-medium mb-0.5">Phòng ngủ</p>
+                                        <p class="font-bold text-slate-800 text-base">${p.beds > 0 ? p.beds + ' phòng' : '-'}</p>
+                                    </div>
+                                    <div class="border-x border-slate-200">
+                                        <p class="text-xs text-slate-400 font-medium mb-0.5">Phòng tắm</p>
+                                        <p class="font-bold text-slate-800 text-base">${p.baths > 0 ? p.baths + ' WC' : '-'}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-slate-400 font-medium mb-0.5">Diện tích</p>
+                                        <p class="font-bold text-slate-800 text-base">${p.area > 0 ? p.area + ' m²' : '-'}</p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 class="text-sm font-bold text-slate-900 mb-2">Mô tả chi tiết</h3>
+                                    <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">${escapeHtml(p.description)}</p>
+                                </div>
+                            </div>
                         </div>
 
-                        ${hasMultipleImages ? `
-                        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1" id="thumbnailContainer">
-                            ${p.images.map((img, idx) => `
-                                <img src="${img}" onclick="selectModalImage(${idx})" class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl cursor-pointer border-2 transition-all shrink-0 ${idx === currentImageIndex ? 'border-blue-600 scale-95 opacity-100 shadow-md' : 'border-transparent opacity-60 hover:opacity-100'}">
-                            `).join('')}
-                        </div>` : ''}
-
-                        <div class="mt-2">
-                            <div class="flex items-center text-blue-600 text-sm font-semibold mb-1.5">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                ${p.address}
-                            </div>
-                            <h1 class="text-2xl font-extrabold text-slate-900 leading-tight mb-4">${p.title}</h1>
-                            
-                            <div class="grid grid-cols-3 gap-3 bg-slate-50 p-4 rounded-2xl mb-5 border border-slate-100 text-center">
-                                <div>
-                                    <p class="text-xs text-slate-400 font-medium mb-0.5">Phòng ngủ</p>
-                                    <p class="font-bold text-slate-800 text-base">${p.beds > 0 ? p.beds + ' phòng' : '-'}</p>
-                                </div>
-                                <div class="border-x border-slate-200">
-                                    <p class="text-xs text-slate-400 font-medium mb-0.5">Phòng tắm</p>
-                                    <p class="font-bold text-slate-800 text-base">${p.baths > 0 ? p.baths + ' WC' : '-'}</p>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-slate-400 font-medium mb-0.5">Diện tích</p>
-                                    <p class="font-bold text-slate-800 text-base">${p.area > 0 ? p.area + ' m²' : '-'}</p>
-                                </div>
+                        <div class="w-full lg:w-2/5 flex flex-col gap-4">
+                            <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                                <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-1">Mức giá niêm yết</p>
+                                <p class="text-3xl font-black text-blue-600 tracking-tight">${escapeHtml(p.priceStr)}</p>
                             </div>
 
-                            <div>
-                                <h3 class="text-sm font-bold text-slate-900 mb-2">Mô tả chi tiết</h3>
-                                <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">${p.description}</p>
+                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                                <div class="flex items-center gap-3.5 mb-4">
+                                    <div class="w-11 h-11 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-base border-2 border-white shadow-sm uppercase shrink-0">
+                                        ${escapeHtml(p.agentName.charAt(0))}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="font-bold text-slate-900 truncate">${escapeHtml(p.agentName)}</p>
+                                        <p class="text-[11px] text-emerald-600 font-bold flex items-center gap-1">
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                            Đối tác uy tín
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2.5">
+                                    <a href="${p.agentPhone ? 'tel:' + encodeURIComponent(p.agentPhone) : '#'}"
+                                       class="modal-action w-full py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white flex items-center justify-center gap-2 font-bold text-sm shadow-md">
+                                        ${p.agentPhone ? 'Gọi: ' + escapeHtml(p.agentPhone) : 'Chưa có SĐT'}
+                                    </a>
+                                    <a href="${p.agentPhone ? 'https://zalo.me/' + encodeURIComponent(p.agentPhone) : '#'}"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="modal-action w-full py-3 px-4 rounded-xl bg-zalo hover:bg-zaloHover text-white flex items-center justify-center gap-2 font-bold text-sm shadow-md">
+                                        Chat Zalo Ngay
+                                    </a>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-200/60">
+                                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.address)}"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="modal-action py-2.5 px-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs flex justify-center items-center gap-1.5 shadow-sm">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+                                            <circle cx="12" cy="10" r="3"></circle>
+                                        </svg>
+                                        Bản Đồ
+                                    </a>
+
+                                    <button onclick="copyShareLink('${escapeHtml(p.id)}')"
+                                            class="modal-action py-2.5 px-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs flex justify-center items-center gap-1.5 shadow-sm">
+                                        Chia Sẻ Link
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- CỘT BÊN PHẢI: Giá & Liên hệ (Canh chỉnh vừa vặn với chiều cao ảnh) -->
-                    <div class="w-full lg:w-2/5 flex flex-col gap-4">
-                        <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-1">Mức giá niêm yết</p>
-                            <p class="text-3xl font-black text-blue-600 tracking-tight">${p.priceStr}</p>
-                        </div>
-
-                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100">
-                            <div class="flex items-center gap-3.5 mb-4">
-                                <div class="w-11 h-11 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-base border-2 border-white shadow-sm uppercase shrink-0">
-                                    ${p.agentName.charAt(0)}
-                                </div>
-                                <div class="min-w-0">
-                                    <p class="font-bold text-slate-900 truncate">${p.agentName}</p>
-                                    <p class="text-[11px] text-emerald-600 font-bold flex items-center gap-1">
-                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Đối tác uy tín
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="space-y-2.5">
-                                <a href="${p.agentPhone ? 'tel:' + p.agentPhone : '#'}" class="w-full py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white flex items-center justify-center gap-2 font-bold text-sm transition-all shadow-md">
-                                    ${p.agentPhone ? 'Gọi: ' + p.agentPhone : 'Chưa có SĐT'}
-                                </a>
-                                <a href="${p.agentPhone ? 'https://zalo.me/' + p.agentPhone : '#'}" target="_blank" class="w-full py-3 px-4 rounded-xl bg-zalo hover:bg-zaloHover text-white flex items-center justify-center gap-2 font-bold text-sm transition-all shadow-md">
-                                    Chat Zalo Ngay
-                                </a>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-200/60">
-                                <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.address)}" target="_blank" class="py-2.5 px-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs flex justify-center items-center gap-1.5 transition-colors shadow-sm">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg> Bản Đồ
-                                </a>
-                                <button onclick="copyShareLink('${p.id}')" class="py-2.5 px-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs flex justify-center items-center gap-1.5 transition-colors shadow-sm">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg> Chia Sẻ Link
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>`;
+                </div>`;
         }
+
+        window.openModal = function(id) {
+            const property = state.properties.find(item => item.id === String(id));
+            if (!property) return;
+
+            state.currentProperty = property;
+            state.currentImageIndex = 0;
+
+            renderModalContent();
+            els.modal.classList.add('is-open');
+            document.body.style.overflow = 'hidden';
+
+            if (history.replaceState) {
+                history.replaceState(null, '', `#id=${encodeURIComponent(property.id)}`);
+            } else {
+                window.location.hash = `id=${encodeURIComponent(property.id)}`;
+            }
+        };
+
+        window.closeModal = function() {
+            els.modal.classList.remove('is-open');
+            document.body.style.overflow = '';
+
+            setTimeout(() => {
+                if (!els.modal.classList.contains('is-open')) {
+                    els.modal.innerHTML = '';
+                }
+            }, 320);
+
+            state.currentProperty = null;
+
+            if (window.location.hash.includes('id=')) {
+                history.replaceState(null, '', window.location.pathname + window.location.search);
+            }
+        };
 
         window.changeModalImage = function(direction) {
-            if(!currentModalProperty) return;
-            const total = currentModalProperty.images.length;
-            currentImageIndex = (currentImageIndex + direction + total) % total;
-            updateModalImageView();
-        }
-        window.selectModalImage = function(index) {
-            currentImageIndex = index;
-            updateModalImageView();
-        }
-        function updateModalImageView() {
-            const mainImg = document.getElementById('modalMainImg');
-            const counter = document.getElementById('imgCounter');
-            if(mainImg) mainImg.src = currentModalProperty.images[currentImageIndex];
-            if(counter) counter.textContent = currentImageIndex + 1;
+            if (!state.currentProperty) return;
 
-            const thumbs = document.querySelectorAll('#thumbnailContainer img');
-            thumbs.forEach((img, i) => {
-                img.className = i === currentImageIndex 
-                    ? "w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl cursor-pointer border-2 transition-all shrink-0 border-blue-600 scale-95 opacity-100 shadow-md"
-                    : "w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl cursor-pointer border-2 transition-all shrink-0 border-transparent opacity-60 hover:opacity-100";
+            const total = state.currentProperty.images.length;
+            state.currentImageIndex = (state.currentImageIndex + direction + total) % total;
+            updateModalImageView();
+        };
+
+        window.selectModalImage = function(index) {
+            if (!state.currentProperty) return;
+
+            state.currentImageIndex = index;
+            updateModalImageView();
+        };
+
+        function updateModalImageView() {
+            const property = state.currentProperty;
+            const mainImg = $('#modalMainImg');
+            const counter = $('#imgCounter');
+
+            if (!property || !mainImg) return;
+
+            mainImg.style.opacity = '0.45';
+            mainImg.style.transform = 'scale(0.985)';
+
+            const nextSrc = property.images[state.currentImageIndex];
+
+            const preloader = new Image();
+            preloader.onload = () => {
+                if (!mainImg || !state.currentProperty) return;
+
+                mainImg.src = nextSrc;
+                requestAnimationFrame(() => {
+                    mainImg.style.opacity = '1';
+                    mainImg.style.transform = 'scale(1)';
+                });
+            };
+            preloader.onerror = () => {
+                mainImg.src = FALLBACK_IMAGE;
+                mainImg.style.opacity = '1';
+                mainImg.style.transform = 'scale(1)';
+            };
+            preloader.src = nextSrc;
+
+            if (counter) counter.textContent = state.currentImageIndex + 1;
+
+            $$('#thumbnailContainer img').forEach((img, index) => {
+                img.classList.toggle('border-blue-600', index === state.currentImageIndex);
+                img.classList.toggle('scale-95', index === state.currentImageIndex);
+                img.classList.toggle('opacity-100', index === state.currentImageIndex);
+                img.classList.toggle('shadow-md', index === state.currentImageIndex);
+                img.classList.toggle('border-transparent', index !== state.currentImageIndex);
+                img.classList.toggle('opacity-60', index !== state.currentImageIndex);
             });
-        }
-        window.closeModal = function() {
-            modalOverlay.classList.add('hidden');
-            document.body.style.overflow = '';
-            window.location.hash = '';
-            currentModalProperty = null;
         }
 
         window.openLightbox = function(index) {
-            if(!currentModalProperty) return;
-            document.getElementById('lightboxImg').src = currentModalProperty.images[index];
-            document.getElementById('lightboxCaption').textContent = `${currentModalProperty.title} (${index + 1}/${currentModalProperty.images.length})`;
-            document.getElementById('lightboxOverlay').classList.remove('hidden');
-        }
+            if (!state.currentProperty) return;
+
+            const property = state.currentProperty;
+            const safeIndex = Math.max(0, Math.min(index, property.images.length - 1));
+
+            els.lightboxImg.src = property.images[safeIndex];
+            els.lightboxCaption.textContent =
+                `${property.title} (${safeIndex + 1}/${property.images.length})`;
+
+            els.lightbox.classList.add('is-open');
+        };
+
         window.closeLightbox = function() {
-            document.getElementById('lightboxOverlay').classList.add('hidden');
+            els.lightbox.classList.remove('is-open');
+        };
+
+        window.copyShareLink = async function(id) {
+            const shareUrl = `${window.location.origin}${window.location.pathname}#id=${encodeURIComponent(id)}`;
+
+            try {
+                await navigator.clipboard.writeText(shareUrl);
+                showToast('Đã chép đường dẫn BĐS vào bộ nhớ tạm!');
+            } catch {
+                showToast('Không thể sao chép tự động. Hãy sao chép đường dẫn trên trình duyệt.');
+            }
+        };
+
+        function showToast(message) {
+            clearTimeout(state.toastTimer);
+
+            els.toastMsg.textContent = message;
+            els.toast.classList.remove('translate-y-20', 'opacity-0');
+
+            state.toastTimer = setTimeout(() => {
+                els.toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2800);
         }
 
-        window.copyShareLink = function(id) {
-            const shareUrl = `${window.location.origin}${window.location.pathname}#id=${id}`;
-            navigator.clipboard.writeText(shareUrl).then(() => {
-                showToast('Đã chép đường dẫn BĐS vào bộ nhớ tạm!');
+        function checkUrlHash() {
+            const match = window.location.hash.match(/^#id=(.+)$/);
+            if (!match) return;
+
+            const id = decodeURIComponent(match[1]);
+            const property = state.properties.find(item => item.id === id);
+
+            if (property) {
+                requestAnimationFrame(() => openModal(id));
+            }
+        }
+
+        function handleGridInteraction(event) {
+            const card = event.target.closest('[data-property-id]');
+            if (!card || !els.grid.contains(card)) return;
+
+            openModal(card.dataset.propertyId);
+        }
+
+        function handleGridKeyboard(event) {
+            if (event.key !== 'Enter' && event.key !== ' ') return;
+
+            const card = event.target.closest('[data-property-id]');
+            if (!card) return;
+
+            event.preventDefault();
+            openModal(card.dataset.propertyId);
+        }
+
+        async function loadProperties() {
+            els.loading.classList.remove('hidden');
+            els.error.classList.add('hidden');
+            els.contentGrid.classList.add('hidden');
+
+            Papa.parse(CSV_URL, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                transformHeader: header => header.trim().toLowerCase(),
+
+                complete(results) {
+                    try {
+                        state.properties = results.data
+                            .filter(item => item.id && item.title)
+                            .map(normalizeProperty);
+
+                        if (!state.properties.length) {
+                            showError('Không có dữ liệu bất động sản hợp lệ.');
+                            return;
+                        }
+
+                        els.loading.classList.add('hidden');
+                        els.contentGrid.classList.remove('hidden');
+
+                        render();
+                        checkUrlHash();
+                    } catch (error) {
+                        console.error('[007] Data normalization error:', error);
+                        showError('Cấu trúc cột trong Google Sheet không khớp. Vui lòng kiểm tra lại.');
+                    }
+                },
+
+                error(error) {
+                    console.error('[007] CSV loading error:', error);
+                    showError('Không thể tải dữ liệu. Vui lòng kiểm tra lại nguồn dữ liệu.');
+                }
             });
         }
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMsg').textContent = msg;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
-        }
-        function checkUrlHash() {
-            const hash = window.location.hash;
-            if(hash && hash.includes('id=')) {
-                const id = hash.split('id=')[1];
-                openModal(id);
-            }
-        }
-        modalOverlay.addEventListener('click', closeModal);
 
         /* ==========================================================
-           HỆ THỐNG BẢO MẬT & CHỐNG SOI MÃ NGUỒN
+           EVENTS — dùng delegation, tránh tạo hàng trăm listener
            ========================================================== */
-        
-        document.addEventListener('contextmenu', function (e) {
-            e.preventDefault();
-            return false;
+
+        els.search.addEventListener('input', triggerSearchAndScroll);
+        els.type.addEventListener('change', render);
+        els.status.addEventListener('change', render);
+        els.sort.addEventListener('change', render);
+
+        $('#tabs-container').addEventListener('click', event => {
+            const button = event.target.closest('.tab-btn');
+            if (button) setActiveTab(button.dataset.tab);
         });
-        
-        document.addEventListener('keydown', function (e) {
-            if (e.keyCode === 123 || 
-               (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
-               (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83)) ||
-               (e.ctrlKey && e.shiftKey && e.keyCode === 85)) {
-                e.preventDefault();
-                return false;
+
+        els.grid.addEventListener('click', handleGridInteraction);
+        els.grid.addEventListener('keydown', handleGridKeyboard);
+
+        els.modal.addEventListener('click', event => {
+            if (event.target === els.modal) closeModal();
+        });
+
+        els.lightbox.addEventListener('click', event => {
+            if (event.target === els.lightbox) closeLightbox();
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') {
+                if (els.lightbox.classList.contains('is-open')) {
+                    closeLightbox();
+                } else if (els.modal.classList.contains('is-open')) {
+                    closeModal();
+                }
+            }
+
+            if (
+                state.currentProperty &&
+                els.modal.classList.contains('is-open') &&
+                state.currentProperty.images.length > 1
+            ) {
+                if (event.key === 'ArrowLeft') changeModalImage(-1);
+                if (event.key === 'ArrowRight') changeModalImage(1);
             }
         });
-        
-        (function () {
-            const detectDevTool = function (allowedLag) {
-                const start = performance.now();
-                debugger;
-                const end = performance.now();
-                if (end - start > allowedLag) {
-                    document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#0f172a;color:#fff;font-family:sans-serif;text-align:center;"><h2>Hệ thống phát hiện công cụ gỡ lỗi (DevTools). Truy cập bị từ chối!</h2></div>';
-                    window.location.href = "about:blank";
-                }
-            };
-            setInterval(function () { detectDevTool(150); }, 800);
-        })();
+
+        window.addEventListener('hashchange', checkUrlHash);
+
+        loadProperties();
+
+        /* ==========================================================
+           HỆ THỐNG BẢO MẬT CƠ BẢN
+           Lưu ý: client-side protection không thể chống sao chép tuyệt đối.
+           ========================================================== */
+
+        document.addEventListener('contextmenu', event => {
+            event.preventDefault();
+        });
+
+        document.addEventListener('keydown', event => {
+            const blocked =
+                event.key === 'F12' ||
+                (event.ctrlKey && event.shiftKey && ['I', 'J', 'C'].includes(event.key.toUpperCase())) ||
+                (event.ctrlKey && ['U', 'S'].includes(event.key.toUpperCase())) ||
+                (event.ctrlKey && event.shiftKey && event.key.toUpperCase() === 'U');
+
+            if (blocked) {
+                event.preventDefault();
+            }
+        });
+
     </script>
 </body>
 </html>
