@@ -291,14 +291,40 @@
             box-sizing: border-box;
         }
 
+        /* Scroll container: scrollbar is clipped inside the modal's rounded edge. */
+        .modal-scroll-frame {
+            width: 100%;
+            max-height: calc(100vh - 32px);
+            overflow: hidden;
+            border-radius: 1.5rem;
+            box-sizing: border-box;
+        }
+
         .modal-scroll-area {
             min-height: 0;
             max-height: calc(100vh - 32px);
             overflow-x: hidden;
             overflow-y: auto;
             scrollbar-gutter: stable;
-            border-radius: 1.5rem;
+            border-radius: inherit;
             box-sizing: border-box;
+        }
+
+        .modal-scroll-area::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .modal-scroll-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .modal-scroll-area::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 999px;
+        }
+
+        .modal-scroll-area::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
         }
 
         .modal-close-btn {
@@ -320,6 +346,7 @@
                 max-height: calc(100vh - 24px);
             }
 
+            .modal-scroll-frame,
             .modal-scroll-area {
                 max-height: calc(100vh - 24px);
             }
@@ -749,8 +776,9 @@
                         </svg>
                     </button>
 
-                    <div class="modal-scroll-area custom-scrollbar p-5 sm:p-7">
-                        <div class="flex flex-col lg:flex-row gap-6 sm:gap-8 items-start">
+                    <div class="modal-scroll-frame">
+                        <div class="modal-scroll-area custom-scrollbar p-5 sm:p-7">
+                            <div class="flex flex-col lg:flex-row gap-6 sm:gap-8 items-start">
                             <div class="w-full lg:w-3/5 flex flex-col gap-4">
                             <div class="relative h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden bg-slate-900 group">
                                 <img id="modalMainImg"
@@ -878,8 +906,8 @@
                                     </button>
                                 </div>
                             </div>
+                            </div>
                         </div>
-                    </div>
                     </div>
                 </div>`;
         }
